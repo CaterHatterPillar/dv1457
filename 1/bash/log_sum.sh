@@ -14,6 +14,13 @@
 # -t: Which IP number get the most bytes sent to them?
 # -f: Which IP number sends the most bytes to the server <filename> refers to the logfile. If '-' is given as a filename, or no filename is given, then standard input should be read. This enables the script to be used in a pipeline.
 
+source log_sum_c.sh
+source log_sum_2.sh
+source log_sum_r.sh
+source log_sum_F.sh
+source log_sum_t.sh
+source log_sum_f.sh
+
 echo "log_sum: Script start."
 
 # Establish bashtrap used to escape application in case of murderous goblins and/or psychotic mystics:
@@ -31,11 +38,14 @@ argFilename=""
 while getopts ":n:|:h:d:|:c2rFtf" opt; do
 	case $opt in
 		n)
-			echo "Limit the number of results to $OPTARG." >&2 								;;
+			echo "Limit the number of results to $OPTARG." >&2
+			argLimitOutput=$OPTARG		;;
 		h)
-			echo "Limit the query to the last number of hours: $OPTARG." >&2 				;;
+			echo "Limit the query to the last number of hours: $OPTARG." >&2
+			argLimitQueryHours=$OPTARG	;;
 		d)
-			echo "Limit the query to the last number of days: $OPTARG" >&2 					;;
+			echo "Limit the query to the last number of days: $OPTARG" >&2
+			argLimitQueryDays=$OPTARG	;;
 		c)
 			echo "Which IP address makes the most number of connection attempts?" >&2 		;;
 		2)
