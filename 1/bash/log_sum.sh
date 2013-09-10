@@ -36,30 +36,36 @@ argLimitQueryHours=-1
 argLimitQueryDays=-1
 argFilename=""
 
+# Enumeration hack:
+query=-1
+query_c=0
+query_2=1
+query_r=2
+query_F=3
+query_t=4
+query_f=5
+
 # Parse parameters using getopts:
 while getopts ":n:|:h:d:|:c2rFtf" opt; do
 	case $opt in
 		n)
-			echo "Limit the number of results to $OPTARG." >&2
 			argLimitOutput=$OPTARG		;;
 		h)
-			echo "Limit the query to the last number of hours: $OPTARG." >&2
 			argLimitQueryHours=$OPTARG	;;
 		d)
-			echo "Limit the query to the last number of days: $OPTARG" >&2
 			argLimitQueryDays=$OPTARG	;;
 		c)
-			echo "Which IP address makes the most number of connection attempts?" >&2 		;;
+			query=query_c				;;
 		2)
-			echo "Which address makes the most number of successful attempts?" >&2			;;
+			query=query_2				;;
 		r)
-			echo "What are the most common results codes and where do they come from?" >&2	;;
+			query=query_r				;;
 		F)
-			echo "What are the most common result codes that indicate failure (no auth, not found etc) and where do they come from?" >&2 ;;
+			query=query_F				;;
 		t)
-			echo "Which IP number get the most bytes sent to them?" >&2 ;;
+			query=query_t				;;
 		f)
-			echo "Which IP number sends the most bytes to the server <filename> refers to the logfile. If '-' is given as a filename, or no filename is given, then standard input should be read. This enables the script to be used in a pipeline." >&2 ;;
+			query=query_f				;;
 		\?)
 			echo "Invalid option: -$OPTARG." >&2 
 			exit 1 ;;
@@ -69,7 +75,31 @@ done
 # Parse remaining mandatory parameter (filename):
 argFilename=${@:$OPTIND:1}
 
-#echo "Specified filename: $argFilename"
+# When all parameters have been passed, call the specified query:
+# Consider doing some sort of check to see whether or not all required arguments have been passed.
+case $query in
+	query_c)
+		echo "called query_c"
+		;;
+	query_2)
+		echo "called query_2"
+		;;
+	query_r)
+		echo "called query_r"
+		;;
+	query_F)
+		echo "called query_F"
+		;;
+	query_t)
+		echo "called query_t"
+		;;
+	query_f)
+		echo "called query_f"
+		;;
+	\?)
+		echo "Invalid query: $query."
+		exit 1 ;;
+esac
 
 parseLogFile
 
