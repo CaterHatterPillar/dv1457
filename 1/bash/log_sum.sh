@@ -22,6 +22,7 @@ source log_sum_t.sh
 source log_sum_f.sh
 
 source log_parser.sh
+source log_sum_d.sh
 
 echo "log_sum: Script start."
 
@@ -32,8 +33,8 @@ bashtrap() {
 }
 
 argLimitOutput=-1
-argLimitQueryHours=-1
-argLimitQueryDays=-1
+argLimitQueryHours=0
+argLimitQueryDays=0
 argFilename=""
 
 # Enumeration hack:
@@ -75,7 +76,14 @@ done
 # Parse remaining mandatory parameter (filename):
 argFilename=${@:$OPTIND:1}
 
-parseLogFile
+# Read the original file:
+log_read
+
+dateLimit=0
+if [ $argLimitQueryDays -gt 0 -o $argLimitQueryHours -gt 0 ] ; then
+	dateLimit=$(date --date="now -$argLimitQueryDays days -$argLimitQueryHours hours" +%s)
+fi
+log_sort_dates $dateLimit
 
 # When all parameters have been passed, call the specified query:
 # Consider doing some sort of check to see whether or not all required arguments have been passed.
