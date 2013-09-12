@@ -39,10 +39,9 @@ function log_sort_dates() {
 
 		if [ $dateDelta -gt $dateLimit ]
 		then
-			linesSorted+=line
+			linesSorted+=$line
 			echo "$line"
 		fi
-
 	done
 	
 	
