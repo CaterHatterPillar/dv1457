@@ -22,6 +22,7 @@ source log_sum_t.sh
 source log_sum_f.sh
 
 source log_parser.sh
+source log_sum_d.sh
 
 echo "log_sum: Script start."
 
@@ -32,8 +33,8 @@ bashtrap() {
 }
 
 argLimitOutput=-1
-argLimitQueryHours=-1
-argLimitQueryDays=-1
+argLimitQueryHours=0
+argLimitQueryDays=0
 argFilename=""
 
 # Enumeration hack:
@@ -75,6 +76,15 @@ done
 # Parse remaining mandatory parameter (filename):
 argFilename=${@:$OPTIND:1}
 
+# Read the original file:
+log_read
+
+dateLimit=0
+if [ $argLimitQueryDays -gt 0 -o $argLimitQueryHours -gt 0 ] ; then
+	dateLimit=$(date --date="now -$argLimitQueryDays days -$argLimitQueryHours hours" +%s)
+fi
+log_sort_dates $dateLimit
+
 # When all parameters have been passed, call the specified query:
 # Consider doing some sort of check to see whether or not all required arguments have been passed.
 case $query in
@@ -101,12 +111,30 @@ case $query in
 		exit 1 ;;
 esac
 
-parseLogFile
+#OLDIFS=$IFS
+#IFS=$'\n'
+#arr=($(egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' thttpd.log))
+#IFS=$OLDIFS
 
-for ip in "${g_ips[@]}"
-do
-	echo "$ip"
-done
+#hour=$(date +%H)
+#minute=$(date +%M)
+#second=$(date +%S)
+#day=$(date +%d)
+#month=$(date +%b)
+#year=$(date +%Y)
+#curDate="$day/$month/$year"
+#curTime=":$hour:$minute:$second"
+#timeDate="$day/$month/$year:$hour:$minute:$second"
+#echo "$timeDate"
+
+#date -d 'now -2 days -3 hours' 
+
+#for i in "${arr[@]}"
+#do
+#	echo "$i"
+#done
+
+
 
 echo "log_sum: Script end."
 exit 0
