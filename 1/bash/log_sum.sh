@@ -75,38 +75,39 @@ done
 # Parse remaining mandatory parameter (filename):
 argFilename=${@:$OPTIND:1}
 
+parseLogFile
+
 # When all parameters have been passed, call the specified query:
 # Consider doing some sort of check to see whether or not all required arguments have been passed.
 case $query in
 	query_c)
 		echo "called query_c"
+		log_sum_c
 		;;
 	query_2)
+		log_sum_2
 		echo "called query_2"
 		;;
 	query_r)
+		log_sum_r
 		echo "called query_r"
 		;;
 	query_F)
+		log_sum_F
 		echo "called query_F"
 		;;
 	query_t)
+		log_sum_t
 		echo "called query_t"
 		;;
 	query_f)
+		log_sum_f
 		echo "called query_f"
 		;;
 	\?)
 		echo "Invalid query: $query."
 		exit 1 ;;
 esac
-
-parseLogFile
-
-for ip in "${g_ips[@]}"
-do
-	echo "$ip"
-done
 
 echo "log_sum: Script end."
 exit 0
