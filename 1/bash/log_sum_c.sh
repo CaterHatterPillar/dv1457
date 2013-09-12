@@ -1,17 +1,25 @@
 #! /bin/bash
 
-source log_parser.sh
-
 function log_sum_c() {
-	declare -A count
-	max=0
+	for lineSorted in "${linesSorted[@]}"
+	do
+		ip=$(echo $lineSorted | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' )
+		ips+=$ip
 
-	for i in "${g_ips[@]}" ; do
-		if (( ++count[$i] > max )) ; then
-        	max=${count[$i]}
-        	winner=$i
-    	fi
+		#echo $ip
 	done
 
-	echo Most number of connection attempts made by : $winner, $max times.
+	declare -A ipCount
+	ipMax=0
+	ipWin=0
+	for ip in "${ips[@]}" ; do
+		if (( ++ipCount[$ip] > ipMax )) ; then
+			ipMax=${ipCount[$ip]}
+			ipWin=$ip
+		fi
+
+		#echo $ip
+	done
+
+	#echo "The IP sending most queries is $ipWin with $ipMax requests."
 }
