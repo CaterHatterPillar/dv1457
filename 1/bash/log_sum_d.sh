@@ -10,6 +10,7 @@ function log_read() {
 function log_sort_dates() {
 	dateLimit=$1
 
+	linesSorted=()
 	months=('Jan' 'Feb' 'Mar' 'Apr' 'May' 'Jun' 'Jul' 'Aug' 'Sep' 'Okt' 'Nov' 'Dec')
 	monthsNr=(01 02 03 04 05 06 07 08 09 10 11 12)
 
@@ -39,11 +40,7 @@ function log_sort_dates() {
 
 		if [ $dateDelta -gt $dateLimit ]
 		then
-			linesSorted+=$line
+			linesSorted[$[${#linesSorted[@]}+1]]=$line
 		fi
-	done
-
-	for loltemp in "${linesSorted[@]}" ; do
-		echo loltemp
 	done
 }
