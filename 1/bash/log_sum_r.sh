@@ -1,58 +1,48 @@
 #! /bin/bash
 
 function log_sum_r() {
-	# Get all result codes along with their occurences into an associative array:
+	# Get all the occuring result codes, along with their respective number of occurences:
 	resultCount=()
-	for lineSorted in "${linesSorted[@]}"
-	do
+	declare -A resultCountIP
+	for lineSorted in "${linesSorted[@]}" ; do
 		# Retrieve the result code:
-		result=$(echo $lineSorted | egrep -o 'HTTP/1.1" [[:digit:]]{3}' )
+		result=$(echo $lineSorted | egrep -o 'HTTP/[[:digit:]]{1}.[[:digit:]]{1}" [[:digit:]]{3}' )
 		if (( ${#result} > 0 )) ; then # If a result was found.
-			# Get the responsible IP:
-			ip=$(echo $lineSorted | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ' )
-			
 			# Get the code in and of itself:
 			result=$(echo $result | egrep -o '[[:digit:]]{3}')
 
 			# Store the number of occurences of said code:
 			resultCount[$result]=$(expr ${resultCount[$result]} + 1)
 
-			#echo $ip
+			# Get the responsible IP:
+			ip=$(echo $lineSorted | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ' )
+
+			resultIP="$result $ip"
+			resultCountIP[$resultIP]=$(expr ${resultCountIP[$resultIP]} + 1)
 		fi
 	done
 
-	# # Establish the most commonly used result code:
-	# mcurc=-1
-	# mcurcCount=0
-	# for i in "${!resultCount[@]}" ; do
-	# 	if (( ${resultCount[$i]} > $mcurcCount )) ; then
-	# 		mcurcCount=${resultCount[$i]}
-	# 		mcurc=$i
-	# 	fi
-	# done
+	for i in "${!resultCount[@]}"
+	do
+ 		resultCode=$i
+ 		resultCount=${resultCount[$i]}
 
-	# echo "key  : $mcurc"
-	# echo "value: $mcurcCount"
+ 		resultMax=0
+		ipResponsible=0
+		for i in "${!resultCountIP[@]}" ; do
+			count=${resultCountIP[$i]}
+	 		resultIp=$i
+	 		code=$(echo "$resultIp" | cut -d' ' -f1)
+			ip=$(echo "$resultIp" | cut -d' ' -f2-)
+	 		
+	 		if [ "$code" = "$resultCode" ] ; then
+	 			if (( $count > resultMax )) ; then
+	 				resultMax=$count
+	 				ipResponsible=$ip
+	 			fi
+	 		fi
+		done
 
-	# declare -A resultIps
-	# for lineSorted in "${linesSorted[@]}" ; do
-	# 	# Retrieve the result code:
-	# 	result=$(echo $lineSorted | egrep -o 'HTTP/1.1" $mcurc' )
-	# 	result=$(echo $result | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ')
-
-	# 	# Store the number of occurences of said code:
-	# 	#resultIps[$result]=$(expr ${resultIps[$result]} + 1)
-
-	# 	echo $result
-	# done
-
-	#for resultIp in "${resultIps[@]}" ; do
-	#	echo $resultIp
-	#done
+		echo "Result: $resultCode occured $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
+	done
 }
-#HTTP/1.1" 404
-
-# -r: What are the most common results codes and where do they come from?
-
-#resultCodes=()
-#resultCodes[$[${#resultCodes[@]}+1]]=$lineSorted
