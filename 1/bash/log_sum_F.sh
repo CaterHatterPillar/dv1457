@@ -1,8 +1,12 @@
 #! /bin/bash
 
 source log_sum_resultCount.sh
+source log_sum_result.sh
 
 function log_sum_F() {
+	OLDIFS=$IFS
+	IFS=$'\n'
+
 	log_sum_resultCount
 
 	# Load http error codes
@@ -10,6 +14,7 @@ function log_sum_F() {
 
 	errorCode=5
 	notErrorCode=0
+	finalResults=($( 
 	for i in "${!resultCount[@]}" ; do
  		resultCode=$i
  		resultCount=${resultCount[$i]}
@@ -40,5 +45,7 @@ function log_sum_F() {
 
 			echo "Result: $resultCode occurred $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
 		fi
-	done
+	done))
+
+	IFS=$OLDIFS
 }

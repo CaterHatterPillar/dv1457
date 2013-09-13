@@ -1,10 +1,15 @@
 #! /bin/bash
 
 source log_sum_resultCount.sh
+source log_sum_result.sh
 
 function log_sum_r() {
+	OLDIFS=$IFS
+	IFS=$'\n'
+
 	log_sum_resultCount
 
+	finalResults=($(
 	for i in "${!resultCount[@]}" ; do
  		resultCode=$i
  		resultCount=${resultCount[$i]}
@@ -26,5 +31,7 @@ function log_sum_r() {
 		done
 
 		echo "Result: $resultCode occurred $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
-	done
+	done | sort -k12 -n -r ))
+
+	IFS=$OLDIFS
 }
