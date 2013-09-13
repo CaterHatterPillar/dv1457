@@ -1,5 +1,7 @@
 #! /bin/bash
 
+source log_sum_result.sh
+
 function log_sum_c() {
 	declare -A ipsCount
 	for lineSorted in "${linesSorted[@]}"
@@ -8,12 +10,13 @@ function log_sum_c() {
 		ipsCount[$ip]=$(expr ${ipsCount[$ip]} + 1)
 	done
 
-	for i in "${!ipsCount[@]}" ; do
+	OLDIFS=$IFS
+	IFS=$'\n'
+	finalResults=($(for i in "${!ipsCount[@]}" ; do
 		ipCount=${ipsCount[$i]}
 	 	ip=$i
 
 	 	echo -e "$ip \t $ipCount"
-	done | sort -k2 -n -r
-
-	#echo "The IP sending most queries is $ipWin with $ipMax requests."
+	done | sort -k2 -n -r))
+	IFS=$OLDIFS
 }
