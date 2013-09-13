@@ -68,7 +68,7 @@ while getopts ":n:|:h:d:|:c2rFtf" opt; do
 		f)
 			query=query_f				;;
 		\?)
-			echo "Invalid option: -$OPTARG." >&2 
+			echo "log_sum: Invalid option: -$OPTARG." >&2 
 			exit 1 ;;
 	esac
 done
@@ -89,31 +89,31 @@ log_sort_dates $dateLimit
 # Consider doing some sort of check to see whether or not all required arguments have been passed.
 case $query in
 	query_c)
-		echo "called query_c:"
+		echo "log_sum: called query_c:"
 		log_sum_c
 		;;
 	query_2)
 		log_sum_2
-		echo "called query_2:"
+		echo "log_sum: called query_2:"
 		;;
 	query_r)
 		log_sum_r
-		echo "called query_r:"
+		echo "log_sum: called query_r:"
 		;;
 	query_F)
 		log_sum_F
-		echo "called query_F:"
+		echo "log_sum: called query_F:"
 		;;
 	query_t)
 		log_sum_t
-		echo "called query_t:"
+		echo "log_sum: called query_t:"
 		;;
 	query_f)
 		log_sum_f
-		echo "called query_f:"
+		echo "log_sum: called query_f:"
 		;;
 	\?)
-		echo "Invalid query: $query."
+		echo "log_sum: Invalid query: $query."
 		exit 1 ;;
 esac
 
