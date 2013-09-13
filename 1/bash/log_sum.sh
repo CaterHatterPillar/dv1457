@@ -109,6 +109,7 @@ case $query in
 		exit 1 ;;
 esac
 
+# Print final results:
 lineCount=0
 for print in "${finalResults[@]}" ; do
 	if [ $lineCount -ge $argLimitOutput ] ; then
