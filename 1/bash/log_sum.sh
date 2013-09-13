@@ -30,7 +30,7 @@ bashtrap() {
 	echo "log_sum: Script force quit. Execution was interrupted."
 }
 
-argLimitOutput=-1
+argLimitOutput=9999999
 argLimitQueryHours=0
 argLimitQueryDays=0
 argFilename=""
@@ -108,5 +108,16 @@ case $query in
 		echo "log_sum: Invalid query: $query."
 		exit 1 ;;
 esac
+
+# Print final results:
+lineCount=0
+for print in "${finalResults[@]}" ; do
+	if [ $lineCount -ge $argLimitOutput ] ; then
+		exit 0
+	fi
+
+	echo -e "$print"
+	lineCount=$(expr $lineCount + 1)
+done
 
 exit 0
