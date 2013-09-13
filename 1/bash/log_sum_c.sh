@@ -1,11 +1,11 @@
 #! /bin/bash
 
 function log_sum_c() {
-	ips=()
+	declare -A ipsCount
 	for lineSorted in "${linesSorted[@]}"
 	do
 		ip=$(echo $lineSorted | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ' )
-		ips[$[${#ips[@]}+1]]=$ip
+		ipsCount[$ip]=$(expr ${ipsCount[$ip]} + 1)
 	done
 
 	for i in "${!ipsCount[@]}" ; do
@@ -14,4 +14,6 @@ function log_sum_c() {
 
 	 	echo -e "$ip \t $ipCount"
 	done | sort -k2 -n -r
+
+	#echo "The IP sending most queries is $ipWin with $ipMax requests."
 }
