@@ -7,8 +7,12 @@
 #
 
 source log_sum_d.sh
+source log_sum_result.sh
 
 function log_sum_2() {
+
+	OLDIFS=$IFS
+	IFS=$'\n'
 
 	#Find all ip-adresses that have a successfull status code.
 	ipIndex=0
@@ -35,9 +39,11 @@ function log_sum_2() {
 	done
 
 	#Print results and send output thruogh sort to get them in numerical order.
-	for i in "${!ipCount[@]}"
+	finalResults=($(for i in "${!ipCount[@]}"
 	do
 		echo "IP: $ip 	Successfull attempts: ${ipCount[$i]}"
-	done | sort -k5 -n -r
+	done | sort -k5 -n -r))
 	#Sort by fith column in output due to a tab between $ip and Successfull.
+
+	IFS=$OLDIFS
 }

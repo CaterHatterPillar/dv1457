@@ -8,6 +8,8 @@ source log_sum_result.sh
 
 function log_sum_t() {
 
+	OLDIFS=$IFS
+	IFS=$'\n'
 	index=0
 	for line in "${linesSorted[@]}" ; do
 		numBytes=$(echo $line | grep 'GET\|HEAD\|TRACE\|OPTIONS\|CONNECT' | egrep -o ' [[:digit:]]{3} [[:digit:]]{1,} ')
@@ -20,15 +22,10 @@ function log_sum_t() {
 			index=$(expr $index + 1)
 		fi
 	done
+	
+	finalResults=($(for result in "${results[@]}" ; do
+		echo -e "$result"
+	done | sort -k2 -n -r | uniq))
 
-	t_header=("IP Address: \t Number of bytes:")
-	t_results=$(for result in "${results[@]}" ; do
-		echo -e $result
-	done | sort -k2 -n -r | uniq)
-
-	finalResults=("${t_header[@]}" "${t_results[@]}")
-
-	for i in "${finalResults[@]}" ; do
-		echo -e "$i"
-	done
+	IFS=$OLDIFS
 }

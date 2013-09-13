@@ -1,7 +1,12 @@
 #! /bin/bash
 
+source log_sum_result.sh
+
 function log_sum_f() {
 	
+	OLDIFS=$IFS
+	IFS=$'\n'
+
 	index=0
 	for line in "${linesSorted[@]}" ; do
 		numBytes=$(echo $line | grep 'PUT\|POST\|PATCH' | egrep -o ' [[:digit:]]{3} [[:digit:]]{1,} ')
@@ -15,8 +20,9 @@ function log_sum_f() {
 		fi
 	done
 
-	echo -e "IP Address: \t Number of bytes:"
-	for result in "${results[@]}" ; do
-		echo -e $result
-	done | sort -k2 -n -r | uniq
+	finalResults=($(for result in "${results[@]}" ; do
+		echo -e "$result"
+	done | sort -k2 -n -r | uniq))
+
+	IFS=$OLDIFS
 }
