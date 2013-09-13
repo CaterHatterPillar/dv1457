@@ -1,3 +1,3 @@
 #! /bin/bash
 
-declare -r finalResults
+declare -a finalResults
