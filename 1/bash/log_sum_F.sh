@@ -38,7 +38,7 @@ function log_sum_F() {
 	 			fi
 			done
 
-			echo "Result: $resultCode occured $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
+			echo "Result: $resultCode occurred $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
 		fi
 	done
 }

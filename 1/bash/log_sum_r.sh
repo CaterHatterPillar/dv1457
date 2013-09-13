@@ -25,6 +25,6 @@ function log_sum_r() {
 	 		fi
 		done
 
-		echo "Result: $resultCode occured $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
+		echo "Result: $resultCode occurred $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
 	done
 }
