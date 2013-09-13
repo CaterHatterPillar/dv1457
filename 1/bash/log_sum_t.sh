@@ -4,6 +4,8 @@
 #Which IP gets the most bytes sent to them.
 #
 
+source log_sum_result.sh
+
 function log_sum_t() {
 
 	index=0
@@ -19,8 +21,14 @@ function log_sum_t() {
 		fi
 	done
 
-	echo -e "IP Address: \t Number of bytes:"
-	for result in "${results[@]}" ; do
+	t_header=("IP Address: \t Number of bytes:")
+	t_results=$(for result in "${results[@]}" ; do
 		echo -e $result
-	done | sort -k2 -n -r | uniq
+	done | sort -k2 -n -r | uniq)
+
+	finalResults=("${t_header[@]}" "${t_results[@]}")
+
+	for i in "${finalResults[@]}" ; do
+		echo -e "$i"
+	done
 }
