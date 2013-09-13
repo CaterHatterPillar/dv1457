@@ -14,7 +14,7 @@ function log_sum_2() {
 	ipIndex=0
 	for line in "${linesSorted[@]}"
 	do
-		ip=$(echo $line | grep ' 200 ' | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ')
+		ip=$(echo $line | egrep ' 2[[:digit:]]{2} ' | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ')
 		if [ ${#ip} -gt 1 ]
 		then
 			ips[$ipIndex]=$ip
@@ -37,7 +37,7 @@ function log_sum_2() {
 	#Print results and send output thruogh sort to get them in numerical order.
 	for i in "${!ipCount[@]}"
 	do
-		echo "IP: $ip 	Successfull connections: ${ipCount[$i]}"
+		echo "IP: $ip 	Successfull attempts: ${ipCount[$i]}"
 	done | sort -k5 -n -r
 	#Sort by fith column in output due to a tab between $ip and Successfull.
 }
