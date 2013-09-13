@@ -8,16 +8,10 @@ function log_sum_c() {
 		ips[$[${#ips[@]}+1]]=$ip
 	done
 
-	declare -A ipCount
-	ipMax=0
-	ipWin=0
-	for ip in "${ips[@]}" ; do
-		ipCount[$ip]=$(expr ${ipCount[$ip]} + 1)
-		if (( ${ipCount[$ip]} > ipMax )) ; then
-			ipMax=${ipCount[$ip]}
-			ipWin=$ip
-		fi
-	done
+	for i in "${!ipsCount[@]}" ; do
+		ipCount=${ipsCount[$i]}
+	 	ip=$i
 
-	echo "The IP sending most queries is $ipWin with $ipMax requests."
+	 	echo -e "$ip \t $ipCount"
+	done | sort -k2 -n -r
 }
