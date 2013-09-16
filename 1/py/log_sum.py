@@ -1,16 +1,20 @@
 #! /usr/bin/python -tt
 
-import getopt, sys
+import sys
+import getopt
 
-import main
-from main import *
+import time
+import datetime
 
 import log_sum_queries
 from log_sum_queries import Queries
+import log_sum_filter
+from log_sum_filter import log_sum_filter
 
 # How to call the script:
 # ---
 # log_sum(.sh|.py) [-n N] [-h H|-d D] [-c|-2|-r|-F|-t|-f] <filename>
+# Use Python 3.4 or above.
 # ---
 # -n: Limit the number of results to N.
 # -h: Limit the query to the last number of hours (< 24).
@@ -27,18 +31,22 @@ from log_sum_queries import Queries
 try:
 	opts, args = getopt.getopt( sys.argv[1:], ":n:|:h:d:|:c2rFtf" )
 except getopt.GetoptError as err:
-	print(err) # will print something like "option -a not recognized"
-	sys.exit(2)
+	print( err ) # will print something like "option -a not recognized"
+	sys.exit( 2 )
 
 q = Queries.Queries_NA
+date = datetime.datetime.now()
 
 # Interpret arguments parsed to script:
 for opt, arg in opts:
 	if opt == "-n":
-		print("log_sum: Arglimit")
-	if opt in ("-h", "-d"):
-		print("log_sum: Timelimit")
-	if opt in ("-c", "-2", "-r", "-F", "-t", "-f"):
+		print( "log_sum: Arglimit" )
+	if opt in ( "-h", "-d" ):
+		if opt == "-h": # Now - Hours
+			date = date + datetime.timedelta( hours = -int(arg) )
+		elif opt == "-d": # Now - Days
+			date = date + datetime.timedelta( days = -int(arg) )
+	if opt in ( "-c", "-2", "-r", "-F", "-t", "-f" ):
 		if opt == "-c":
 			q = Queries.Queries_c
 		elif opt == "-2":
@@ -52,11 +60,7 @@ for opt, arg in opts:
 		elif opt == "-f":
 			q = Queries.Queries_f
 
-		print("log_sum: Query")
+# Filter the input according to date:
+src = log_sum_filter( "thttpd.log", date ) #Temp, this ought to be read as a parameter
 
-print(q)
-
-# Send arguments to main
-main()
-
-sys.exit(0)
+sys.exit( 0 )

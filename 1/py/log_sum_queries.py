@@ -1,5 +1,7 @@
 #! /usr/bin/python -tt
 
+from enum import Enum
+
 class Queries(Enum):
 	Queries_NA = 0
 	Queries_c = 1 # -c: Which IP address makes the most number of connection attempts?
