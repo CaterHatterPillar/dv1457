@@ -6,10 +6,14 @@ import getopt
 import time
 import datetime
 
-import log_sum_queries
-from log_sum_queries import Queries
 import log_sum_filter
 from log_sum_filter import log_sum_filter
+
+# Queries:
+import log_sum_queries
+from log_sum_queries import Queries
+import log_sum_c
+from log_sum_c import log_sum_c
 
 # How to call the script:
 # ---
@@ -30,8 +34,8 @@ from log_sum_filter import log_sum_filter
 # Parse arguments using getopt:
 try:
 	opts, args = getopt.getopt( sys.argv[1:], ":n:|:h:d:|:c2rFtf" )
-except getopt.GetoptError as err:
-	print( err ) # will print something like "option -a not recognized"
+except getopt.GetoptError as e:
+	print( e )
 	sys.exit( 2 )
 
 q = Queries.Queries_NA
@@ -62,5 +66,10 @@ for opt, arg in opts:
 
 # Filter the input according to date:
 src = log_sum_filter( "thttpd.log", date ) #Temp, this ought to be read as a parameter
+
+# Call the specified query:
+results=[]
+if q == Queries.Queries_c:
+	log_sum_c( src, results )
 
 sys.exit( 0 )

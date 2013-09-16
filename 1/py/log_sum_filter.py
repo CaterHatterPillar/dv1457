@@ -6,8 +6,8 @@ import sys
 import time
 import datetime
 
-# Date format: 31/Mar/2002:19:50:45 +0200
-filterDate = "[0-9]{2}/[a-zA-Z]{3}/[0-9]{4}:[0-9]{2}:[0-9]{2}:[0-9]{2} \+[0-9]{4}"
+import log_sum_const
+from log_sum_const import *
 
 monthToInt = { 
 	'Jan' : '01',
@@ -48,5 +48,6 @@ def log_sum_filter( filename, date ):
 				int( dteMinute				),
 				int( dteSec					) ) 
 			if( (dteObj - date).total_seconds() > 0 ):
-				srcFiltered.append( dteObj )
+				srcFiltered.append( line )
+
 	return srcFiltered
