@@ -8,9 +8,6 @@ import log_sum_const
 from log_sum_const import *
 
 def log_sum_c( src, results ):
-	# Define title:
-	results.append( "Attempts:\tIP:" )
-
 	ipsCount = {}
 	for line in src:
 		mo = re.search( filterIP, str(line) )

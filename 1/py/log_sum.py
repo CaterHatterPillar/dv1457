@@ -14,6 +14,8 @@ import log_sum_queries
 from log_sum_queries import Queries
 import log_sum_c
 from log_sum_c import log_sum_c
+import log_sum_2
+from log_sum_2 import log_sum_2
 
 # How to call the script:
 # ---
@@ -71,12 +73,17 @@ src = log_sum_filter( "thttpd.log", date ) #Temp, this ought to be read as a par
 # Call the specified query:
 results=[]
 if q == Queries.Queries_c:
+	results.append( "Connection attempts:" )
 	log_sum_c( src, results )
+elif q == Queries.Queries_2:
+	results.append( "Sucessful connection attempts:" )
+	log_sum_2( src, results )
 
-# Print title (always defined): 
-print( results[0] )
-printLimit = min( len(results), printLimit)
-for i in range( 1, printLimit + 1 ): # First position in array reserved as title.
-	print( results[i] )
+i = 0
+for line in results:
+	if i >= printLimit:
+		break
+	print( line )
+	i += 1
 
 sys.exit( 0 )
