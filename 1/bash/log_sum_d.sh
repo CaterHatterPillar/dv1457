@@ -1,12 +1,14 @@
 
-function log_read() {
+function log_sum_read() {
+	filename=$1
+
 	OLDIFS=$IFS
 	IFS=$'\n'
-	lines=($(grep '' thttpd.log))	
+	lines=($(grep '' $filename))	
 	IFS=$OLDIFS
 }
 
-function log_sort_dates() {
+function log_sum_d() {
 	dateLimit=$1
 
 	linesSorted=()
