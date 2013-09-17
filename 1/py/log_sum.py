@@ -1,28 +1,5 @@
 #! /usr/bin/python -tt
 
-import sys
-import getopt
-
-import time
-import datetime
-
-import log_sum_filter
-from log_sum_filter import log_sum_filter
-
-# Queries:
-import log_sum_queries
-from log_sum_queries import Queries
-import log_sum_c
-from log_sum_c import log_sum_c
-import log_sum_2
-from log_sum_2 import log_sum_2
-import log_sum_r
-from log_sum_r import log_sum_r
-import log_sum_F
-from log_sum_F import log_sum_F
-import log_sum_t
-from log_sum_t import log_sum_t
-
 # How to call the script:
 # ---
 # log_sum(.sh|.py) [-n N] [-h H|-d D] [-c|-2|-r|-F|-t|-f] <filename>
@@ -38,6 +15,30 @@ from log_sum_t import log_sum_t
 # -t: Which IP number get the most bytes sent to them?
 # -f: Which IP number sends the most bytes to the server <filename> refers to the logfile. If '-' is given as a filename, or no filename is given, then standard input should be read. This enables the script to be used in a pipeline.
 
+import sys
+import getopt
+
+import time
+import datetime
+
+import log_sum_filter
+from log_sum_filter import *
+
+# Queries:
+import log_sum_queries
+from log_sum_queries import Queries
+import log_sum_c
+from log_sum_c import log_sum_c
+import log_sum_2
+from log_sum_2 import log_sum_2
+import log_sum_r
+from log_sum_r import log_sum_r
+import log_sum_F
+from log_sum_F import log_sum_F
+import log_sum_t
+from log_sum_t import log_sum_t
+import log_sum_f
+from log_sum_f import log_sum_f
 
 # Parse arguments using getopt:
 try:
@@ -74,25 +75,28 @@ for opt, arg in opts:
 			q = Queries.Queries_f
 
 # Filter the input according to date:
-src = log_sum_filter( "thttpd.log", date ) #Temp, this ought to be read as a parameter
+src = log_sum_filterDate( "thttpd.log", date ) #Temp, this ought to be read as a parameter
 
 # Call the specified query:
 results=[]
 if q == Queries.Queries_c:
 	results.append( "Connection attempts:" )
-	log_sum_c( src, results )
+	log_sum_c( log_sum_filterQueries( src, ["GET"] ), results )	# Allow only GET-queries.
 elif q == Queries.Queries_2:
 	results.append( "Connection attempts indicating success:" )
-	log_sum_2( src, results )
+	log_sum_2( log_sum_filterQueries( src, ["GET"] ), results )	# Allow only GET-queries.
 elif q == Queries.Queries_r:
 	results.append( "Common response codes:" )
-	log_sum_r( src, results )
+	log_sum_r( log_sum_filterQueries( src, httpQueries ), results )	# Allow all HTTP-queries.
 elif q == Queries.Queries_F:
 	results.append( "Common response codes indicating error:" )
-	log_sum_F( src, results )
+	log_sum_F( log_sum_filterQueries( src, httpQueries ), results )	# Allow all HTTP-queries.
 elif q == Queries.Queries_t:
 	results.append( "IPs recieving the highest amount of bytes:" )
-	log_sum_t( src, results )
+	log_sum_t( log_sum_filterQueries( src, httpQueries ), results )	# Allow all HTTP-queries.
+elif q == Queries.Queries_f:
+	results.append( "IPs sending the highest amount of bytes:" )
+	log_sum_f( log_sum_filterQueries( src, ["PUT", "POST"] ), results )	# Allow only PUT- and POST-queries.
 
 # Print results:
 i = 0

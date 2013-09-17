@@ -23,7 +23,7 @@ monthToInt = {
 	'Nov' : '11',
 	'Dec' : '12' }
 
-def log_sum_filter( filename, date ):
+def log_sum_filterDate( filename, date ):
 	srcFiltered=[]
 
 	src = open( filename, 'r' ) # r for readonly?
@@ -51,3 +51,14 @@ def log_sum_filter( filename, date ):
 				srcFiltered.append( line )
 
 	return srcFiltered
+
+def log_sum_filterQueries( src, queries ):
+	filteredQueries = []
+	for line in src:
+		mo = re.search( filterHttpQuery, str(line) )
+		if mo: # Effectively filters anything that isn't an HTTP-query.
+			query = mo.string[ mo.start(0):mo.end(0) ]
+			if query in queries:
+				filteredQueries.append( line )
+
+	return filteredQueries

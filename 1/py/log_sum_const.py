@@ -13,6 +13,18 @@ filterResultExt = "HTTP/[0-9]{1}\.[0-9]{1}\" [0-9]{3}"
 # Nr of bytes sent format: HTTP/1.1" 200 2936
 filterBytesSent = " [0-9]{3} [0-9]{1,}"
 
+# HTTP Query format: "GET 
+filterHttpQuery = "GET|HEAD|PUT|POST|DELETE|LINK|UNLINK"
+
+httpQueries = [
+	"GET", 		# Request to read a Web page
+	"HEAD", 	# Request to read a Web page
+	"PUT", 		# Request to write a Web page
+	"POST", 	# Append to a named resource (e.g. a Web page)
+	"DELETE", 	# Remove the Web page
+	"LINK", 	# Connects two existing resources
+	"UNLINK" ]
+
 httpError = [
 	# HTTP ERROR CLIENT
 	400,
