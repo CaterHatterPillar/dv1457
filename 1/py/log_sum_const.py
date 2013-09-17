@@ -10,6 +10,9 @@ filterIP = "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"
 filterResult = "[0-9]{3}"
 filterResultExt = "HTTP/[0-9]{1}\.[0-9]{1}\" [0-9]{3}"
 
+# Nr of bytes sent format: HTTP/1.1" 200 2936
+filterBytesSent = " [0-9]{3} [0-9]{1,}"
+
 httpError = [
 	# HTTP ERROR CLIENT
 	400,

@@ -20,6 +20,8 @@ import log_sum_r
 from log_sum_r import log_sum_r
 import log_sum_F
 from log_sum_F import log_sum_F
+import log_sum_t
+from log_sum_t import log_sum_t
 
 # How to call the script:
 # ---
@@ -88,6 +90,9 @@ elif q == Queries.Queries_r:
 elif q == Queries.Queries_F:
 	results.append( "Common response codes indicating error:" )
 	log_sum_F( src, results )
+elif q == Queries.Queries_t:
+	results.append( "IPs recieving the highest amount of bytes:" )
+	log_sum_t( src, results )
 
 # Print results:
 i = 0
