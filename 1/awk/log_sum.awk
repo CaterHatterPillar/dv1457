@@ -1,6 +1,7 @@
 
 @include log_sum_c.awk
 @include log_sum_2.awk
+@include log_sum_r.awk
 @include log_sum_time.awk
 
 BEGIN {
@@ -52,6 +53,8 @@ BEGIN {
 			log_sum_c();
 		if(arg_2 > 0)
 			log_sum_2();
+		if(arg_r > 0)
+			log_sum_r();
 	}
 }
 END {
@@ -59,6 +62,8 @@ END {
 		display_c_results(displayLimit);
 	if(arg_2 > 0)
 		display_2_results(displayLimit);
+	if(arg_r > 0)
+		display_r_results(displayLimit);
 
 	print "Script end!";
 	exit 0;
