@@ -1,5 +1,6 @@
 
 @include log_sum_c.awk
+@include log_sum_2.awk
 @include log_sum_time.awk
 
 BEGIN {
@@ -26,7 +27,7 @@ BEGIN {
 			hourLimit = extractArgValue(ARGV[i]);
 		else if( extractArgId(ARGV[i]) == "c")
 			arg_c = extractArgValue(ARGV[i]);
-		else if( extractArgId(ARGV[i]) == "2")
+		else if( extractArgId(ARGV[i]) == "s")
 			arg_2 = extractArgValue(ARGV[i]);
 		else if( extractArgId(ARGV[i]) == "r")
 			arg_r = extractArgValue(ARGV[i]);
@@ -49,11 +50,15 @@ BEGIN {
 	{	
 		if(arg_c > 0)
 			log_sum_c();
+		if(arg_2 > 0)
+			log_sum_2();
 	}
 }
 END {
 	if(arg_c > 0)
-		display_c_results(displayLimit)
+		display_c_results(displayLimit);
+	if(arg_2 > 0)
+		display_2_results(displayLimit);
 
 	print "Script end!";
 	exit 0;
