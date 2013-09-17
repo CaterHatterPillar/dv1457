@@ -16,6 +16,8 @@ import log_sum_c
 from log_sum_c import log_sum_c
 import log_sum_2
 from log_sum_2 import log_sum_2
+import log_sum_r
+from log_sum_r import log_sum_r
 
 # How to call the script:
 # ---
@@ -78,10 +80,14 @@ if q == Queries.Queries_c:
 elif q == Queries.Queries_2:
 	results.append( "Sucessful connection attempts:" )
 	log_sum_2( src, results )
+elif q == Queries.Queries_r:
+	results.append( "Common response codes:" )
+	log_sum_r( src, results )
 
+# Print results:
 i = 0
 for line in results:
-	if i >= printLimit:
+	if i > printLimit:
 		break
 	print( line )
 	i += 1
