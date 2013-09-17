@@ -40,11 +40,12 @@ except getopt.GetoptError as e:
 
 q = Queries.Queries_NA
 date = datetime.datetime.now()
+printLimit = sys.maxsize
 
 # Interpret arguments parsed to script:
 for opt, arg in opts:
 	if opt == "-n":
-		print( "log_sum: Arglimit" )
+		printLimit = int( arg )
 	if opt in ( "-h", "-d" ):
 		if opt == "-h": # Now - Hours
 			date = date + datetime.timedelta( hours = -int(arg) )
@@ -71,5 +72,11 @@ src = log_sum_filter( "thttpd.log", date ) #Temp, this ought to be read as a par
 results=[]
 if q == Queries.Queries_c:
 	log_sum_c( src, results )
+
+# Print title (always defined): 
+print( results[0] )
+printLimit = min( len(results), printLimit)
+for i in range( 1, printLimit + 1 ): # First position in array reserved as title.
+	print( results[i] )
 
 sys.exit( 0 )

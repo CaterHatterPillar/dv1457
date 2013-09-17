@@ -2,11 +2,15 @@
 
 import re
 import sys
+import operator
 
 import log_sum_const
 from log_sum_const import *
 
 def log_sum_c( src, results ):
+	# Define title:
+	results.append( "Attempts:\tIP:" )
+
 	ipsCount = {}
 	for line in src:
 		mo = re.search( filterIP, str(line) )
@@ -16,23 +20,7 @@ def log_sum_c( src, results ):
 				ipsCount[ip] = ipsCount[ip] + 1
 			else:
 				ipsCount[ip] = 1
-	for ip in ipsCount:
-		print( ip + ": \t" + str(ipsCount[ip]) )
 
-
-# declare -A ipsCount
-# 	for lineSorted in "${linesSorted[@]}"
-# 	do
-# 		ip=$(echo $lineSorted | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ' )
-# 		ipsCount[$ip]=$(expr ${ipsCount[$ip]} + 1)
-# 	done
-
-# 	OLDIFS=$IFS
-# 	IFS=$'\n'
-# 	finalResults=($(for i in "${!ipsCount[@]}" ; do
-# 		ipCount=${ipsCount[$i]}
-# 	 	ip=$i
-
-# 	 	echo -e "$ip \t $ipCount"
-# 	done | sort -k2 -n -r))
-# 	IFS=$OLDIFS
+	# Store results
+	for ip in sorted( ipsCount, key = ipsCount.get, reverse = True ):
+		results.append( str(ipsCount[ip]) + "\t" + ip )
