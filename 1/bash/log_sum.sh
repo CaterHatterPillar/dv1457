@@ -21,7 +21,6 @@ source log_sum_F.sh
 source log_sum_t.sh
 source log_sum_f.sh
 
-source log_parser.sh
 source log_sum_d.sh
 
 # Establish bashtrap used to escape application in case of murderous goblins and/or psychotic mystics:
