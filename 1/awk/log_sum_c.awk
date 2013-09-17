@@ -14,7 +14,7 @@ function display_c_results(limit)
 	if((limit+0) < 0)
 		limit = resSize;
 
-	print "Ip Address: \t Connections:"
+	print "Connections: \t Ip Address:"
 	for(i=0; i<(limit+0); i++)
 		print res[i];
 }
@@ -40,12 +40,3 @@ function sortAssociativeArrayValue(source, dest)
 	}
 	return destSize;
 }
-
-function tst(source, limit)
-{
-	print "Ip Address: \t Connections:"
-	for(i=0; i<limit; i++)
-		print source[i];	
-}
-
-
