@@ -10,35 +10,12 @@ function log_sum_c()
 
 function display_c_results(limit)
 {
-	#tmp[1]="0 0.0.0.0";
-	#tmpSize=1;
-	#for(ip in c_results)
-	#{
-	#	for(tmpIndex=1; tmpIndex<=tmpSize; tmpIndex++)
-	#	{
-	#		split(tmp[tmpIndex], values, " ")
-	#		if((c_results[ip]+0) >= (values[1]+0))
-	#		{
-	#			for(i=tmpSize; i>=tmpIndex; i--)
-	#				tmp[i+1] = tmp[i];
-	#			tmp[tmpIndex] = sprintf("%s %s", c_results[ip], ip);
-	#			break;
-	#		}
-	#	}
-	#	tmpSize++;
-	#}
-
-	#if((limit+0) < 0)
-	#	limit = tmpSize;
-
-	#tst(tmp, limit);
-
 	resSize = sortAssociativeArrayValue(c_results, res)
 	if((limit+0) < 0)
 		limit = resSize;
 
 	print "Ip Address: \t Connections:"
-	for(i=0; i<limit; i++)
+	for(i=0; i<(limit+0); i++)
 		print res[i];
 }
 

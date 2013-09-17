@@ -1,6 +1,6 @@
 
 @include log_sum_c.awk
-@include log_sum_date.awk
+@include log_sum_time.awk
 
 BEGIN {
 	print "Script begining!";
