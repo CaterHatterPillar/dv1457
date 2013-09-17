@@ -6,5 +6,8 @@ import sys
 import log_sum_const
 from log_sum_const import *
 
+import log_sum_t
+from log_sum_t import log_sum_t
+
 def log_sum_f( src, results ):
-	print( "log_sum_f has not yet been implemented." )
+	log_sum_t( src, results )
