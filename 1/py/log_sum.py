@@ -50,6 +50,7 @@ except getopt.GetoptError as e:
 q = Queries.Queries_NA
 date = datetime.datetime.now()
 printLimit = sys.maxsize
+filename = ""
 
 # Interpret arguments parsed to script:
 for opt, arg in opts:
@@ -74,8 +75,14 @@ for opt, arg in opts:
 		elif opt == "-f":
 			q = Queries.Queries_f
 
+# Get the last argument (filename):
+filename = sys.argv[-1] # HACK
+
+# Load the specified file:
+src = open( filename, 'r' ) # r for readonly?
+
 # Filter the input according to date:
-src = log_sum_filterDate( "thttpd.log", date ) #Temp, this ought to be read as a parameter
+src = log_sum_filterDate( src, date ) #Temp, this ought to be read as a parameter
 
 # Call the specified query:
 results=[]

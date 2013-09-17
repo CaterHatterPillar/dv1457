@@ -23,10 +23,9 @@ monthToInt = {
 	'Nov' : '11',
 	'Dec' : '12' }
 
-def log_sum_filterDate( filename, date ):
+def log_sum_filterDate( src, date ):
 	srcFiltered=[]
 
-	src = open( filename, 'r' ) # r for readonly?
 	for line in src:
 		# Filter any lines that do not contain a date (all queries should):
 		mo = re.search( filterDate, line )
