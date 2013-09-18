@@ -3,16 +3,38 @@ r_results[0]=0;
 
 function log_sum_r()
 {
-	r_results[statusCode]++;
+	r_results[sprintf("%s %s", ip, statusCode)]++;
 }
 
 function display_r_results(limit)
 {
-	resSize = sortAssociativeArrayValue(r_results, res)
-	if((limit+0) < 0)
-		limit = resSize;
+	num = sortAssociativeArrayValue(r_results, tmp)
+	num = findUniqueCodes(tmp, num, res);
 
-	print "Nr: \t Codes:"
-	for(i=0; i<(limit+0); i++)
+	for(i=1; i<=num; i++)
 		print res[i];
+}
+
+function findUniqueCodes(source, sourceSize, res)
+{
+	resSize=1;
+	res[resSize] = source[1];
+	for(sourceIdx=1; sourceIdx<=sourceSize; sourceIdx++)
+	{
+		split(source[sourceIdx], sourceSplit, " ");
+		
+		codeFound=0;
+		for(resIdx=1; resIdx<=resSize; resIdx++)
+		{
+			split(res[resIdx], resSplit, " ");
+			if(resSplit[3] == sourceSplit[3])
+				codeFound = 1;
+		}
+		if(codeFound == 0)
+		{
+			resSize++;
+			res[resSize] = source[sourceIdx];
+		}
+	}
+	return resSize;
 }
