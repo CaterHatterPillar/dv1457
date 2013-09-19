@@ -23,7 +23,7 @@ function display_F_results(limit)
 	for(i=1; i<=(limit+0); i++)
 	{
 		split(res[i], values, " ")
-		print values[2], "\t", values[1];
+		print values[2], "\t", values[3];
 	}
 	print ""
 }
