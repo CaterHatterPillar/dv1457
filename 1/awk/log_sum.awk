@@ -2,10 +2,14 @@
 @include log_sum_c.awk
 @include log_sum_2.awk
 @include log_sum_r.awk
+@include log_sum_F.awk
+@include log_sum_t.awk
+@include log_sum_f.awk
+@include log_sum_data.awk
 @include log_sum_time.awk
+@include log_sum_util.awk
 
 BEGIN {
-	print "Script begining!";
 
 	displayLimit=-1;
 	dayLimit=0;
@@ -55,6 +59,12 @@ BEGIN {
 			log_sum_2();
 		if(arg_r > 0)
 			log_sum_r();
+		if(arg_F > 0)
+			log_sum_F();
+		if(arg_t > 0)
+			log_sum_t();
+		if(arg_f > 0)
+			log_sum_f();
 	}
 }
 END {
@@ -64,14 +74,23 @@ END {
 		display_2_results(displayLimit);
 	if(arg_r > 0)
 		display_r_results(displayLimit);
+	if(arg_F > 0)
+		display_F_results(displayLimit);
+	if(arg_t > 0)
+		display_t_results(displayLimit);
+	if(arg_f > 0)
+		display_f_results(displayLimit);
 
-	print "Script end!";
 	exit 0;
 }
 
 function extractArgId(argStr)
 {	
-	return substr(argStr, 1, 1); 
+	argId = "-"
+	if(substr(argStr, 2, 1) == "=")
+	argId = substr(argStr, 1, 1); 
+
+	return argId;
 }
 function extractArgValue(argStr)
 {

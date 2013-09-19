@@ -14,10 +14,18 @@ function log_sum_2()
 function display_2_results(limit)
 {
 	resSize = sortAssociativeArrayValue(two_results, res)
+	
+	if((limit+0) > (resSize+0))
+		limit = resSize;
 	if((limit+0) < 0)
 		limit = resSize;
 
-	print "Attempts: \t Ip Address:"
-	for(i=0; i<(limit+0); i++)
-		print res[i];
+	print "Number of successful conection attempts."
+	print "Ip Address: \t Connection attempts:"
+	for(i=1; i<=(limit+0); i++)
+	{
+		split(res[i], values, " ")
+		print values[2], "\t", values[1];
+	}
+	print "";
 }
