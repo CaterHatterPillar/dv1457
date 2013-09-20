@@ -15,33 +15,20 @@ function log_sum_2() {
 	IFS=$'\n'
 
 	#Find all ip-adresses that have a successfull status code.
-	ipIndex=0
+	declare -A ips
 	for line in "${linesSorted[@]}"
 	do
-		ip=$(echo $line | egrep ' 2[[:digit:]]{2} ' | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ')
+		ip=$(echo $line | egrep 'HTTP/[[:digit:]]{1}\.[[:digit:]]{1}\" 2[[:digit:]]{2} ' | egrep -o '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3} ')
 		if [ ${#ip} -gt 1 ]
 		then
-			ips[$ipIndex]=$ip
-			ipIndex=$(expr $ipIndex + 1)
-		fi
-	done
-
-	#Count number of times each ip-adress occurs.
- 	declare -A ipCount
-	ipMax=0
-	ipWin=0
-	for ip in "${ips[@]}" ; do
-		ipCount[$ip]=$(expr ${ipCount[$ip]} + 1)
-		if (( ${ipCount[$ip]} > ipMax )) ; then
-			ipMax=${ipCount[$ip]}
-			ipWin=$ip
+			ips[$ip]=$(expr ${ips[$ip]} + 1)
 		fi
 	done
 
 	#Print results and send output thruogh sort to get them in numerical order.
-	finalResults=($(for i in "${!ipCount[@]}"
+	finalResults=($(for ip in "${!ips[@]}"
 	do
-		echo "IP: $ip 	Successfull attempts: ${ipCount[$i]}"
+		echo "IP: $ip 	Successfull attempts: ${ips[$ip]}"
 	done | sort -k5 -n -r))
 	#Sort by fith column in output due to a tab between $ip and Successfull.
 

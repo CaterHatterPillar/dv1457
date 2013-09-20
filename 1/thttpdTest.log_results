@@ -1,0 +1,33 @@
+# -n: Limit the number of results to N.
+# -h: Limit the query to the last number of hours (< 24).
+# -d: Limit the query to the last number of days (counting from midnight).
+# -c: Which IP address makes the most number of connection attempts?
+# -2: Which address makes the most number of successful attempts?
+# -r: What are the most common results codes and where do they come from?
+# -F: What are the most common result codes that indicate failure (no auth, not found etc) and where do they come from?
+# -t: Which IP number get the most bytes sent to them?
+# -f: Which IP number sends the most bytes to the server <filename> refers to the logfile. If '-' is given as a filename, or no filename is given, then standard input should be read. This enables the script to be used in a pipeline.
+
+bash
+-c: 213.64.153.92 336
+-2: IP: 172.16.0.3  	Successfull attempts: 34
+-r: Result: 404 occurred 1012 times. Primarily responsible ip was 213.64.153.92  with 336 occurrences.
+-F: Result: 404 occurred 1012 times. Primarily responsible ip was 213.64.153.92  with 336 occurrences
+-t: 194.237.142.24  	 1900928
+-f: -
+
+python
+-c: 336	213.64.153.92
+-2: 34	172.16.0.3
+-r: 404: 1012 (336 by 213.64.153.92)
+-F: 404: 1012 (336 by 213.64.153.92)
+-t: 194.237.142.24	1900928
+-f: -
+
+awk
+-c: 213.64.153.92 	336
+-2: 172.16.0.3 	 	34
+-r: 213.64.153.92 	404
+-F: 213.64.153.92 	404
+-t: 194.237.142.24 	 1900928
+-f: -

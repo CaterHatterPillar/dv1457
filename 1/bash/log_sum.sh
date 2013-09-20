@@ -21,7 +21,6 @@ source log_sum_F.sh
 source log_sum_t.sh
 source log_sum_f.sh
 
-source log_parser.sh
 source log_sum_d.sh
 
 # Establish bashtrap used to escape application in case of murderous goblins and/or psychotic mystics:
@@ -74,14 +73,11 @@ done
 # Parse remaining mandatory parameter (filename):
 argFilename=${@:$OPTIND:1}
 
-# Read the original file:
-log_read
-
 dateLimit=0
 if [ $argLimitQueryDays -gt 0 -o $argLimitQueryHours -gt 0 ] ; then
 	dateLimit=$(date --date="now -$argLimitQueryDays days -$argLimitQueryHours hours" +%s)
 fi
-log_sort_dates $dateLimit
+log_sum_d $dateLimit $argFilename
 
 # When all parameters have been passed, call the specified query:
 # Consider doing some sort of check to see whether or not all required arguments have been passed.

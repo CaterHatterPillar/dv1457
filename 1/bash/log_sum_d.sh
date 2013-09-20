@@ -1,46 +1,48 @@
+function log_sum_d() {
+	dateLimit=$1
+	filename=$2
 
-function log_read() {
+	linesSorted=()
+	declare -A monthNumeric
+	monthNumeric['Jan']=01
+	monthNumeric['Feb']=02
+	monthNumeric['Mar']=03
+	monthNumeric['Apr']=04
+	monthNumeric['May']=05
+	monthNumeric['Jun']=06
+	monthNumeric['Jul']=07
+	monthNumeric['Aug']=08
+	monthNumeric['Sep']=09
+	monthNumeric['Oct']=10
+	monthNumeric['Nov']=11
+	monthNumeric['Dec']=12
+
 	OLDIFS=$IFS
 	IFS=$'\n'
 
-	lines=($(egrep '[[:digit:]]{2}/[[:alpha:]]{3}/[[:digit:]]{4}:[[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2} \+[[:digit:]]{4}' thttpd.log))	
-	IFS=$OLDIFS
-}
-
-function log_sort_dates() {
-	dateLimit=$1
+	readarray lines < $filename
+	dates=($(egrep -o '[[:digit:]]{2}/[[:alpha:]]{3}/[[:digit:]]{4}:[[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2} \+[[:digit:]]{4}' $filename))
 
 	linesSorted=()
-	months=('Jan' 'Feb' 'Mar' 'Apr' 'May' 'Jun' 'Jul' 'Aug' 'Sep' 'Okt' 'Nov' 'Dec')
-	monthsNr=(01 02 03 04 05 06 07 08 09 10 11 12)
-
-	for line in "${lines[@]}"
-	do
-		date=$(echo $line | egrep -o '[[:digit:]]{2}/[[:alpha:]]{3}/[[:digit:]]{4}:[[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2} \+[[:digit:]]{4}' )
-
-		day=${date:0:2}
-		month=${date:3:3}
-		year=${date:7:4}
-		hour=${date:12:2}
-		minute=${date:15:2}
-		second=${date:18:2}
-		timezone=${date:21:5}
-
-		index=0
-		for key in "${months[@]}"
-		do
-			if [ "$month" = "$key" ]
-			then
-				month=${monthsNr[index]}
-			fi
-			index=$(expr $index + 1)
-		done
-		
-		dateDelta=$(date --date="$year$month$day $hour:$minute:$second" +%s)
-
-		if [ $dateDelta -gt $dateLimit ]
-		then
-			linesSorted[$[${#linesSorted[@]}+1]]=$line
-		fi
+	i=0
+	for date in "${dates[@]}" ; do
+		#echo $date
+	 	day=${date:0:2}
+	 	month=${date:3:3}
+	 	month=${monthNumeric[$month]}
+	 	year=${date:7:4}
+	 	hour=${date:12:2}
+	 	minute=${date:15:2}
+	 	second=${date:18:2}
+	 	timezone=${date:21:5}
+	 	dateDelta=$(date --date="$year$month$day $hour:$minute:$second" +%s)
+	
+	 	if [ $dateDelta -gt $dateLimit ] ; then
+	 		linesSorted+=( ${lines[$i]} )
+	 	fi
+	 	
+	 	i=$(expr $i + 1)
 	done
+
+	IFS=$OLDIFS
 }
