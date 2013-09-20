@@ -25,6 +25,15 @@ httpQueries = [
 	"LINK", 	# Connects two existing resources
 	"UNLINK" ]
 
+httpSuccess = [
+	200,
+	201,
+	202,
+	203,
+	204,
+	205,
+	206 ]
+
 httpError = [
 	# HTTP ERROR CLIENT
 	400,

@@ -45,7 +45,7 @@ function log_sum_F() {
 
 			echo "Result: $resultCode occurred $resultCount times. Primarily responsible ip was $ipResponsible with $resultMax occurrences."
 		fi
-	done))
+	done | sort -k3 -n -r | uniq))
 
 	IFS=$OLDIFS
 }

@@ -36,8 +36,6 @@ function log_sum_d() {
 	 	second=${date:18:2}
 	 	timezone=${date:21:5}
 	 	dateDelta=$(date --date="$year$month$day $hour:$minute:$second" +%s)
-
-	 	echo Month: ${date:3:3} MontNumeric: $month
 	
 	 	if [ $dateDelta -gt $dateLimit ] ; then
 	 		linesSorted+=( ${lines[$i]} )

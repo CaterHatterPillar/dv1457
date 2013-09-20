@@ -15,7 +15,7 @@ def log_sum_2( src, results ):
 		# Filter lines based on whether or not they contain the HTTP result-code '200':
 		mo = re.search( filterResultExt, line )
 		mo = re.search( filterResult, mo.string[ mo.start(0):mo.end(0) ] )
-		if mo.string[ mo.start(0):mo.end(0) ] == "200":
+		if mo.string[ mo.start(0):mo.end(0) ] in str(httpSuccess):
 			srcSuccess.append( line )
 
 	log_sum_c( srcSuccess, results )
