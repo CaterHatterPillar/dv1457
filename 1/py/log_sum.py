@@ -2,7 +2,7 @@
 
 # How to call the script:
 # ---
-# log_sum(.sh|.py) [-n N] [-h H|-d D] [-c|-2|-r|-F|-t|-f] <filename>
+# python3 log_sum.py [-n N] [-h H|-d D] [-c|-2|-r|-F|-t|-f] <filename>
 # Use Python 3.4 or above.
 # ---
 # -n: Limit the number of results to N.

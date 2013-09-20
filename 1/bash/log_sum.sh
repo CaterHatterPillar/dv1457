@@ -2,7 +2,7 @@
 
 # How to call the script:
 # ---
-# log_sum(.sh|.py) [-n N] [-h H|-d D] [-c|-2|-r|-F|-t|-f] <filename>
+# log_sum.sh [-n N] [-h H|-d D] [-c|-2|-r|-F|-t|-f] <filename>
 # ---
 # -n: Limit the number of results to N.
 # -h: Limit the query to the last number of hours (< 24).
