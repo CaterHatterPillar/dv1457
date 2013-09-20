@@ -75,7 +75,9 @@ argFilename=${@:$OPTIND:1}
 
 dateLimit=0
 if [ $argLimitQueryDays -gt 0 -o $argLimitQueryHours -gt 0 ] ; then
-	dateLimit=$(date --date="now -$argLimitQueryDays days -$argLimitQueryHours hours" +%s)
+	dateLimit=$(date --date="now -$argLimitQueryDays days -$argLimitQueryHours hours" +%F_%T)
+else
+	dateLimit="0000-00-00_00:00:00"
 fi
 log_sum_d $dateLimit $argFilename
 
