@@ -82,7 +82,7 @@ filename = sys.argv[-1] # HACK
 src = open( filename, 'r' ) # r for readonly?
 
 # Filter the input according to date:
-src = log_sum_filterDate( src, date ) #Temp, this ought to be read as a parameter
+src = log_sum_filterDate( src, date )
 
 # Call the specified query:
 results=[]
