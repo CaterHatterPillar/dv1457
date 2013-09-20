@@ -73,14 +73,11 @@ done
 # Parse remaining mandatory parameter (filename):
 argFilename=${@:$OPTIND:1}
 
-# Read the original file:
-log_sum_read $argFilename
-
 dateLimit=0
 if [ $argLimitQueryDays -gt 0 -o $argLimitQueryHours -gt 0 ] ; then
 	dateLimit=$(date --date="now -$argLimitQueryDays days -$argLimitQueryHours hours" +%s)
 fi
-log_sum_d $dateLimit
+log_sum_d $dateLimit $argFilename
 
 # When all parameters have been passed, call the specified query:
 # Consider doing some sort of check to see whether or not all required arguments have been passed.

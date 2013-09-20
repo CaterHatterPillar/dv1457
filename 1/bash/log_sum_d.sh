@@ -1,15 +1,7 @@
 
-function log_sum_read() {
-	filename=$1
-
-	OLDIFS=$IFS
-	IFS=$'\n'
-	lines=($(grep '' $filename))	
-	IFS=$OLDIFS
-}
-
 function log_sum_d() {
 	dateLimit=$1
+	filename=$2
 
 	linesSorted=()
 	declare -A monthNumeric
@@ -26,23 +18,40 @@ function log_sum_d() {
 	monthNumeric['Nov']=11
 	monthNumeric['Dec']=12
 
-	for line in "${lines[@]}"
-	do
-		date=$(echo $line | egrep -o '[[:digit:]]{2}/[[:alpha:]]{3}/[[:digit:]]{4}:[[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2} \+[[:digit:]]{4}' )
+	OLDIFS=$IFS
+	IFS=$'\n'
 
-		day=${date:0:2}
-		month=${date:3:3}
-		month=${monthNumeric[$month]}
-		year=${date:7:4}
-		hour=${date:12:2}
-		minute=${date:15:2}
-		second=${date:18:2}
-		timezone=${date:21:5}
-		dateDelta=$(date --date="$year$month$day $hour:$minute:$second" +%s)
+	readarray lines < $filename
+	dates=($(egrep -o '[[:digit:]]{2}/[[:alpha:]]{3}/[[:digit:]]{4}:[[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2} \+[[:digit:]]{4}' $filename))
 
-		if [ $dateDelta -gt $dateLimit ]
-		then
-			linesSorted[$[${#linesSorted[@]}+1]]=$line
-		fi
+	echo ${#dates[@]}
+
+	linesSorted=()
+	i=0
+	for date in "${dates[@]}" ; do
+		#echo $date
+	 	day=${date:0:2}
+	 	month=${date:3:3}
+	 	month=${monthNumeric[$month]}
+	 	year=${date:7:4}
+	 	hour=${date:12:2}
+	 	minute=${date:15:2}
+	 	second=${date:18:2}
+	 	timezone=${date:21:5}
+	 	dateDelta=$(date --date="$year$month$day $hour:$minute:$second" +%s)
+	
+	 	#if [ $dateDelta -gt $dateLimit ] ; then
+	 	#	#linesSorted[$[${#linesSorted[@]}+1]]=${lines[$i]}
+	 	#	linesSorted+=( ${lines[$i]} )
+	 	#fi
+
+		#i=$(expr $i + 1)
 	done
+
+	#for line in "${linesSorted[@]}"
+	#do
+	#	echo $line
+	#done
+
+	IFS=$OLDIFS
 }
