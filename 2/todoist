@@ -1,0 +1,19 @@
+ToDoIst:
+
+* The remake should be true to the original to the point where the player enters the caves, i.e. to the “Hall of Mists” (location 15).
+* There is also no need to be able to jump to “Y2” room (location 33).
+
+E:
+	* The program should run as a server. Which you can connect to using, for instance, telnet.
+	* The server should be able to handle any number of simultaneously connected players.
+	* The different players should be separate from each other, i.e. each player is operating in his/her own copy of the world.
+C:
+	* For each player joining/leaving the game, an appropriate entry in syslog should be produced.
+	* Make the server a daemon process.
+	* If the signal SIGHUP is caught by the server, it should wait 30 seconds, and then nicely terminate all player connections.
+A:
+	* Extend the game to the “Hall of MT (Mountain) King”.
+	* Preserve the game state: it means that the player should:
+	* Start from the point where it was at the time of exit
+	* Start the game from initial point.
+	* Each player should have unique ID
