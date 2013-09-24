@@ -13,7 +13,10 @@ public:
 	void play();
 protected:
 	void gameLoop();
-	void interpretCommand( std::string& p_command );
+	void commandFormat( std::string p_command, std::vector<std::string>& io_words );
+	void commandInterpret( std::vector<std::string>& p_words );
+	
+	bool commandTravel( std::string p_word );
 private:
 	// Game data:
 	AdventData m_ad;

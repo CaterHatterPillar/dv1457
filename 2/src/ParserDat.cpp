@@ -107,22 +107,29 @@ void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
 
 	// Retrieve x (loc) and y (dest), and store them in the travel table.
 	p_ss >> x >> y;
-	m_ad->dataTravelTable[ x ] = y;
 
 	// Retrieve and store verbs causing travel (the remainder) in the travel-verb struct:
 	std::string verb;
-    while( std::getline( p_ss, verb, ' ') ) {
-    	v = atoi( verb.c_str() );
-    	m_ad->dataTravelVerbs[x].push_back( v );
+	std::vector<unsigned> verbs;
+    while( std::getline( p_ss, verb, '\t') ) {
+    	if( verb.size() > 0 ) {
+    		v = atoi( verb.c_str() );
+    		verbs.push_back( v );
+    	}
     }
+
+    m_ad->dataTravelTable[ x ].loc = x;
+    TravelDestination td;
+    td.dest = y;
+    td.verbs = verbs;
+    m_ad->dataTravelTable[ x ].dests.push_back( td );
 }
 void ParserDat::parseVocabulary( std::istringstream& p_ss ) {
 	unsigned verbId;
 	std::string verbStr;
 
-	// Retrieve and store the verbID - identifying and describing the function of said verb - and it's string representation:
 	p_ss >> verbId >> verbStr;
-	m_ad->dataVocabulary[ verbId ] = verbStr;
+	m_ad->dataVocabulary[ verbStr ] = verbId;
 }
 void ParserDat::parseMsgs( std::istringstream& p_ss, std::map<unsigned, std::string>& p_map ) {
 	unsigned msgId;

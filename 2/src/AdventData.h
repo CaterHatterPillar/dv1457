@@ -5,6 +5,15 @@
 #include <vector>
 #include <string>
 
+struct TravelDestination {
+	unsigned dest; // y
+	std::vector<unsigned> verbs;
+};
+struct TravelLocation {
+	unsigned loc; // x
+	std::vector<TravelDestination> dests;
+};
+
 struct AdventData {
 	// Description
 	std::map< unsigned, std::vector<std::string> > dataDescLocLong;
@@ -16,10 +25,11 @@ struct AdventData {
 	// Also, the data structure cannot be a map - as we must know the order of certain objects.
 
 	// Travel
-	std::map< unsigned, unsigned >				dataTravelTable;
-	std::map< unsigned, std::vector<unsigned> >	dataTravelVerbs;
+	std::map< unsigned, TravelLocation > dataTravelTable;
+	//std::map< unsigned, unsigned >				dataTravelTable;
+	//std::map< unsigned, std::vector<unsigned> >	dataTravelVerbs;
 
-	std::map< unsigned, std::string > dataVocabulary;
+	std::map< std::string, unsigned > dataVocabulary;
 
 	// Messages
 	std::map< unsigned, std::string > dataMsgsArbitrary;
