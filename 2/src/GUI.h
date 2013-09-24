@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <stdarg.h>
 
 class GUI {
 public:
@@ -15,6 +16,7 @@ public:
 	// Out
 	static void ClearScreen();
 	static void RenderDescription( std::string& p_short, std::vector<std::string>& p_long );
+	static void RenderText( int numLines, ... );
 protected:
 private:
 };

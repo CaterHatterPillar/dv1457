@@ -4,7 +4,7 @@ all: main
 main: advent gui
 	g++ -c main.cpp
 
-advent: parser
+advent: parser error
 	g++ -c Advent.h Advent.cpp
 
 parser:
@@ -12,3 +12,6 @@ parser:
 
 gui:
 	g++ -c GUI.h GUI.cpp
+
+error:
+	g++ -c ExceptionAdventNotYetImplemented.h

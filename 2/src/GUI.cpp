@@ -30,3 +30,11 @@ void GUI::RenderDescription( std::string& p_short, std::vector<std::string>& p_l
 	}
 	std::cout << std::endl;
 }
+void GUI::RenderText( int numLines, ... ) {
+	va_list list;
+	va_start(list, numLines); 
+	for(unsigned i = 0; i < numLines; i++) { 
+		std::cout << va_arg(list, char*) << std::endl;
+	}
+	va_end(list);
+}

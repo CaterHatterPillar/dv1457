@@ -2,12 +2,14 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include <iostream> // temp, be sure to have me removed.
 
-#include "ParserDat.h"
 #include "GUI.h"
+#include "ParserDat.h"
+#include "ExceptionAdventNotYetImplemented.h"
 
 #include "Advent.h"
+
+#include <iostream> // temp, be sure to have me removed.
 
 Advent::Advent() {
 	m_running = true;
@@ -84,7 +86,7 @@ void Advent::commandInterpret( std::vector<std::string>& p_words ) {
     }
 
     if( executed==false ) {
-    	// Interpreter did not understand.
+    	GUI::RenderText( 2, "Sorry, I could not understand You.", "Use HELP to recieve instructions." );
     }
 }
 bool Advent::commandTravel( std::string p_word ) {
@@ -108,18 +110,27 @@ bool Advent::commandTravel( std::string p_word ) {
 
     	if( n<=300 ) { // if n<=300 It is the location to go to.
     	} else if( (n > 300) && (n<= 500) ) { // if 300<n<=500 n-300 is used in a computed goto to a section of special code.
+    		throw ExceptionAdventNotYetImplemented();
     	} else if( n > 500 ) { // if n>500 Message n-500 from section 6 is printed, and he stays wherever he is.
+    		throw ExceptionAdventNotYetImplemented();
     	}
 
     	if( m == 0 ) { // if m=0 It's unconditional.
     		travel = true;
     	} else if( (m > 0) && (m < 100) ) { // if 0<m<100 It is done with m% probability.
+    		throw ExceptionAdventNotYetImplemented();
     	} else if( m == 100 ) { // if m=100 Unconditional, but forbidden to dwarves.
+    		throw ExceptionAdventNotYetImplemented();
     	} else if( (m > 100) && (m <= 200) ) { // if 100<m<=200	He must be carrying object m-100.
+    		throw ExceptionAdventNotYetImplemented();
     	} else if( (m > 200) && (m <= 300) ) { // if 200<m<=300	Must be carrying or in same room as m-200.
+    		throw ExceptionAdventNotYetImplemented();
     	} else if( (m > 300) && (m <= 400) ) { // if 300<m<=400	prop(m mod 100) must *not* be 0.
+    		throw ExceptionAdventNotYetImplemented();
     	} else if( (m > 400) && (m <= 500) ) { // if 400<m<=500	prop(m mod 100) must *not* be 1.
+    		throw ExceptionAdventNotYetImplemented();
     	} else if( (m > 500) && (m <= 600) ) { // if 500<m<=600	prop(m mod 100) must *not* be 2, etc.
+    		throw ExceptionAdventNotYetImplemented();
     	}
 
     	if( travel==true ) {
