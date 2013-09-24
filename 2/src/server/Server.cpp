@@ -37,30 +37,21 @@ void Server::run()
 	pthread_exit(NULL);
 }
 
-void* Server::handleClient(void* threadId)
+void* Server::handleClient(void* p_threadId)
 {
 	int sockfd = acceptConnection();
- 		
- 	char buffer[256];
 
+	char* msg = new char[256];
  	bool connected=true;
- 	while(connected)
+ 	int sysCode = 1;
+ 	while(sysCode > 0)
  	{
- 		bzero(buffer, 256);
- 		int numBytes = read(sockfd, buffer, 255);
- 		if(numBytes<0)
- 			printf("Error reading client message.\n errno: %d\n", errno);
-	
- 		if(strcmp(buffer, "exit\n") == 0)
- 			connected = false;
-
-	 	printf("Message at socket %d: \n\t%s", sockfd, buffer);
-
-	 	numBytes = write(sockfd, buffer, strlen(buffer));
-	 	if(numBytes<0)
- 			printf("Error writing message.\n errno: %d\n", errno);
+ 		readMsg(sockfd, &msg);
+ 		chatMsg(msg, sockfd);
+ 		sysCode = sysMsg(msg);
 	}
 
+	delete []msg;
 	disconnectClient(sockfd);
  	pthread_exit(NULL);
 }
@@ -74,12 +65,37 @@ int Server::acceptConnection()
 
  	return newSockfd;
 }
-void Server::disconnectClient(int sockfd)
+void Server::disconnectClient(int p_sockfd)
 {
-	printf("Client at socket %d disconnecting.\n", sockfd);
+	printf("Client at socket %d disconnecting.\n", p_sockfd);
 	s_clientCnt--;
-	shutdown(sockfd, SHUT_RDWR);
+	shutdown(p_sockfd, SHUT_RDWR);
 }
+void Server::readMsg(int p_sockfd, char** p_msg)
+{
+	bzero((*p_msg), 256);
+ 	int numBytes = read(p_sockfd, (*p_msg), 255);
+ 	if(numBytes<0)
+ 		printf("Error reading client message.\n errno: %d\n", errno);
+}
+void Server::chatMsg(char* p_msg, int p_sockfd)
+{
+	printf("Message at socket %d: \n\t%s", p_sockfd, p_msg);
+
+ 	int numBytes = write(p_sockfd, p_msg, strlen(p_msg));
+ 	if(numBytes<0)
+  		printf("Error writing message.\n errno: %d\n", errno);
+}
+int Server::sysMsg(char* p_msg)
+{
+	int sysCode = 1;
+	if(strcmp(p_msg, "exit\n") == 0)
+ 		sysCode = 0;
+
+ 	return sysCode;
+}
+
+
 
 void Server::createSock()
 {
