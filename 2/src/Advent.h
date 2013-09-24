@@ -13,9 +13,14 @@ public:
 	void play();
 protected:
 	void gameLoop();
+	void interpretCommand( std::string& p_command );
 private:
+	// Game data:
 	AdventData m_ad;
 	bool m_running;
+
+	// Adventure data:
+	unsigned int m_playerLoc;
 };
 
 #endif // ADVENT_H

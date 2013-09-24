@@ -1,7 +1,7 @@
 all: main
 	g++ -o main *.o
 
-main: advent
+main: advent gui
 	g++ -c main.cpp
 
 advent: parser
@@ -9,3 +9,6 @@ advent: parser
 
 parser:
 	g++ -c ParserDat.h ParserDat.cpp
+
+gui:
+	g++ -c GUI.h GUI.cpp

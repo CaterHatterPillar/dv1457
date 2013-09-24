@@ -7,7 +7,7 @@
 
 struct AdventData {
 	// Description
-	std::map< unsigned, std::string > dataDescLocLong;
+	std::map< unsigned, std::vector<std::string> > dataDescLocLong;
 	std::map< unsigned, std::string > dataDescLocShort;
 	
 	//std::map< unsigned, std::string > dataDescObj; 

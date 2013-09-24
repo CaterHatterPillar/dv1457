@@ -12,14 +12,15 @@ public:
 
 	bool init();
 protected:
-	void parseDesc(					std::istringstream& p_ss, std::map<unsigned, std::string>& p_target );
+	void parseDescLong(			std::istringstream& p_ss );
+	void parseDescShort( 		std::istringstream& p_ss );
 	//void parseDescriptionsObject( 	std::istringstream& p_ss ); // This function is broken. See AdventData.h for more info.
-	void parseTravelTable( 			std::istringstream& p_ss );
-	void parseVocabulary( 			std::istringstream& p_ss );
-	void parseMsgs( 				std::istringstream& p_ss, std::map<unsigned, std::string>& p_target );
-	void parseLocObj( 				std::istringstream& p_ss );
-	void parseActionDefaults( 		std::istringstream& p_ss );
-	void parseLiquidAssets( 		std::istringstream& p_ss ); // This function is not yet used.
+	void parseTravelTable( 		std::istringstream& p_ss );
+	void parseVocabulary( 		std::istringstream& p_ss );
+	void parseMsgs( 			std::istringstream& p_ss, std::map<unsigned, std::string>& p_target );
+	void parseLocObj( 			std::istringstream& p_ss );
+	void parseActionDefaults( 	std::istringstream& p_ss );
+	void parseLiquidAssets( 	std::istringstream& p_ss ); // This function is not yet used.
 private:
 	std::ifstream* m_ifs;
 	AdventData* m_ad;

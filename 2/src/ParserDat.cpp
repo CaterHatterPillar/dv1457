@@ -43,10 +43,10 @@ bool ParserDat::init() {
 		std::istringstream ss( line );
 		switch( section ) {
 			case Sections_LONG_FORM_DESCRIPTIONS:
-				parseDesc( ss, m_ad->dataDescLocLong );
+				parseDescLong( ss );
 				break;
 			case Sections_SHORT_FORM_DESCRIPTIONS:
-				parseDesc( ss, m_ad->dataDescLocShort );
+				parseDescShort( ss );
 				break;
 			case Sections_TRAVEL_TABLE:
 				parseTravelTable( ss );
@@ -84,14 +84,23 @@ bool ParserDat::init() {
 	return true; // tmep
 }
 
-void ParserDat::parseDesc( std::istringstream& p_ss, std::map<unsigned, std::string>& p_target ) {
+void ParserDat::parseDescLong( std::istringstream& p_ss ) {
 	unsigned int key;
 	std::string desc;
 
 	p_ss >> key;
 	std::getline( p_ss, desc );
 
-	p_target[ key ] = desc;
+	m_ad->dataDescLocLong[ key ].push_back( desc );
+}
+void ParserDat::parseDescShort( std::istringstream& p_ss ) {
+	unsigned int key;
+	std::string desc;
+
+	p_ss >> key;
+	std::getline( p_ss, desc );
+
+	m_ad->dataDescLocShort[ key ] = desc;
 }
 void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
 	unsigned x, y, v;
