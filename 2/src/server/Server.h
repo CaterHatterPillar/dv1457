@@ -1,15 +1,17 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <cstring>
 #include <errno.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <sys/socket.h>
+#include <sys/types.h>
 #include <stdio.h>
 #include <strings.h>
 #include <unistd.h>
+#include <pthread.h>
 
-#define MAX_CONNECTION_COUNT 5
+#define MAX_CLIENT_CNT 5
 
 class Server
 {
@@ -21,13 +23,20 @@ public:
 	void run();
 private:
 
+	static void* handleClient(void* threadId);
+	static int acceptConnection();
+	static void disconnectClient(int sockfd);
+
 	void createSock();
 	void createAddr();
 	void bindAddrToSock(); 
 
+	pthread_t m_threads[MAX_CLIENT_CNT];
+	static unsigned int s_clientCnt;
+
 	sockaddr_in m_addr;
 	int m_port;
-	int m_sockfd;
+	static int s_sockfd;
 
 };
 

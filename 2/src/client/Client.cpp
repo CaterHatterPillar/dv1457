@@ -22,22 +22,29 @@ void Client::init()
 void Client::run()
 {
 	char buffer[256];
- 	bzero(buffer, 256);
- 	
- 	printf("Enter message: ");
- 	fgets(buffer, 255, stdin);
+	bool exit = false;
+	while(!exit)
+	{
+ 		bzero(buffer, 256);
+ 		printf("Enter message: ");
+ 		fgets(buffer, 255, stdin);
 
- 	int n = write(m_sockfd, buffer, strlen(buffer));
- 	if(n < 0)
- 		printf("Error writing to socket.\n errno: %d\n", errno);
+ 		if(strcmp(buffer, "exit\n") == 0)
+ 			exit = true;
 
- 	bzero(buffer, 256);
- 	n = read(m_sockfd, buffer, 255);
- 	if(n<0)
-		printf("Error reading from socket.\n errno: %d\n", errno);
+	 	int numBytes = write(m_sockfd, buffer, strlen(buffer));
+	 	if(numBytes < 0)
+	 		printf("Error writing to socket.\n errno: %d\n", errno);
+	
+	 	bzero(buffer, 256);
+	 	numBytes = read(m_sockfd, buffer, 255);
+	 	if(numBytes<0)
+			printf("Error reading from socket.\n errno: %d\n", errno);
 
-	printf("Answer: \n\t%s", buffer);
-	printf("\n");
+		printf("Answer: \n\t%s", buffer);
+		printf("\n");
+	}
+	shutdown(m_sockfd, SHUT_RDWR);
 }
 
 void Client::createAddr()
