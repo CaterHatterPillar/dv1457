@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <stdio.h>
+#include <string>
 #include <strings.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -23,6 +24,11 @@ public:
 	void run();
 private:
 
+	std::string readUserInput();
+	std::string readMsg();
+	void 		sendMsg(std::string p_msg);
+
+	void login();
 	void createAddr();
 	void createSock();
 	void connectToServer();

@@ -40,18 +40,22 @@ void Server::run()
 void* Server::handleClient(void* p_threadId)
 {
 	int sockfd = acceptConnection();
+	std::string name = login(sockfd);
 
-	char* msg = new char[256];
- 	bool connected=true;
+	std::string msg;
  	int sysCode = 1;
  	while(sysCode > 0)
  	{
- 		readMsg(sockfd, &msg);
- 		chatMsg(msg, sockfd);
- 		sysCode = sysMsg(msg);
+ 		msg = readMsg(sockfd);
+ 		if(msg.length() > 0)
+ 		{
+ 			if(msg.at(0) == '/')
+ 				sysCode = sysMsg(msg);
+ 			else
+ 				chatMsg(msg, sockfd);
+ 		}
 	}
 
-	delete []msg;
 	disconnectClient(sockfd);
  	pthread_exit(NULL);
 }
@@ -69,33 +73,67 @@ void Server::disconnectClient(int p_sockfd)
 {
 	printf("Client at socket %d disconnecting.\n", p_sockfd);
 	s_clientCnt--;
-	shutdown(p_sockfd, SHUT_RDWR);
 }
-void Server::readMsg(int p_sockfd, char** p_msg)
+std::string Server::readMsg(int p_sockfd)
 {
-	bzero((*p_msg), 256);
- 	int numBytes = read(p_sockfd, (*p_msg), 255);
+	char buffer[256];
+	bzero((char*)buffer, 256);
+ 	int numBytes = recv(p_sockfd, buffer, 255, 0);
  	if(numBytes<0)
  		printf("Error reading client message.\n errno: %d\n", errno);
-}
-void Server::chatMsg(char* p_msg, int p_sockfd)
-{
-	printf("Message at socket %d: \n\t%s", p_sockfd, p_msg);
 
- 	int numBytes = write(p_sockfd, p_msg, strlen(p_msg));
+ 	return std::string(buffer);
+}
+void Server::sendMsg(int p_sockfd, std::string p_msg)
+{
+	int numBytes = send(p_sockfd, p_msg.c_str(), p_msg.length(), 0);
  	if(numBytes<0)
   		printf("Error writing message.\n errno: %d\n", errno);
 }
-int Server::sysMsg(char* p_msg)
+void Server::chatMsg(std::string p_msg, int p_sockfd)
+{
+	printf("Message at socket %d: \n\t%s", p_sockfd, p_msg.c_str());
+
+ 	sendMsg(p_sockfd, p_msg);
+}
+int Server::sysMsg(std::string p_msg)
 {
 	int sysCode = 1;
-	if(strcmp(p_msg, "exit\n") == 0)
+	if(strcmp(p_msg.c_str(), "/exit\n") == 0)
  		sysCode = 0;
 
  	return sysCode;
 }
+std::string Server::login(int p_sockfd)
+{
+	std::string name = askName(p_sockfd);
+	openPrevGame(name);
+  	return name;
+}
+std::string Server::askName(int p_sockfd)
+{
+	std::string msg = "What is your name adventurer?";
+	sendMsg(p_sockfd, msg);
 
+  	std::string name = readMsg(p_sockfd);
+  	printf("Welcome %s", name.c_str());
+  	msg = "Welcome " + name;
+ 	sendMsg(p_sockfd, msg);
 
+ 	printf("Message sent");
+
+  	return name;
+}
+bool Server::openPrevGame(std::string p_name)
+{
+	p_name.erase(p_name.end()-1);
+	std::string filename = p_name + ".cave";
+//	std::fstream file(filename.c_str());
+
+	printf("%s", filename.c_str());
+//	if(file.is_open())
+//		printf("file opened");
+}
 
 void Server::createSock()
 {

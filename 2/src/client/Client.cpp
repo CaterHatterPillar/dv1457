@@ -21,32 +21,66 @@ void Client::init()
 
 void Client::run()
 {
-	char buffer[256];
+	std::string msg;
 	bool exit = false;
+
+	login();
+
 	while(!exit)
 	{
- 		bzero(buffer, 256);
- 		printf("Enter message: ");
- 		fgets(buffer, 255, stdin);
+ 		msg = readUserInput();
 
- 		if(strcmp(buffer, "exit\n") == 0)
+ 		if(strcmp(msg.c_str(), "/exit\n") == 0)
  			exit = true;
 
-	 	int numBytes = write(m_sockfd, buffer, strlen(buffer));
-	 	if(numBytes < 0)
-	 		printf("Error writing to socket.\n errno: %d\n", errno);
+	 	sendMsg(msg);
+		if(!exit)
+		{
+	 		msg = readMsg();
 	
-	 	bzero(buffer, 256);
-	 	numBytes = read(m_sockfd, buffer, 255);
-	 	if(numBytes<0)
-			printf("Error reading from socket.\n errno: %d\n", errno);
-
-		printf("Answer: \n\t%s", buffer);
-		printf("\n");
+			printf("Answer: \n\t%s", msg.c_str());
+			printf("\n");
+		}
 	}
 	shutdown(m_sockfd, SHUT_RDWR);
 }
 
+std::string Client::readUserInput()
+{
+	char buffer[256];
+	bzero(buffer, 256);
+ 	fgets(buffer, 255, stdin);
+
+ 	return std::string(buffer);
+}
+std::string Client::readMsg()
+{
+	char buffer[256];
+	bzero(buffer, 256);
+	int numBytes = recv(m_sockfd, buffer, 255, 0);
+	if(numBytes<0)
+		printf("Error reading from socket.\n errno: %d\n", errno);
+
+	return std::string(buffer);
+}
+void Client::sendMsg(std::string p_msg)
+{
+	int numBytes = send(m_sockfd, p_msg.c_str(), p_msg.length(), 0);
+	if(numBytes < 0)
+		printf("Error writing to socket.\n errno: %d\n", errno);
+}
+
+void Client::login()
+{
+	std::string msg = readMsg();
+	printf("%s\n", msg.c_str());
+
+	msg = readUserInput();
+	sendMsg(msg);
+
+	msg = readMsg();
+	printf("%s\n", msg.c_str());
+}
 void Client::createAddr()
 {
 	m_addr.sin_family 	= AF_INET;
