@@ -1,3 +1,3 @@
 
 all:
-	g++ -o client.bin main.cpp Client.cpp Client.h
+	g++ -o ../../bin/client.bin main.cpp Client.cpp Client.h
