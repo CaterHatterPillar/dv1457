@@ -38,6 +38,9 @@ void GUI::RenderText( int numLines, ... ) {
 	}
 	va_end(list);
 }
+void GUI::RenderString( std::string p_string ) {
+	std::cout << p_string;
+}
 void GUI::RenderTerminal() {
 	std::cout << "> ";
 }

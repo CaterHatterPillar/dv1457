@@ -1,9 +1,8 @@
-#include "ParserDat.h"
-
 #include <string>
 #include <sstream>
-#include <cstdlib> // atoi
-#include <iostream>
+
+#include "Util.h"
+#include "ParserDat.h"
 
 enum Sections {
 	Sections_LONG_FORM_DESCRIPTIONS 	= 1,
@@ -55,14 +54,13 @@ bool ParserDat::init() {
 				parseVocabulary( ss );
 				break;
 			case Sections_OBJECT_DESCRIPTIONS:
-				//parseDesc( ss, m_ad->dataDescObj );
-				// We do not parse objects yet.
+				parseObjDesc( ss );
 				break;
 			case Sections_ARBITRARY_MESSAGES:
 				parseMsgs( ss, m_ad->dataMsgsArbitrary );
 				break;
 			case Sections_OBJECT_LOCATIONS:
-				parseLocObj( ss );
+				parseObjLoc( ss );
 				break;
 			case Sections_ACTION_DEFAULTS:
 				parseActionDefaults( ss );
@@ -113,7 +111,7 @@ void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
 	std::vector<unsigned> verbs;
     while( std::getline( p_ss, verb, '\t') ) {
     	if( verb.size() > 0 ) {
-    		v = atoi( verb.c_str() );
+    		v = Util::toInt( verb.c_str() );
     		verbs.push_back( v );
     	}
     }
@@ -140,7 +138,7 @@ void ParserDat::parseMsgs( std::istringstream& p_ss, std::map<unsigned, std::str
 
 	p_map[ msgId ] = msgStr;
 }
-void ParserDat::parseLocObj( std::istringstream& p_ss ) {
+void ParserDat::parseObjLoc( std::istringstream& p_ss ) {
 	unsigned obj;
 	int l;
 
@@ -151,10 +149,28 @@ void ParserDat::parseLocObj( std::istringstream& p_ss ) {
 	std::string loc;
     while( std::getline( p_ss, loc, '\t' ) ) {
     	if( loc.size() > 0 ) { // Some weird bug caused this method to write a single zero-value at the beginning of each iteration because loc was returned as "". Strange.
-    		l = atoi( loc.c_str() );
-    		m_ad->dataLocObj[obj].push_back( l );
+    		l = Util::toInt( loc.c_str() );
+    		m_ad->dataObjLoc[obj].push_back( l );
     	}
     }
+}
+void ParserDat::parseObjDesc( std::istringstream& p_ss ) {
+	static unsigned prevObj; // hack
+	std::string first, second;
+	p_ss >> first;
+	std::getline( p_ss, second );
+
+	if( first.size() >= 3 ) { // Then 1st and 2nd denote a message that ought to be appended to the previously added object.
+		m_ad->dataObjDesc[ prevObj ][ first ] += second;
+	} else { // 1st and 2nd indicate a new object. This also means 1st may be considered an unsigned int.
+		unsigned obj = Util::toInt( first.c_str() );
+		m_ad->dataObj[ obj ] = second; // Name of object.
+
+		prevObj = obj;
+	}
+
+	// "Properties which produce no message should be given the message ">$<"."
+	// Considering giving objects with empty description-lists the above description? Unclear.
 }
 void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
 	unsigned a, d;
