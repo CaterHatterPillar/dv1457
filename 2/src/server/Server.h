@@ -22,19 +22,6 @@ public:
 	Server(int p_port);
 	~Server();
 
-	enum FileStatus
-	{
-		FileStatus_UNKNOWN,
-		FileStatus_LOADED,
-		FileStatus_CREATED
-	};
-	enum GameStatus
-	{
-		GameStatus_UNKNOWN,
-		GameStatus_LOAD_GAME,
-		GameStatus_NEW_GAME
-	};
-
 	void init();
 	void run();
 private:
@@ -47,14 +34,6 @@ private:
 	static void 		sendMsg(int p_sockfd, std::string p_msg);
 	static void	 		chatMsg(std::string p_msg, int p_sockfd);
 	static int 	 		sysMsg(std::string p_msg);
-	
-	static std::string 	queryName(int p_sockfd);
-	static FileStatus 	openGame(std::string p_name, int p_sockfd);
-	static FileStatus 	openCaveFile(std::string p_name);
-	static GameStatus 	queryContinue(int p_sockfd);
-	static void 		loadGameData(std::string p_name);
-	static void 		runGame(int p_sockfd);
-	static void 		saveGame(std::string p_name);
 
 	void createSock();
 	void createAddr();

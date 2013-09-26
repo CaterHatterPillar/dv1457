@@ -1,4 +1,5 @@
 #include "Server.h"
+#include "Game.h"
 
 int Server::s_sockfd;
 unsigned int Server::s_clientCnt;
@@ -40,18 +41,10 @@ void Server::run()
 void* Server::handleClient(void* p_threadId)
 {
 	int sockfd = acceptConnection();
-	std::string name = queryName(sockfd);
-	FileStatus fileStatus = openGame(name, sockfd);
-	GameStatus gameStatus = GameStatus_NEW_GAME;
-	if(fileStatus == FileStatus_LOADED)
-		gameStatus = queryContinue(sockfd);
 
-	if(gameStatus == GameStatus_LOAD_GAME)
-		loadGameData(name);
+	Game game(sockfd);
+	game.run();
 
-	runGame(sockfd);
-	
-	saveGame(name);
 	disconnectClient(sockfd);
  	pthread_exit(NULL);
 }
@@ -104,142 +97,6 @@ int Server::sysMsg(std::string p_msg)
  		sysCode = 0;
 
  	return sysCode;
-}
-
-std::string Server::queryName(int p_sockfd)
-{
-	std::string msg = "What is your name adventurer?";
-	sendMsg(p_sockfd, msg);
-
-  	std::string name = readMsg(p_sockfd);
-  	//printf("Welcome %s", name.c_str());
-  	msg = "Welcome " + name;
-  	sendMsg(p_sockfd, msg);
-
-  	return name;
-}
-
-Server::FileStatus Server::openGame(std::string p_name, int p_sockfd)
-{
-	std::string msg = "";
-	FileStatus status = openCaveFile(p_name);
-	if(status == FileStatus_CREATED)
-	{
-		msg = "/new_game";
-		sendMsg(p_sockfd, msg);
-	}
-	else
-	{
-		msg = "/prev_game";
-		sendMsg(p_sockfd, msg);
-	}
-
-	return status;
-}	
-
-Server::GameStatus Server::queryContinue(int p_sockfd)
-{
-	GameStatus status;
-	std::string msg ="";
-	bool done = false;
-	while(!done)
-	{
-		msg = readMsg(p_sockfd);
-		if(strcmp(msg.c_str(), "yes\n") == 0)
-		{
-			done = true;
-			msg = "/load_game";
-			sendMsg(p_sockfd, msg);
-			status = GameStatus_LOAD_GAME;
-		}
-		else if(strcmp(msg.c_str(), "no\n") == 0)
-		{
-			done = true;
-			std::string msg = "/new_game";
-			sendMsg(p_sockfd, msg);
-			status = GameStatus_NEW_GAME;
-		}
-		else
-		{
-			msg = "/unknown";
-			sendMsg(p_sockfd, msg);
-		}
-	}
-	return status;
-}
-
-Server::FileStatus Server::openCaveFile(std::string p_name)
-{
-	FileStatus status = FileStatus_UNKNOWN;
-
-	p_name.erase(p_name.end()-1);
-	std::string filename = p_name + ".cave";
-	std::fstream file(filename.c_str());
-
-	std::string msg = "";
-
-	printf("%s\n", filename.c_str());
-	if(file.is_open())
-		status = FileStatus_LOADED;
-	else
-	{
-		file.open(filename.c_str(),
-			std::ios_base::in |
-			std::ios_base::out |
-			std::ios_base::trunc);
-		status = FileStatus_CREATED;
-	}
-
-	file.close();
-	return status;
-}
-
-void Server::loadGameData(std::string p_name)
-{
-	printf("Loading game\n");
-
-	p_name.erase(p_name.end()-1);
-	std::string filename = p_name + ".cave";
-	std::fstream file(filename.c_str());
-
-	//Load shit!s
-
-	file.close();
-}
-
-void Server::runGame(int p_sockfd)
-{
-	std::string msg;
- 	int sysCode = 1;
- 	while(sysCode > 0)
- 	{
- 		msg = readMsg(p_sockfd);
- 		if(msg.length() > 0)
- 		{
- 			if(msg.at(0) == '/')
- 				sysCode = sysMsg(msg);
- 			else
- 				chatMsg(msg, p_sockfd);
- 		}
-	}
-}
-
-void Server::saveGame(std::string p_name)
-{
-	printf("Saving game\n");
-
-	p_name.erase(p_name.end()-1);
-	std::string filename = p_name + ".cave";
-	std::fstream file;
-	file.open(filename.c_str(),
-		std::ios_base::in |
-		std::ios_base::out |
-		std::ios_base::trunc);
-
-	//Save shit!
-	file << p_name << "\n";
-
-	file.close();
 }
 
 void Server::createSock()
