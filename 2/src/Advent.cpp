@@ -40,8 +40,8 @@ void Advent::play() {
 
 void Advent::gameLoop() {
 	GUI::RenderDescription( 
-		m_ad.dataDescLocShort[m_playerLoc], 
-		m_ad.dataDescLocLong[m_playerLoc] );
+		m_ad.map[ m_playerLoc ].getDescShort(), //m_ad.dataDescLocShort[m_playerLoc], 
+		m_ad.map[ m_playerLoc ].getDescLongs() );  //m_ad.dataDescLocLong[m_playerLoc] );
 	// Render objects here.
 #ifdef ADVENT_DEBUG
 	GUI::RenderString( "DEBUG INFO: \nCurrent location: " + Util::toString(m_playerLoc) + "\n");
@@ -53,11 +53,11 @@ void Advent::gameLoop() {
 	GUI::GetInput( input );
 
 	// Format input:
-	std::vector<std::string> words(5);
-	commandFormat( input, words );
+	std::vector<Verb> verbs;
+	commandFormat( input, verbs );
 
 	// Interpret input:
-	bool success = commandInterpret( words );
+	bool success = commandInterpret( verbs );
 	if( success==true ) {
 		// Do not clear screen if in debug-mode.
 #ifndef ADVENT_DEBUG
@@ -66,7 +66,7 @@ void Advent::gameLoop() {
 	}
 }
 
-void Advent::commandFormat( std::string p_command, std::vector<std::string>& io_words ) {
+void Advent::commandFormat( std::string p_command, std::vector<Verb>& io_verbs ) {
 	// Start by splitting up the command into words:
 	std::istringstream ss( p_command );
 	while( std::getline( ss, p_command, ' ') ) {
@@ -74,22 +74,24 @@ void Advent::commandFormat( std::string p_command, std::vector<std::string>& io_
 		std::string word = p_command.substr(0, 5); 
 
 		// Filter any words that are not contained within the application vocabulary:
-		if( m_ad.dataVocabulary.find( word )!=m_ad.dataVocabulary.end() ) {
-			io_words.push_back( word ); 
+		unsigned verbId = 0;
+		if( m_ad.vocabulary.isVerb( word, verbId )==true ) {
+			// ...and convert these words into verbs - that is a collection of synonyms meaning the same:
+			io_verbs.push_back( m_ad.vocabulary[ verbId ] ); 
 		}	
     }
 }
-bool Advent::commandInterpret( std::vector<std::string>& p_words ) {
+bool Advent::commandInterpret( std::vector<Verb> p_verbs  ) {
     bool executed = false; // To make sure that one, and only one, modification is made to the game world per command.
-    for( unsigned wordIx = 0; wordIx < p_words.size() && executed==false; wordIx++ ) {
-    	std::string word = p_words[ wordIx ];
+    for( unsigned i = 0; i < p_verbs.size() && executed==false; i++ ) {
+    	Verb verb = p_verbs[ i ];
 
-    	// Get value of verb, which signifies what type of action is to be performed:
-    	unsigned verbVal = m_ad.dataVocabulary[ word ];
+    	// Get verb id, which signifies what type of action is to be performed:
+    	unsigned verbVal = verb.getId();
     	unsigned verbAction = verbVal / 1000;
     	switch( verbAction ) {
     		case 0: // Denotes travel.
-    			executed = commandTravel( word );
+    			executed = commandTravel( verb );
     			break;
     		case 1: // Denotes object.
     			throw ExceptionAdventNotYetImplemented( "Command - Object." );
@@ -109,7 +111,7 @@ bool Advent::commandInterpret( std::vector<std::string>& p_words ) {
     }
     return executed;
 }
-bool Advent::commandTravel( std::string p_word ) {
+bool Advent::commandTravel( Verb& p_verb ) {
 	bool travel = false;
 	unsigned int playerLoc = m_playerLoc;
 
@@ -118,8 +120,7 @@ bool Advent::commandTravel( std::string p_word ) {
 		TravelDestination td = tl.dests[i];
 	
 		// If the word does not correspond to any word used for travel at the current location - skip to the next destination:
-		unsigned wordId = m_ad.dataVocabulary[ p_word ];
-		if( std::find( td.verbs.begin(), td.verbs.end(), wordId ) == td.verbs.end() ) {
+		if( std::find( td.verbs.begin(), td.verbs.end(), p_verb.getId() ) == td.verbs.end() ) {
 			continue;
 		}
 

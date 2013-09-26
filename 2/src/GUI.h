@@ -15,7 +15,7 @@ public:
 
 	// Out
 	static void ClearScreen();
-	static void RenderDescription( std::string& p_short, std::vector<std::string>& p_long );
+	static void RenderDescription( std::string p_short, std::vector<std::string> p_long );
 	static void RenderText( int numLines, ... );
 	static void RenderString( std::string p_string );
 	static void RenderTerminal();

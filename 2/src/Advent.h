@@ -15,10 +15,10 @@ public:
 	void play();
 protected:
 	void gameLoop();
-	void commandFormat( std::string p_command, std::vector<std::string>& io_words );
-	bool commandInterpret( std::vector<std::string>& p_words );
+	void commandFormat( std::string p_command, std::vector<Verb>& io_verbs );
+	bool commandInterpret( std::vector<Verb> p_verbs  );
 	
-	bool commandTravel( std::string p_word );
+	bool commandTravel( Verb& p_verb );
 	bool commandTravelToDestination( TravelDestination& p_td, unsigned p_loc );
 	bool commandObject( std::string p_word );
 private:

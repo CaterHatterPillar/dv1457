@@ -84,21 +84,21 @@ bool ParserDat::init() {
 
 void ParserDat::parseDescLong( std::istringstream& p_ss ) {
 	unsigned int key;
-	std::string desc;
+	std::string descLong;
 
 	p_ss >> key;
-	std::getline( p_ss, desc );
+	std::getline( p_ss, descLong );
 
-	m_ad->dataDescLocLong[ key ].push_back( desc );
+	m_ad->map[ key ].appendDescLong( descLong ); //m_ad->dataDescLocLong[ key ].push_back( desc );
 }
 void ParserDat::parseDescShort( std::istringstream& p_ss ) {
 	unsigned int key;
-	std::string desc;
+	std::string descShort;
 
 	p_ss >> key;
-	std::getline( p_ss, desc );
+	std::getline( p_ss, descShort );
 
-	m_ad->dataDescLocShort[ key ] = desc;
+	m_ad->map[ key ].setDescShort( descShort ); //m_ad->dataDescLocShort[ key ] = desc;
 }
 void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
 	unsigned x, y, v;
@@ -123,11 +123,16 @@ void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
     m_ad->dataTravelTable[ x ].dests.push_back( td );
 }
 void ParserDat::parseVocabulary( std::istringstream& p_ss ) {
-	unsigned verbId;
-	std::string verbStr;
+	unsigned id;
+	std::string word;
 
-	p_ss >> verbId >> verbStr;
-	m_ad->dataVocabulary[ verbStr ] = verbId;
+	// Add word to Verb-structure, that is - append synonyms to a common object:
+	p_ss >> id >> word;
+	m_ad->vocabulary[ id ] = id; //m_ad->dataVocabulary[ verbStr ] = verbId;
+	m_ad->vocabulary[ id ].appendWord( word );
+
+	// Append unique word to vocabulary:
+	m_ad->vocabulary.addWord( id, word ); // This is used to map unique words to common verbs.
 }
 void ParserDat::parseMsgs( std::istringstream& p_ss, std::map<unsigned, std::string>& p_map ) {
 	unsigned msgId;

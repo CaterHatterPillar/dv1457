@@ -21,7 +21,7 @@ void GUI::GetInput( std::string& io_input ) {
 void GUI::ClearScreen() {
 	std::cout << std::string( 100, '\n' );
 }
-void GUI::RenderDescription( std::string& p_short, std::vector<std::string>& p_long ) {
+void GUI::RenderDescription( std::string p_short, std::vector<std::string> p_long ) {
 	std::cout << "---" << std::endl
 		<< p_short << std::endl
 		<< "---" << std::endl;
