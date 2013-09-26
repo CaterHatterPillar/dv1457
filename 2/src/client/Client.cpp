@@ -42,7 +42,6 @@ void Client::run()
 			printf("\n");
 		}
 	}
-	shutdown(m_sockfd, SHUT_RDWR);
 }
 
 std::string Client::readUserInput()

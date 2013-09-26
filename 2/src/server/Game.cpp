@@ -138,7 +138,7 @@ void Game::runGame()
 
 void Game::saveGame()
 {
-	printf("Saving game\n");
+	printf("Saving game....\n");
 
 	std::string filename = getFileName();
 	std::fstream file;
@@ -151,6 +151,8 @@ void Game::saveGame()
 	file << m_name << "\n";
 
 	file.close();
+
+	printf("Game saved\n");
 }
 
 
@@ -174,15 +176,35 @@ void Game::sendMsg(std::string p_msg)
 
 void Game::chatMsg(std::string p_msg)
 {
+	/*
+	NOTE. All incoming messges must be answered by the server.
+	The client runs on a single thread and will therefore be blocked
+	on next call to recieve until the server answers.
+	*/
+
 	printf("Message at socket %d: \n\t%s", m_sockfd, p_msg.c_str());
 	sendMsg(p_msg);
 }
 
 int Game::sysMsg(std::string p_msg)
 {
+	/*
+	NOTE. All incoming messges must be answered by the server.
+	The client runs on a single thread and will therefore be blocked
+	on next call to recieve until the server answers.
+	*/
+
 	int sysCode = 1;
 	if(strcmp(p_msg.c_str(), "/exit\n") == 0)
- 		sysCode = 0;
+	{
+		sysCode = 0;
+		shutdown(m_sockfd, SHUT_RDWR);
+	}
+ 	else if(strcmp(p_msg.c_str(), "/save\n") == 0)
+ 	{
+ 		saveGame();
+ 		sendMsg("Game saved!");
+ 	}
 
  	return sysCode;
 }
