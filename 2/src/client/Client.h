@@ -29,6 +29,7 @@ private:
 	void 		sendMsg(std::string p_msg);
 
 	void login();
+	void loadGame();
 	void createAddr();
 	void createSock();
 	void connectToServer();

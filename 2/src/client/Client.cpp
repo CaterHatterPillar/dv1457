@@ -53,6 +53,7 @@ std::string Client::readUserInput()
 
  	return std::string(buffer);
 }
+
 std::string Client::readMsg()
 {
 	char buffer[256];
@@ -63,6 +64,7 @@ std::string Client::readMsg()
 
 	return std::string(buffer);
 }
+
 void Client::sendMsg(std::string p_msg)
 {
 	int numBytes = send(m_sockfd, p_msg.c_str(), p_msg.length(), 0);
@@ -77,10 +79,41 @@ void Client::login()
 
 	msg = readUserInput();
 	sendMsg(msg);
-
 	msg = readMsg();
 	printf("%s\n", msg.c_str());
+
+	msg = readMsg();
+	if(strcmp(msg.c_str(), "/new_game") == 0)
+		printf("Starting new game...\n");
+	else if(strcmp(msg.c_str(), "/prev_game") == 0)
+		loadGame();
 }
+
+void Client::loadGame()
+{
+	printf("You have been here before! Continue from last save? (yes/no)\n");
+	std::string msg = "";
+	bool done = false;
+	while(!done)
+	{
+		msg = readUserInput();
+		sendMsg(msg);
+		msg = readMsg();
+		if(strcmp(msg.c_str(), "/new_game") == 0)
+		{
+			done = true;
+			printf("Starting new game... \n");
+		}
+		else if(strcmp(msg.c_str(), "/load_game") == 0)
+		{
+			done = true;
+			printf("Loading game...\n");
+		}
+		else
+			printf("You must answer \"yes\" or \"no\" \n");
+	}
+}
+
 void Client::createAddr()
 {
 	m_addr.sin_family 	= AF_INET;
@@ -89,12 +122,14 @@ void Client::createAddr()
  	if(inet_pton(AF_INET, m_ip, &m_addr.sin_addr) <=0 )
  		printf("Error inet_pton.\n errno: %d\n", errno);
 }
+
 void Client::createSock()
 {
 	m_sockfd = socket(AF_INET, SOCK_STREAM, 0);
  	if(m_sockfd<0)
  		printf("Error creating socket.\n errno: %d\n", errno);
 }
+
 void Client::connectToServer()
 {
 	if(connect(m_sockfd, (struct sockaddr*)&m_addr, sizeof(m_addr)) < 0)
