@@ -22,6 +22,13 @@ bool Verb::operator==( const unsigned& p_id ) const {
 	}
 	return equals;
 }
+bool Verb::operator==( const Verb& p_id ) const {
+	bool equals = false;
+	if( *this==p_id.getId() ) {
+		equals = true;
+	}
+	return equals;
+}
 
 unsigned Verb::getId() const {
 	return m_id;

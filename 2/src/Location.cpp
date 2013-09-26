@@ -23,6 +23,10 @@ void Location::appendDescLong( std::string p_descLong ) {
 	m_descLongs.push_back( p_descLong );
 }
 
+void Location::appendDestination( Destination p_destination ) {
+	m_destinations.push_back( p_destination );
+}
+
 unsigned Location::getId() {
 	return m_id;
 }
@@ -39,4 +43,12 @@ std::string Location::getDescLong() {
 }
 std::vector< std::string > Location::getDescLongs() {
 	return m_descLongs;
+}
+
+unsigned Location::getNumDestinations() {
+	return m_destinations.size();
+}
+
+Destination& Location::operator[]( unsigned p_id ) {
+	return m_destinations[ p_id ];
 }

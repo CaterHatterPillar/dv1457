@@ -13,6 +13,7 @@ public:
 
 	Verb& operator=( unsigned p_id );
 	bool operator==( const unsigned& p_id ) const;
+	bool operator==( const Verb& p_id ) const;
 
 	unsigned getId() const;
 protected:

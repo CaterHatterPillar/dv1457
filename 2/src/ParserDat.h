@@ -1,6 +1,7 @@
 #ifndef PARSERDAT_H
 #define PARSERDAT_H
 
+#include <vector>
 #include <fstream>
 
 #include "AdventData.h"
@@ -10,8 +11,9 @@ public:
 	ParserDat( std::ifstream& p_ifs, AdventData& io_ad );
 	~ParserDat();
 
-	bool init();
+	void init(); // Consider adding return of bool-type to indicate successful parse.
 protected:
+	void compileDependantData();
 	void parseDescLong(			std::istringstream& p_ss );
 	void parseDescShort( 		std::istringstream& p_ss );
 	void parseTravelTable( 		std::istringstream& p_ss );
@@ -23,7 +25,16 @@ protected:
 	void parseLiquidAssets( 	std::istringstream& p_ss ); // This function is not yet used.
 private:
 	std::ifstream* m_ifs;
-	AdventData* m_ad;
+	AdventData* m_ad; // Result
+
+	// Temporary data used whilst parsing:
+	struct TravelDesc {
+		unsigned loc;
+		unsigned dest;
+		std::vector<unsigned> verbIds;
+	};
+
+	std::vector<TravelDesc> m_travelDescs;
 };
 
 #endif //PARSERDAT_H

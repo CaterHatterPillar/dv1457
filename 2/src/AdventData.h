@@ -8,23 +8,9 @@
 #include "Map.h"
 #include "Vocabulary.h"
 
-struct TravelDestination {
-	unsigned dest; // y
-	std::vector<unsigned> verbs;
-};
-struct TravelLocation {
-	unsigned loc; // x
-	std::vector<TravelDestination> dests;
-};
-
 struct AdventData {
 	Map map;
 	Vocabulary vocabulary;
-
-	std::map< unsigned, TravelLocation > dataTravelTable;
-
-	// The vocabulary of the entire application.
-	//std::map< std::string, unsigned > dataVocabulary;
 
 	// Messages
 	std::map< unsigned, std::string > dataMsgsArbitrary;

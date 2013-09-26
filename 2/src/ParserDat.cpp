@@ -27,7 +27,7 @@ ParserDat::~ParserDat() {
 	// Do nothing.
 }
 
-bool ParserDat::init() {
+void ParserDat::init() {
 	unsigned int section = Sections_LONG_FORM_DESCRIPTIONS; // Section start.
 
 	std::string line;
@@ -79,7 +79,19 @@ bool ParserDat::init() {
 		}
 	}
 
-	return true; // tmep
+	compileDependantData();
+}
+void ParserDat::compileDependantData() {
+	for( unsigned i = 0; i < m_travelDescs.size(); i++ ) {
+		TravelDesc td = m_travelDescs[ i ];
+
+		Destination d( td.dest );
+		for( unsigned j = 0; j < td.verbIds.size(); j++ ) {
+			unsigned verbId = td.verbIds[ j ];
+			d.appendVerb( m_ad->vocabulary[ verbId ] );
+		}
+		m_ad->map[ td.loc ].appendDestination( d );
+	}
 }
 
 void ParserDat::parseDescLong( std::istringstream& p_ss ) {
@@ -107,20 +119,30 @@ void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
 	p_ss >> x >> y;
 
 	// Retrieve and store verbs causing travel (the remainder) in the travel-verb struct:
-	std::string verb;
-	std::vector<unsigned> verbs;
-    while( std::getline( p_ss, verb, '\t') ) {
-    	if( verb.size() > 0 ) {
-    		v = Util::toInt( verb.c_str() );
-    		verbs.push_back( v );
+	std::string verbId;
+	std::vector<unsigned> verbIds;
+    while( std::getline( p_ss, verbId, '\t') ) {
+    	if( verbId.size() > 0 ) {
+    		v = Util::toInt( verbId.c_str() );
+    		verbIds.push_back( v );
     	}
     }
 
-    m_ad->dataTravelTable[ x ].loc = x;
+    // At this point we've collected the relevant location, the destination and the verb ids that allows travel to this point.
+    // This is all we need to add a Destination-object to said location. However, the verbs have not yet been loaded at this point.
+    // Thus, we'd like to store some kind of temporary object which will allow us to add these destinations when all the verbs have 
+    // been read.
+    TravelDesc td;
+    td.loc = x;
+    td.dest = y;
+    td.verbIds = verbIds;
+    m_travelDescs.push_back( td );
+
+    /*m_ad->dataTravelTable[ x ].loc = x;
     TravelDestination td;
     td.dest = y;
     td.verbs = verbs;
-    m_ad->dataTravelTable[ x ].dests.push_back( td );
+    m_ad->dataTravelTable[ x ].dests.push_back( td );*/
 }
 void ParserDat::parseVocabulary( std::istringstream& p_ss ) {
 	unsigned id;

@@ -10,24 +10,15 @@
 
 #include "Advent.h"
 
-#include <iostream> // temp, be sure to have me removed.
-
 Advent::Advent() {
-	m_running = true;
-
-	m_playerLoc = 1; // Player starts at position 1.
+	m_running = false;
 }
 Advent::~Advent() {
 	// Do nothing.
 }
 
 void Advent::play() {
-	std::ifstream dat;
-	dat.open( filepathAdventdat.c_str(), std::ios_base::in );
-	if( dat.is_open()==true ) {
-		ParserDat pd( dat, m_ad );
-		bool success = pd.init(); // Not yet indicating success. Consider removing.
-	}
+	load();
 
 	GUI::ClearScreen();
 #ifdef ADVENT_DEBUG
@@ -38,13 +29,27 @@ void Advent::play() {
 	}
 }
 
+void Advent::load() {
+	std::ifstream dat;
+	dat.open( filepathAdventdat.c_str(), std::ios_base::in );
+	if( dat.is_open()==true ) {
+		ParserDat pd( dat, m_ad );
+		pd.init();
+
+		// Initialize player starting position:
+		m_adventurer = Adventurer( m_ad.map[ adventurerStartingLocation ] );
+
+		m_running = true; // Hack to avoid starting the game if the level hasn't yet been loaded.
+	}
+}
+
 void Advent::gameLoop() {
 	GUI::RenderDescription( 
-		m_ad.map[ m_playerLoc ].getDescShort(), //m_ad.dataDescLocShort[m_playerLoc], 
-		m_ad.map[ m_playerLoc ].getDescLongs() );  //m_ad.dataDescLocLong[m_playerLoc] );
+		m_adventurer.getLocation().getDescShort(), //m_ad.dataDescLocShort[m_playerLoc], 
+		m_adventurer.getLocation().getDescLongs() );  //m_ad.dataDescLocLong[m_playerLoc] );
 	// Render objects here.
 #ifdef ADVENT_DEBUG
-	GUI::RenderString( "DEBUG INFO: \nCurrent location: " + Util::toString(m_playerLoc) + "\n");
+	//GUI::RenderString( "DEBUG INFO: \nCurrent location: " + Util::toString(m_playerLoc) + "\n");
 #endif // ADVENT_DEBUG
 	GUI::RenderTerminal();
 
@@ -113,43 +118,42 @@ bool Advent::commandInterpret( std::vector<Verb> p_verbs  ) {
 }
 bool Advent::commandTravel( Verb& p_verb ) {
 	bool travel = false;
-	unsigned int playerLoc = m_playerLoc;
 
-	TravelLocation tl = m_ad.dataTravelTable[ playerLoc ];
-	for( unsigned i = 0; i < tl.dests.size() && travel==false; i++ ) {
-		TravelDestination td = tl.dests[i];
+	Location location = m_adventurer.getLocation();
+	for( unsigned i = 0; i < location.getNumDestinations() && travel==false; i++ ) {
+		Destination destination = location[i];
 	
 		// If the word does not correspond to any word used for travel at the current location - skip to the next destination:
-		if( std::find( td.verbs.begin(), td.verbs.end(), p_verb.getId() ) == td.verbs.end() ) {
+		if( destination.canTravelToUsing( p_verb ) ) {
 			continue;
 		}
 
 #ifdef ADVENT_DEBUG
-		GUI::RenderString( "DEBUG TRAVEL: \nAttempting travel to: " + Util::toString( td.dest ) + "\nTravel would require one of the following verbs:\n" );
+		/*GUI::RenderString( "DEBUG TRAVEL: \nAttempting travel to: " + Util::toString( destination.getId() ) + "\nTravel would require one of the following verbs:\n" );
 		for( unsigned j = 0; j < td.verbs.size(); j++ ) {
 			unsigned verb = td.verbs[j];
 			GUI::RenderString( "\t" + Util::toString( verb ) + "\n" );
-		}
+		}*/
 #endif // ADVENT_DEBUG
 
-		travel = commandTravelToDestination( td, tl.loc );
+		travel = commandTravelToDestination( destination, location );
     	if( travel==true ) {
-    		m_playerLoc = td.dest;
+    		m_adventurer.setLocation( m_ad.map[ destination.getId() ] );
 #ifdef ADVENT_DEBUG
-    		GUI::RenderString( "Travelled to: " + Util::toString( m_playerLoc ) + "\n" );
+    		//GUI::RenderString( "Travelled to: " + Util::toString( m_playerLoc ) + "\n" );
 #endif // ADVENT_DEBUG
     	}
 	}
 
 	return travel;
 }
-bool Advent::commandTravelToDestination( TravelDestination& p_td, unsigned p_loc ) {
+bool Advent::commandTravelToDestination( Destination p_destination, Location p_location ) {
 	bool travel = false;
 
-	unsigned x = p_loc;		// Current location.
-    unsigned y = p_td.dest;	// Possible location to which one might travel.
-    unsigned m = y / 1000; 	// How to travel (might actually not be travel, could even be a goto (!)).
-    unsigned n = y % 1000;	// Conditions of travel.
+	unsigned x = p_location.getId();		// Current location.
+    unsigned y = p_destination.getId();		// Possible location to which one might travel.
+    unsigned m = y / 1000; 					// How to travel (might actually not be travel, could even be a goto (!)).
+    unsigned n = y % 1000;					// Conditions of travel.
 
     if( n<=300 ) { // if n<=300 It is the location to go to.
     } else if( (n > 300) && (n<= 500) ) { // if 300<n<=500 n-300 is used in a computed goto to a section of special code.
