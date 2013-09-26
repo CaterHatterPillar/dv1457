@@ -38,3 +38,6 @@ void GUI::RenderText( int numLines, ... ) {
 	}
 	va_end(list);
 }
+void GUI::RenderTerminal() {
+	std::cout << "> ";
+}

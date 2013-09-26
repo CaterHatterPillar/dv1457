@@ -34,10 +34,11 @@ void Advent::play() {
 }
 
 void Advent::gameLoop() {
-	//GUI::ClearScreen();
+	GUI::ClearScreen();
 	GUI::RenderDescription( 
 		m_ad.dataDescLocShort[m_playerLoc], 
 		m_ad.dataDescLocLong[m_playerLoc] );
+	GUI::RenderTerminal();
 
 	// Aqcuire input:
 	std::string input;
@@ -110,27 +111,27 @@ bool Advent::commandTravel( std::string p_word ) {
 
     	if( n<=300 ) { // if n<=300 It is the location to go to.
     	} else if( (n > 300) && (n<= 500) ) { // if 300<n<=500 n-300 is used in a computed goto to a section of special code.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - GOTO." );
     	} else if( n > 500 ) { // if n>500 Message n-500 from section 6 is printed, and he stays wherever he is.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - Special-case message." );
     	}
 
     	if( m == 0 ) { // if m=0 It's unconditional.
     		travel = true;
     	} else if( (m > 0) && (m < 100) ) { // if 0<m<100 It is done with m% probability.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - probability." );
     	} else if( m == 100 ) { // if m=100 Unconditional, but forbidden to dwarves.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( " Travel - Restrictions to dwarves apply." );
     	} else if( (m > 100) && (m <= 200) ) { // if 100<m<=200	He must be carrying object m-100.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - Must carry certain object." );
     	} else if( (m > 200) && (m <= 300) ) { // if 200<m<=300	Must be carrying or in same room as m-200.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - Must be in same room as..." );
     	} else if( (m > 300) && (m <= 400) ) { // if 300<m<=400	prop(m mod 100) must *not* be 0.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - prop(m mod 100) must *not* be 0." );
     	} else if( (m > 400) && (m <= 500) ) { // if 400<m<=500	prop(m mod 100) must *not* be 1.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - prop(m mod 100) must *not* be 1." );
     	} else if( (m > 500) && (m <= 600) ) { // if 500<m<=600	prop(m mod 100) must *not* be 2, etc.
-    		throw ExceptionAdventNotYetImplemented();
+    		throw ExceptionAdventNotYetImplemented( "Travel - prop(m mod 100) must *not* be 2, etc." );
     	}
 
     	if( travel==true ) {
