@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <stdio.h>
+#include <pwd.h>
 
 class Game
 {
@@ -42,18 +43,16 @@ private:
 	void 		runGame();
 	void 		saveGame();
 
-
-	std::string 	readMsg();
+	std::string readMsg();
 	void 		sendMsg(std::string p_msg);
-	void	 		chatMsg(std::string p_msg);
-	int 	 		sysMsg(std::string p_msg);
+	void	 	chatMsg(std::string p_msg);
+	int 	 	sysMsg(std::string p_msg);
 
-	std::string getFileName();
-
-
+	void createFileName();
 
 	int m_sockfd;
 	std::string m_name;
+	std::string m_filename;
 
 };
 

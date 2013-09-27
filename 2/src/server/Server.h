@@ -17,6 +17,8 @@
 #include <strings.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <vector>
+
 
 #define MAX_CLIENT_CNT 128
 
@@ -50,7 +52,6 @@ private:
 	static sigset_t 	s_mask;
 
 	pthread_t			m_signalThread;
-	pthread_t 			m_threads[MAX_CLIENT_CNT];
 	static unsigned int s_clientCnt;
 
 	sockaddr_in m_addr;

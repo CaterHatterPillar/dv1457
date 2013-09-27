@@ -44,7 +44,8 @@ void Server::run()
 		listen(s_sockfd, MAX_CLIENT_CNT);
 		if(s_clientCnt < MAX_CLIENT_CNT)
 		{
-			pthread_create(&m_threads[s_clientCnt], NULL, handleClient, NULL);
+			pthread_t tid;
+			pthread_create(&tid, NULL, handleClient, NULL);
 			s_clientCnt++;
 		}	
 

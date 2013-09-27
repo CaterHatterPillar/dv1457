@@ -12,6 +12,7 @@ Game::~Game()
 void Game::run()
 {
 	queryName();
+	createFileName();
 	FileStatus fileStatus = openGame();
 	GameStatus gameStatus = GameStatus_NEW_GAME;
 	if(fileStatus == FileStatus_LOADED)
@@ -92,12 +93,10 @@ Game::FileStatus Game::openCaveFile()
 {
 	FileStatus status = FileStatus_UNKNOWN;
 
-	std::string filename = getFileName();
-	std::fstream file(filename.c_str());
+	std::fstream file(m_filename.c_str());
 
-	std::string msg = "";
 
-	printf("%s\n", filename.c_str());
+	printf("%s\n", m_filename.c_str());
 	if(file.is_open())
 		status = FileStatus_LOADED;
 	else
@@ -110,9 +109,7 @@ Game::FileStatus Game::openCaveFile()
 void Game::loadGameData()
 {
 	printf("Loading game\n");
-
-	std::string filename = getFileName();
-	std::fstream file(filename.c_str());
+	std::fstream file(m_filename.c_str());
 
 	//Load shit!s
 
@@ -139,13 +136,14 @@ void Game::runGame()
 void Game::saveGame()
 {
 	printf("Saving game....\n");
-
-	std::string filename = getFileName();
+;
 	std::fstream file;
-	file.open(filename.c_str(),
+	file.open(m_filename.c_str(),
 		std::ios_base::in |
 		std::ios_base::out |
 		std::ios_base::trunc);
+
+	sendMsg(m_filename);
 
 	//Save shit!
 	file << m_name << "\n";
@@ -203,17 +201,25 @@ int Game::sysMsg(std::string p_msg)
  	else if(strcmp(p_msg.c_str(), "/save\n") == 0)
  	{
  		saveGame();
- 		sendMsg("Game saved!");
+ 		//sendMsg("Game saved!");
  	}
 
  	return sysCode;
 }
 
-std::string Game::getFileName()
+void Game::createFileName()
 {
 	std::string filename = m_name;
 	filename.erase(filename.end()-1);
-	filename = filename + ".cave";
 
-	return filename;
+	struct passwd *pw = getpwuid(getuid());
+	std::string user(pw->pw_name);
+
+	std::string dir ="/home/" + user + "/cave/";
+	struct stat st={0};
+	if( stat(dir.c_str(), &st) == -1)
+		mkdir(dir.c_str(), 0700);
+
+	m_filename =dir + filename + ".cave";
+
 }
