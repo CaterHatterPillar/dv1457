@@ -4,6 +4,8 @@
 int Server::s_sockfd;
 unsigned int Server::s_clientCnt;
 sigset_t Server::s_mask;
+pthread_mutex_t Server::m_vecSockMutex;
+std::vector<int> Server::s_sockfds;
 
 Server::Server(int p_port)
 {
@@ -19,9 +21,9 @@ Server::~Server()
 void Server::init()
 {
  	daemonize("cave_server");
- 	syslog(LOG_INFO, "Server demonized");
  	blockSignals();
- 	syslog(LOG_INFO, "Server blocking signals");
+
+ 	pthread_mutex_init(&m_vecSockMutex, NULL);
 
  	int err = pthread_create(&m_signalThread, NULL, signalProcessing, NULL);
  	if(err != 0)
@@ -32,15 +34,13 @@ void Server::init()
  
  	createSock();
  	createAddr();
- 	bindAddrToSock();		
+ 	bindAddrToSock();	
 }
 
 void Server::run()
 {
-	syslog(LOG_INFO, "server running");
 	while(true)
 	{
-		syslog(LOG_INFO, "Listening for connections");
 		listen(s_sockfd, MAX_CLIENT_CNT);
 		if(s_clientCnt < MAX_CLIENT_CNT)
 		{
@@ -158,11 +158,12 @@ void* Server::signalProcessing(void* p_threadId)
 			syslog(LOG_ERR, "sigwait failed");
 			exit(1);
 		}
-		printf("singal recived\n");
 		switch(signo)
 		{
 		case SIGHUP:
 			syslog(LOG_INFO, "Terminating all connections");
+			sleep(30);
+			closeAllSockfds();
 			break;
 		case SIGTERM:
 			syslog(LOG_INFO, "got Sigterm; exiting");
@@ -174,15 +175,28 @@ void* Server::signalProcessing(void* p_threadId)
 		}
 	}
 }
+void Server::closeAllSockfds()
+{
+	pthread_mutex_lock(&m_vecSockMutex);
+	for(unsigned int i=0; i<s_sockfds.size(); i++)
+	{
+		sendMsg(s_sockfds[i], "Server closing connection\n");
+		shutdown(s_sockfds[i], SHUT_RDWR);
+	}
+	pthread_mutex_unlock(&m_vecSockMutex);
+}
+
 
 void* Server::handleClient(void* p_threadId)
 {
 	int sockfd = acceptConnection();
 
+	addSockfd(sockfd);
+
 	Game game(sockfd);
 	game.run();
 
-	disconnectClient(sockfd);
+	removeSockfd(sockfd);
  	pthread_exit(NULL);
 }
 
@@ -197,10 +211,21 @@ int Server::acceptConnection()
  	return newSockfd;
 }
 
-void Server::disconnectClient(int p_sockfd)
+void Server::addSockfd(int p_sockfd)
 {
-	printf("Client at socket %d disconnecting.\n", p_sockfd);
-	s_clientCnt--;
+	pthread_mutex_lock(&m_vecSockMutex);
+	s_sockfds.push_back(p_sockfd);
+	pthread_mutex_unlock(&m_vecSockMutex);
+}
+void Server::removeSockfd(int p_sockfd)
+{
+	pthread_mutex_lock(&m_vecSockMutex);
+	for(unsigned int i=0; i<s_sockfds.size(); i++)
+	{
+		if(p_sockfd == s_sockfds[i])
+			s_sockfds.erase(s_sockfds.begin()+i);
+	}
+	pthread_mutex_unlock(&m_vecSockMutex);
 }
 
 std::string Server::readMsg(int p_sockfd)
@@ -219,21 +244,6 @@ void Server::sendMsg(int p_sockfd, std::string p_msg)
 	int numBytes = send(p_sockfd, p_msg.c_str(), p_msg.length(), 0);
  	if(numBytes<0)
   		printf("Error writing message.\n errno: %d\n", errno);
-}
-
-void Server::chatMsg(std::string p_msg, int p_sockfd)
-{
-	printf("Message at socket %d: \n\t%s", p_sockfd, p_msg.c_str());
-	sendMsg(p_sockfd, p_msg);
-}
-
-int Server::sysMsg(std::string p_msg)
-{
-	int sysCode = 1;
-	if(strcmp(p_msg.c_str(), "/exit\n") == 0)
- 		sysCode = 0;
-
- 	return sysCode;
 }
 
 void Server::createSock()

@@ -36,14 +36,14 @@ private:
 	void blockSignals();
 
 	static void* signalProcessing(void* p_threadId);
+	static void	 closeAllSockfds();
 	static void* handleClient(void* p_threadId);
 	static int   acceptConnection();
-	static void  disconnectClient(int p_sockfd);
+	static void  addSockfd(int p_sockfd);
+	static void  removeSockfd(int p_sockfd);
 	
 	static std::string 	readMsg(int p_sockfd);
 	static void 		sendMsg(int p_sockfd, std::string p_msg);
-	static void	 		chatMsg(std::string p_msg, int p_sockfd);
-	static int 	 		sysMsg(std::string p_msg);
 
 	void createSock();
 	void createAddr();
@@ -53,6 +53,9 @@ private:
 
 	pthread_t			m_signalThread;
 	static unsigned int s_clientCnt;
+
+	static pthread_mutex_t 	m_vecSockMutex;
+	static std::vector<int> s_sockfds;
 
 	sockaddr_in m_addr;
 	int 		m_port;

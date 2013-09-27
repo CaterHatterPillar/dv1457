@@ -12,6 +12,12 @@ Game::~Game()
 void Game::run()
 {
 	queryName();
+	
+	syslog(LOG_INFO,
+		"%s connected at socked %d",
+		m_name.c_str(),
+		m_sockfd);
+	
 	createFileName();
 	FileStatus fileStatus = openGame();
 	GameStatus gameStatus = GameStatus_NEW_GAME;
@@ -119,14 +125,13 @@ void Game::loadGameData()
 void Game::runGame()
 {
 	std::string msg;
- 	int sysCode = 1;
- 	while(sysCode > 0)
+ 	while(fcntl(m_sockfd, F_GETFD) >= 0)
  	{
  		msg = readMsg();
  		if(msg.length() > 0)
  		{
  			if(msg.at(0) == '/')
- 				sysCode = sysMsg(msg);
+ 				sysMsg(msg);
  			else
  				chatMsg(msg);
  		}
@@ -135,22 +140,16 @@ void Game::runGame()
 
 void Game::saveGame()
 {
-	printf("Saving game....\n");
-;
 	std::fstream file;
 	file.open(m_filename.c_str(),
 		std::ios_base::in |
 		std::ios_base::out |
 		std::ios_base::trunc);
 
-	sendMsg(m_filename);
-
 	//Save shit!
 	file << m_name << "\n";
 
 	file.close();
-
-	printf("Game saved\n");
 }
 
 
@@ -184,7 +183,7 @@ void Game::chatMsg(std::string p_msg)
 	sendMsg(p_msg);
 }
 
-int Game::sysMsg(std::string p_msg)
+void Game::sysMsg(std::string p_msg)
 {
 	/*
 	NOTE. All incoming messges must be answered by the server.
@@ -192,19 +191,19 @@ int Game::sysMsg(std::string p_msg)
 	on next call to recieve until the server answers.
 	*/
 
-	int sysCode = 1;
 	if(strcmp(p_msg.c_str(), "/exit\n") == 0)
 	{
-		sysCode = 0;
+		syslog(LOG_INFO,
+			"%s disconnected from socked %d",
+			m_name.c_str(),
+			m_sockfd);
 		shutdown(m_sockfd, SHUT_RDWR);
 	}
  	else if(strcmp(p_msg.c_str(), "/save\n") == 0)
  	{
  		saveGame();
- 		//sendMsg("Game saved!");
+ 		sendMsg("Game saved!");
  	}
-
- 	return sysCode;
 }
 
 void Game::createFileName()

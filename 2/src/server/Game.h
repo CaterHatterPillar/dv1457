@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <syslog.h>
 #include <stdio.h>
 #include <pwd.h>
 
@@ -46,7 +47,7 @@ private:
 	std::string readMsg();
 	void 		sendMsg(std::string p_msg);
 	void	 	chatMsg(std::string p_msg);
-	int 	 	sysMsg(std::string p_msg);
+	void 	 	sysMsg(std::string p_msg);
 
 	void createFileName();
 
