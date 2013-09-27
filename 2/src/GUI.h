@@ -1,3 +1,4 @@
+
 #ifndef GUI_H
 #define GUI_H
 
@@ -21,6 +22,7 @@ public:
 	static void RenderText( int numLines, ... );
 	static void RenderString( std::string p_string );
 	static void RenderTerminal();
+	static void RenderObject( Object p_object );
 protected:
 private:
 };

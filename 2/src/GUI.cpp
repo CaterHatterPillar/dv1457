@@ -22,10 +22,18 @@ void GUI::ClearScreen() {
 	std::cout << std::string( 100, '\n' );
 }
 void GUI::RenderLocation( Location p_location ) {
+	// Render the terrain:
 	std::cout << "---" << std::endl
 		<< p_location.getDescShort() << std::endl
 		<< "---" << std::endl;
 	std::cout << p_location.getDescLong() << std::endl;
+
+	// Render objects:
+	std::vector< Object > objects = p_location.getObjects();
+	for( unsigned i = 0; i < objects.size(); i++ ) {
+		Object object = objects[ i ];
+		RenderObject( object );
+	}
 }
 void GUI::RenderText( int numLines, ... ) {
 	va_list list;
@@ -40,4 +48,8 @@ void GUI::RenderString( std::string p_string ) {
 }
 void GUI::RenderTerminal() {
 	std::cout << "> ";
+}
+
+void GUI::RenderObject( Object p_object ) {
+	std::cout << p_object.getName() << std::endl;
 }

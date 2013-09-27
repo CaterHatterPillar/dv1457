@@ -33,8 +33,13 @@ private:
 		unsigned dest;
 		std::vector<unsigned> verbIds;
 	};
+	struct ObjectDesc {
+		std::vector< unsigned > locs;
+		Object obj;
+	};
 
 	std::vector<TravelDesc> m_travelDescs;
+	std::map< unsigned, ObjectDesc > m_objectDescs;
 };
 
 #endif //PARSERDAT_H

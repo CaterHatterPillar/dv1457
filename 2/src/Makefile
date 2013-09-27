@@ -16,7 +16,7 @@ datastructures: map vocabulary
 	g++ -c AdventData.h
 
 map: vocabulary
-	g++ -c Destination.h Destination.cpp Location.h Location.cpp Map.h Map.cpp
+	g++ -c Object.h Object.cpp Destination.h Destination.cpp Location.h Location.cpp Map.h Map.cpp
 
 vocabulary:
 	g++ -c Verb.h Verb.cpp Vocabulary.h Vocabulary.cpp

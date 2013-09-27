@@ -82,6 +82,7 @@ void ParserDat::init() {
 	compileDependantData();
 }
 void ParserDat::compileDependantData() {
+	// Compile travel-descriptions:
 	for( unsigned i = 0; i < m_travelDescs.size(); i++ ) {
 		TravelDesc td = m_travelDescs[ i ];
 
@@ -91,6 +92,18 @@ void ParserDat::compileDependantData() {
 			d.appendVerb( m_ad->vocabulary[ verbId ] );
 		}
 		m_ad->map[ td.loc ].appendDestination( d );
+	}
+
+	// Compile object-descriptions:
+	typedef std::map< unsigned, ObjectDesc >::iterator iterator;
+	for( iterator it = m_objectDescs.begin(); it != m_objectDescs.end(); it++ ) {
+		Object object = it->second.obj;
+		std::vector< unsigned > locations = it->second.locs;
+
+		for( unsigned i = 0; i < locations.size(); i++ ) {
+			unsigned location = locations[ i ];
+			m_ad->map[ location ].appendObject( object );
+		}
 	}
 }
 
@@ -162,34 +175,45 @@ void ParserDat::parseMsgs( std::istringstream& p_ss, std::map<unsigned, std::str
 	p_map[ msgId ] = msgStr;
 }
 void ParserDat::parseObjLoc( std::istringstream& p_ss ) {
-	unsigned obj;
-	int l;
+	unsigned objId;
 
 	// Get object id in question: 
-	p_ss >> obj;
+	p_ss >> objId;
 
 	// Get locations for said object:
-	std::string loc;
-    while( std::getline( p_ss, loc, '\t' ) ) {
-    	if( loc.size() > 0 ) { // Some weird bug caused this method to write a single zero-value at the beginning of each iteration because loc was returned as "". Strange.
-    		l = Util::toInt( loc.c_str() );
-    		m_ad->dataObjLoc[obj].push_back( l );
+	std::string locationString;
+	unsigned location;
+	std::vector< unsigned > locations;
+    while( std::getline( p_ss, locationString, '\t' ) ) {
+    	if( locationString.size() > 0 ) { // Some weird bug caused this method to write a single zero-value at the beginning of each iteration because loc was returned as "". Strange.
+    		location = Util::toInt( locationString.c_str() );
+    		locations.push_back( location );
     	}
+    }
+
+    m_objectDescs[ objId ].obj.setId( objId );
+    for( unsigned i = 0; i < locations.size(); i++ ) {
+    	unsigned location = locations[ i ];
+    	if( location!=-1 ) {
+    		m_objectDescs[ objId ].locs.push_back( location );
+    	} else {
+    		m_objectDescs[ objId ].obj.setImmovable( true );
+    	} // m_objectDescs[ objId ].obj.insert( m_objectDescs[ objId ].obj.end(), locations.begin(), locations.end() ); 
     }
 }
 void ParserDat::parseObjDesc( std::istringstream& p_ss ) {
-	static unsigned prevObj; // hack
+	static unsigned prevObjId; // hack
 	std::string first, second;
 	p_ss >> first;
 	std::getline( p_ss, second );
 
 	if( first.size() >= 3 ) { // Then 1st and 2nd denote a message that ought to be appended to the previously added object.
-		m_ad->dataObjDesc[ prevObj ][ first ] += second;
+		m_objectDescs[ prevObjId ].obj.appendDescription( first, second );
 	} else { // 1st and 2nd indicate a new object. This also means 1st may be considered an unsigned int.
-		unsigned obj = Util::toInt( first.c_str() );
-		m_ad->dataObj[ obj ] = second; // Name of object.
+		unsigned objId = Util::toInt( first.c_str() );
+		m_objectDescs[ objId ].obj.setName( second ); // Name of object.
 
-		prevObj = obj;
+		prevObjId = objId;
 	}
 
 	// "Properties which produce no message should be given the message ">$<"."
