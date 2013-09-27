@@ -3,6 +3,7 @@
 
 int Server::s_sockfd;
 unsigned int Server::s_clientCnt;
+sigset_t Server::s_mask;
 
 Server::Server(int p_port)
 {
@@ -17,15 +18,29 @@ Server::~Server()
 
 void Server::init()
 {
+ 	daemonize("cave_server");
+ 	syslog(LOG_INFO, "Server demonized");
+ 	blockSignals();
+ 	syslog(LOG_INFO, "Server blocking signals");
+
+ 	int err = pthread_create(&m_signalThread, NULL, signalProcessing, NULL);
+ 	if(err != 0)
+ 	{
+ 		syslog(LOG_INFO, "Could not create singal thread");
+ 		exit(1);
+ 	}
+ 
  	createSock();
  	createAddr();
- 	bindAddrToSock();	
+ 	bindAddrToSock();		
 }
 
 void Server::run()
 {
+	syslog(LOG_INFO, "server running");
 	while(true)
 	{
+		syslog(LOG_INFO, "Listening for connections");
 		listen(s_sockfd, MAX_CLIENT_CNT);
 		if(s_clientCnt < MAX_CLIENT_CNT)
 		{
@@ -36,6 +51,127 @@ void Server::run()
 	}
 
 	pthread_exit(NULL);
+}
+
+void Server::daemonize(const char* cmd)
+{
+	//clear file creation mask.
+	umask(0);
+	
+	//Get the maximum number of file descriptors.
+	struct rlimit rl;
+	if(getrlimit(RLIMIT_NOFILE, &rl) < 0)
+	{
+		printf("Can't get file limit\n");
+		exit(1);
+	}
+
+	//Become session leader to close controlling TTY.
+	pid_t pid;
+	if((pid = fork()) < 0)
+	{
+		printf("Can't fork\n");
+		exit(1);
+	}
+	else if(pid != 0)
+		exit(0);
+
+	setsid();
+
+	//Ensure futire opens won't allocate controlling TTYs
+	struct sigaction sa;
+	sa.sa_handler = SIG_IGN;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+
+	if(sigaction(SIGHUP, &sa, NULL) < 0)
+	{
+		printf("Can't ignore SIGHUP\n");
+		exit(1);
+	}
+	if((pid = fork()) < 0)
+	{
+		printf("Can't fork");
+		exit(1);
+	}
+	else if(pid != 0)
+		exit(0);
+
+	//Chanfe directory to root
+	if(chdir("/") < 0)
+	{
+		printf("Can't change directory to /\n");
+		exit(1);
+	}
+
+	//close all file descriptors.
+	if(rl.rlim_max == RLIM_INFINITY)
+		rl.rlim_max = 1024;
+	for(int i=0; i<rl.rlim_max; i++)
+		close(i);
+
+	//Attach file descriptors 0, 1 and 2 to /dev/null.
+	int fd0 = open("/dev/null", O_RDWR);
+	int fd1 = dup(0);
+	int fd2 = dup(0);
+
+	//Initiate log file.
+	openlog(cmd, LOG_CONS, LOG_DAEMON);
+	if(fd0 != 0 || fd1 != 1 || fd2 != 2)
+	{
+		syslog(LOG_ERR, "unexpected file descriptors %d, %d, %d", fd0, fd1, fd2);
+		exit(1);
+	}
+}
+
+void Server::blockSignals()
+{
+	struct sigaction sa;
+
+	sa.sa_handler = SIG_DFL;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	if(sigaction(SIGHUP, &sa, NULL) < 0)
+	{
+		printf("can't restore SIGHUP default");
+		exit(1);
+	}
+	sigfillset(&s_mask);
+	int err;
+	if((err = pthread_sigmask(SIG_BLOCK, &s_mask, NULL)) != 0)
+	{
+		printf("SIG_BLOCK error");
+		exit(1);
+	}
+}
+
+void* Server::signalProcessing(void* p_threadId)
+{
+	int err, signo;
+
+	while(true)
+	{
+		err = sigwait(&s_mask, &signo);
+		if(err != 0)
+		{
+			syslog(LOG_ERR, "sigwait failed");
+			exit(1);
+		}
+		printf("singal recived\n");
+		switch(signo)
+		{
+		case SIGHUP:
+			syslog(LOG_INFO, "Terminating all connections");
+			break;
+		case SIGTERM:
+			syslog(LOG_INFO, "got Sigterm; exiting");
+			exit(0);
+			break;
+		default:
+			syslog(LOG_INFO, "unexpected signal %d\n", signo);
+			break;
+		}
+	}
 }
 
 void* Server::handleClient(void* p_threadId)

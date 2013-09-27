@@ -1,3 +1,3 @@
 
 all:
-	g++ -o ../../bin/client.bin main.cpp Client.cpp Client.h
+	g++ -o ../../bin/cave_client main.cpp Client.cpp Client.h

@@ -6,15 +6,19 @@
 #include <fcntl.h>
 #include <fstream>
 #include <netinet/in.h>
+#include <signal.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/resource.h>
+#include <syslog.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <strings.h>
 #include <unistd.h>
 #include <pthread.h>
 
-#define MAX_CLIENT_CNT 5
+#define MAX_CLIENT_CNT 128
 
 class Server
 {
@@ -26,9 +30,13 @@ public:
 	void run();
 private:
 
-	static void* 		handleClient(void* p_threadId);
-	static int   		acceptConnection();
-	static void  		disconnectClient(int p_sockfd);
+	void daemonize(const char* cmd);
+	void blockSignals();
+
+	static void* signalProcessing(void* p_threadId);
+	static void* handleClient(void* p_threadId);
+	static int   acceptConnection();
+	static void  disconnectClient(int p_sockfd);
 	
 	static std::string 	readMsg(int p_sockfd);
 	static void 		sendMsg(int p_sockfd, std::string p_msg);
@@ -39,6 +47,9 @@ private:
 	void createAddr();
 	void bindAddrToSock(); 
 
+	static sigset_t 	s_mask;
+
+	pthread_t			m_signalThread;
 	pthread_t 			m_threads[MAX_CLIENT_CNT];
 	static unsigned int s_clientCnt;
 
