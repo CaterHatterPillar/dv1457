@@ -14,9 +14,11 @@ Formatter::~Formatter() {
 
 std::vector< Verb > Formatter::format( std::string p_command ) {
 	return formatVerbs( 
-		formatUppercase( 
-			formatLength( 
-				formatWords( p_command ) ) ) );
+		formatDuplicates( 
+			formatIds( 
+				formatUppercase( 
+					formatLength( 
+						formatWords( p_command ) ) ) ) ) );
 }
 
 std::vector< std::string > Formatter::formatWords( std::string p_command ) {
@@ -45,16 +47,36 @@ std::vector< std::string > Formatter::formatUppercase( std::vector< std::string 
 	}
 	return words;
 }
-std::vector< Verb > Formatter::formatVerbs( std::vector< std::string > p_words ) {
-	std::vector< Verb > verbs;
-	unsigned verbId;
+std::vector< unsigned > Formatter::formatIds( std::vector< std::string > p_words ) {
+	AdventData& ad = Singleton<AdventData>::get();
+
 	std::string word;
+	unsigned wordId;
+	std::vector< unsigned > wordIds;
 	for( unsigned i = 0; i < p_words.size(); i++ ) {
 		word = p_words[ i ];
-		bool isVerb = Singleton<AdventData>::get().vocabulary.isVerb( word, verbId );
+		
+		bool isVerb = ad.vocabulary.isVerb( word, wordId );
 		if( isVerb==true ) {
-			verbs.push_back( Singleton<AdventData>::get().vocabulary[ verbId ] ); 
-		}	
+			wordIds.push_back( wordId );
+		}
+	}
+
+	return wordIds;
+}
+std::vector< unsigned > Formatter::formatDuplicates( std::vector< unsigned > p_wordIds ) {
+	std::sort( p_wordIds.begin(), p_wordIds.end() );
+	p_wordIds.erase( unique( p_wordIds.begin(), p_wordIds.end() ), p_wordIds.end() );
+
+	return p_wordIds;
+}
+std::vector< Verb > Formatter::formatVerbs( std::vector< unsigned > p_wordIds ) {
+	AdventData& ad = Singleton<AdventData>::get();
+
+	std::vector< Verb > verbs;
+	for( unsigned i = 0; i < p_wordIds.size(); i++ ) {
+		unsigned wordId = p_wordIds[ i ];
+		verbs.push_back( ad.vocabulary[ wordId ] );
 	}
 	return verbs;
 }

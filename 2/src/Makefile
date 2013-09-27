@@ -6,14 +6,29 @@ main: advent gui
 	g++ -c main.cpp
 # ---
 
-advent: datastructures parser error util
-	g++ -c Formatter.h Formatter.cpp Advent.h Advent.cpp Adventurer.h Adventurer.cpp
+advent: datastructures parser error util formatter interpreter executioner
+	g++ -c Advent.h Advent.cpp
+
+formatter: error
+	g++ -c Formatter.h Formatter.cpp
+
+interpreter: actions result vocabulary util error
+	g++ -c Interpreter.h Interpreter.cpp
+
+executioner: actions map error
+	g++ -c Executioner.h Executioner.cpp
+
+result:
+	g++ -c Result.h Result.cpp
+
+actions: vocabulary
+	g++ -c Action.h Action.cpp ActionFactory.h ActionFactory.cpp
 
 parser: datastructures util
 	g++ -c ParserDat.h ParserDat.cpp
 
 datastructures: map vocabulary
-	g++ -c Singleton.h AdventData.h
+	g++ -c Singleton.h AdventData.h Adventurer.h Adventurer.cpp
 
 map: vocabulary
 	g++ -c Object.h Object.cpp Destination.h Destination.cpp Location.h Location.cpp Map.h Map.cpp

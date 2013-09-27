@@ -3,6 +3,8 @@
 
 #include "Formatter.h"
 #include "Adventurer.h"
+#include "Interpreter.h"
+#include "Executioner.h"
 
 #define ADVENT_DEBUG 1
 
@@ -18,16 +20,12 @@ public:
 protected:
 	void load();
 	void gameLoop();
-	bool commandInterpret( std::vector<Verb> p_verbs  );
-	
-	bool commandTravel( Verb& p_verb );
-	bool commandTravelToDestination( Destination p_destination, Location p_location );
-	bool commandObject( std::string p_word );
 private:
-	bool m_running;
-	Formatter m_formatter;
+	Formatter	m_formatter;
+	Interpreter m_interpreter;
+	Executioner m_executioner;
 
-	Adventurer m_adventurer; // Game data, considering storing in seperate class.
+	bool m_running;
 };
 
 #endif // ADVENT_H

@@ -6,8 +6,10 @@
 #include <string>
 
 #include "Map.h"
-#include "Singleton.h" // Include for brevity.
 #include "Vocabulary.h"
+#include "Adventurer.h"
+
+#include "Singleton.h" // Include for brevity.
 
 class AdventData {
 public:
@@ -16,8 +18,9 @@ public:
 
 	Map map;
 	Vocabulary vocabulary;
+	Adventurer adventurer;
 
-	// Messages
+	// Everything below is temporary. Ought not be stored in this way.
 	std::map< unsigned, std::string > dataMsgsArbitrary;
 	std::map< unsigned, std::string > dataMsgsClass;
 
