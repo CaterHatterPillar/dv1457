@@ -1,6 +1,7 @@
 #ifndef ADVENTURER_H
 #define ADVENTURER_H
 
+#include "Object.h"
 #include "Location.h"
 
 class Adventurer {
@@ -14,6 +15,7 @@ public:
 protected:
 private:
 	Location m_location;
+	//std::vector< Object > m_inventory;
 };
 
 #endif // ADVENTURER_H

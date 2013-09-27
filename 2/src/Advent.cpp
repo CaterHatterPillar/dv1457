@@ -6,11 +6,10 @@
 #include "GUI.h"
 #include "Util.h"
 #include "ParserDat.h"
+#include "AdventData.h"
 #include "ExceptionAdventNotYetImplemented.h"
 
 #include "Advent.h"
-
-#include <iostream> // Temp, remove me
 
 Advent::Advent() {
 	m_running = false;
@@ -32,14 +31,16 @@ void Advent::play() {
 }
 
 void Advent::load() {
+	AdventData& ad = Singleton<AdventData>::get();
+
 	std::ifstream dat;
 	dat.open( filepathAdventdat.c_str(), std::ios_base::in );
 	if( dat.is_open()==true ) {
-		ParserDat pd( dat, m_ad );
+		ParserDat pd( dat, ad );
 		pd.init();
 
 		// Initialize player starting position:
-		m_adventurer = Adventurer( m_ad.map[ adventurerStartingLocation ] );
+		m_adventurer = Adventurer( ad.map[ adventurerStartingLocation ] );
 
 		m_running = true; // Hack to avoid starting the game if the level hasn't yet been loaded.
 	}
@@ -57,12 +58,8 @@ void Advent::gameLoop() {
 	std::string input;
 	GUI::GetInput( input );
 
-	// Format input:
-	std::vector<Verb> verbs;
-	commandFormat( input, verbs );
-
 	// Interpret input:
-	bool success = commandInterpret( verbs );
+	bool success = commandInterpret( m_formatter.format( input ) );
 	if( success==true ) {
 #ifndef ADVENT_DEBUG
 		GUI::ClearScreen(); // Do not clear screen if in debug-mode.
@@ -70,21 +67,6 @@ void Advent::gameLoop() {
 	}
 }
 
-void Advent::commandFormat( std::string p_command, std::vector<Verb>& io_verbs ) {
-	// Start by splitting up the command into words:
-	std::istringstream ss( p_command );
-	while( std::getline( ss, p_command, ' ') ) {
-		// Shorten each word to a length of five maximum, as the verbs are stored in that way:
-		std::string word = p_command.substr(0, 5); 
-
-		// Filter any words that are not contained within the application vocabulary:
-		unsigned verbId = 0;
-		if( m_ad.vocabulary.isVerb( word, verbId )==true ) {
-			// ...and convert these words into verbs - that is a collection of synonyms meaning the same:
-			io_verbs.push_back( m_ad.vocabulary[ verbId ] ); 
-		}	
-    }
-}
 bool Advent::commandInterpret( std::vector<Verb> p_verbs  ) {
     bool executed = false; // To make sure that one, and only one, modification is made to the game world per command.
     for( unsigned i = 0; i < p_verbs.size() && executed==false; i++ ) {
@@ -102,7 +84,7 @@ bool Advent::commandInterpret( std::vector<Verb> p_verbs  ) {
     			//executed = commandObject( word );
     			break;
     		case 2: // Denotes action.
-    			throw ExceptionAdventNotYetImplemented( "Command - Object." );
+    			throw ExceptionAdventNotYetImplemented( "Command - Action." );
     			break;
     		case 3: // Denotes special-case.
     			throw ExceptionAdventNotYetImplemented( "Command - Special-case." );
@@ -117,6 +99,7 @@ bool Advent::commandInterpret( std::vector<Verb> p_verbs  ) {
 }
 bool Advent::commandTravel( Verb& p_verb ) {
 	bool travel = false;
+	AdventData& ad = Singleton<AdventData>::get();
 
 	Location location = m_adventurer.getLocation();
 	for( unsigned i = 0; i < location.getNumDestinations() && travel==false; i++ ) {
@@ -137,7 +120,7 @@ bool Advent::commandTravel( Verb& p_verb ) {
 
 		travel = commandTravelToDestination( destination, location );
     	if( travel==true ) {
-    		m_adventurer.setLocation( m_ad.map[ destination.getId() ] );
+    		m_adventurer.setLocation( ad.map[ destination.getId() ] );
 #ifdef ADVENT_DEBUG
     		GUI::RenderString( "Travelled to: " + Util::toString( m_adventurer.getLocation().getId() ) + "\n" );
 #endif // ADVENT_DEBUG
@@ -185,18 +168,3 @@ bool Advent::commandObject( std::string p_word ) {
 	std::cout << "Picked up object.";
 	return false;
 }
-
-/*
-typedef std::map< unsigned, std::string >::iterator it_type;
-	for(it_type iterator = m_ad.dataObj.begin(); iterator != m_ad.dataObj.end(); iterator++) {
-		unsigned id = iterator->first;
-		std::string name = iterator->second;
-
-		std::cout << "ObjId: " + Util::toString(id) + " is " + name + " and has the following descriptions:\n";
-		typedef std::map< std::string, std::string >::iterator it_type_2;
-		for(it_type_2 iterator2 = m_ad.dataObjDesc[id].begin(); iterator2 != m_ad.dataObjDesc[id].end(); iterator2++) {
-			std::cout << iterator2->second << "\n";
-		}
-		std::cout << "\n";
-	}
-*/

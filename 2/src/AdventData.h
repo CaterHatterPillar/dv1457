@@ -6,9 +6,14 @@
 #include <string>
 
 #include "Map.h"
+#include "Singleton.h" // Include for brevity.
 #include "Vocabulary.h"
 
-struct AdventData {
+class AdventData {
+public:
+	AdventData()	{}
+	~AdventData()	{}
+
 	Map map;
 	Vocabulary vocabulary;
 
@@ -16,15 +21,12 @@ struct AdventData {
 	std::map< unsigned, std::string > dataMsgsArbitrary;
 	std::map< unsigned, std::string > dataMsgsClass;
 
-	// Objects
-	//std::map< unsigned, std::string > dataObj;
-	//std::map< unsigned, std::map< std::string, std::string > > dataObjDesc;
-	//std::map< unsigned, std::vector<int> > dataObjLoc; // Vector contains locations for key-object. If vector contains '-1', then the object is immovable. If the object has several locatons - it can be assumed to be immovable.
-
 	std::map< unsigned, unsigned > dataActionDefaults;
 
 	// std::map< unsigned, std::vector<unsigned> > dataLiquidAssets;
 	// ^ We're not parsing this yet.
+protected:
+private:
 };
 
 #endif //ADVENTDATA_H

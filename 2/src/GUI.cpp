@@ -13,9 +13,6 @@ GUI::~GUI() {
 
 void GUI::GetInput( std::string& io_input ) {
 	getline( std::cin, io_input );
-
-	// Make line uppercase:
-	std::transform( io_input.begin(), io_input.end(), io_input.begin(), ::toupper );
 }
 
 void GUI::ClearScreen() {

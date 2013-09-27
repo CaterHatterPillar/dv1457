@@ -1,8 +1,8 @@
 #ifndef ADVENT_H
 #define ADVENT_H
 
+#include "Formatter.h"
 #include "Adventurer.h"
-#include "AdventData.h"
 
 #define ADVENT_DEBUG 1
 
@@ -18,19 +18,16 @@ public:
 protected:
 	void load();
 	void gameLoop();
-	void commandFormat( std::string p_command, std::vector<Verb>& io_verbs );
 	bool commandInterpret( std::vector<Verb> p_verbs  );
 	
 	bool commandTravel( Verb& p_verb );
 	bool commandTravelToDestination( Destination p_destination, Location p_location );
 	bool commandObject( std::string p_word );
 private:
-	// Game data:
-	AdventData m_ad;
 	bool m_running;
+	Formatter m_formatter;
 
-	// Adventure data:
-	Adventurer m_adventurer;
+	Adventurer m_adventurer; // Game data, considering storing in seperate class.
 };
 
 #endif // ADVENT_H

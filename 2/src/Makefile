@@ -7,13 +7,13 @@ main: advent gui
 # ---
 
 advent: datastructures parser error util
-	g++ -c Advent.h Advent.cpp Adventurer.h Adventurer.cpp
+	g++ -c Formatter.h Formatter.cpp Advent.h Advent.cpp Adventurer.h Adventurer.cpp
 
 parser: datastructures util
 	g++ -c ParserDat.h ParserDat.cpp
 
 datastructures: map vocabulary
-	g++ -c AdventData.h
+	g++ -c Singleton.h AdventData.h
 
 map: vocabulary
 	g++ -c Object.h Object.cpp Destination.h Destination.cpp Location.h Location.cpp Map.h Map.cpp
