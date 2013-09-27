@@ -14,6 +14,7 @@ public:
 	bool canTravelToUsing( Verb p_verb );
 
 	unsigned getId() const;
+	std::vector< Verb > getVerbs() const;
 protected:
 private:
 	unsigned m_id; // y

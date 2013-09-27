@@ -10,6 +10,8 @@
 
 #include "Advent.h"
 
+#include <iostream> // Temp, remove me
+
 Advent::Advent() {
 	m_running = false;
 }
@@ -44,12 +46,10 @@ void Advent::load() {
 }
 
 void Advent::gameLoop() {
-	GUI::RenderDescription( 
-		m_adventurer.getLocation().getDescShort(), //m_ad.dataDescLocShort[m_playerLoc], 
-		m_adventurer.getLocation().getDescLongs() );  //m_ad.dataDescLocLong[m_playerLoc] );
+	GUI::RenderLocation( m_adventurer.getLocation() );
 	// Render objects here.
 #ifdef ADVENT_DEBUG
-	//GUI::RenderString( "DEBUG INFO: \nCurrent location: " + Util::toString(m_playerLoc) + "\n");
+	GUI::RenderString( "DEBUG INFO: \nCurrent location: " + Util::toString( m_adventurer.getLocation().getId() ) + "\n");
 #endif // ADVENT_DEBUG
 	GUI::RenderTerminal();
 
@@ -64,9 +64,8 @@ void Advent::gameLoop() {
 	// Interpret input:
 	bool success = commandInterpret( verbs );
 	if( success==true ) {
-		// Do not clear screen if in debug-mode.
 #ifndef ADVENT_DEBUG
-		GUI::ClearScreen();
+		GUI::ClearScreen(); // Do not clear screen if in debug-mode.
 #endif // ADVENT_DEBUG
 	}
 }
@@ -124,23 +123,23 @@ bool Advent::commandTravel( Verb& p_verb ) {
 		Destination destination = location[i];
 	
 		// If the word does not correspond to any word used for travel at the current location - skip to the next destination:
-		if( destination.canTravelToUsing( p_verb ) ) {
+		if( destination.canTravelToUsing( p_verb )==false ) {
 			continue;
 		}
 
 #ifdef ADVENT_DEBUG
-		/*GUI::RenderString( "DEBUG TRAVEL: \nAttempting travel to: " + Util::toString( destination.getId() ) + "\nTravel would require one of the following verbs:\n" );
-		for( unsigned j = 0; j < td.verbs.size(); j++ ) {
-			unsigned verb = td.verbs[j];
-			GUI::RenderString( "\t" + Util::toString( verb ) + "\n" );
-		}*/
+		GUI::RenderString( "DEBUG TRAVEL: \nAttempting travel to: " + Util::toString( destination.getId() ) + "\nTravel would require one of the following verbs:\n" );
+		for( unsigned j = 0; j < destination.getVerbs().size(); j++ ) {
+			Verb verb = destination.getVerbs()[j];
+			GUI::RenderString( "\t" + Util::toString( verb.getId() ) + "\n" );
+		}
 #endif // ADVENT_DEBUG
 
 		travel = commandTravelToDestination( destination, location );
     	if( travel==true ) {
     		m_adventurer.setLocation( m_ad.map[ destination.getId() ] );
 #ifdef ADVENT_DEBUG
-    		//GUI::RenderString( "Travelled to: " + Util::toString( m_playerLoc ) + "\n" );
+    		GUI::RenderString( "Travelled to: " + Util::toString( m_adventurer.getLocation().getId() ) + "\n" );
 #endif // ADVENT_DEBUG
     	}
 	}

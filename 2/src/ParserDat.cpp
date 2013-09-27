@@ -101,7 +101,8 @@ void ParserDat::parseDescLong( std::istringstream& p_ss ) {
 	p_ss >> key;
 	std::getline( p_ss, descLong );
 
-	m_ad->map[ key ].appendDescLong( descLong ); //m_ad->dataDescLocLong[ key ].push_back( desc );
+	m_ad->map[ key ].setId( key ); // This is likewize set in parseDescShort.
+	m_ad->map[ key ].appendDescLong( descLong );
 }
 void ParserDat::parseDescShort( std::istringstream& p_ss ) {
 	unsigned int key;
@@ -110,7 +111,8 @@ void ParserDat::parseDescShort( std::istringstream& p_ss ) {
 	p_ss >> key;
 	std::getline( p_ss, descShort );
 
-	m_ad->map[ key ].setDescShort( descShort ); //m_ad->dataDescLocShort[ key ] = desc;
+	m_ad->map[ key ].setId( key ); // This is likewize set in parseDescLong.
+	m_ad->map[ key ].setDescShort( descShort );
 }
 void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
 	unsigned x, y, v;
@@ -137,12 +139,6 @@ void ParserDat::parseTravelTable( std::istringstream& p_ss ) {
     td.dest = y;
     td.verbIds = verbIds;
     m_travelDescs.push_back( td );
-
-    /*m_ad->dataTravelTable[ x ].loc = x;
-    TravelDestination td;
-    td.dest = y;
-    td.verbs = verbs;
-    m_ad->dataTravelTable[ x ].dests.push_back( td );*/
 }
 void ParserDat::parseVocabulary( std::istringstream& p_ss ) {
 	unsigned id;

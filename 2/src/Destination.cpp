@@ -25,3 +25,6 @@ bool Destination::canTravelToUsing( Verb p_verb ) {
 unsigned Destination::getId() const {
 	return m_id;
 }
+std::vector< Verb > Destination::getVerbs() const {
+	return m_verbs;
+}

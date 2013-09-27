@@ -22,9 +22,9 @@ bool Verb::operator==( const unsigned& p_id ) const {
 	}
 	return equals;
 }
-bool Verb::operator==( const Verb& p_id ) const {
+bool Verb::operator==( const Verb& p_verb ) const {
 	bool equals = false;
-	if( *this==p_id.getId() ) {
+	if( m_id==p_verb.getId() ) {
 		equals = true;
 	}
 	return equals;

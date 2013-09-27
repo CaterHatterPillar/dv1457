@@ -5,6 +5,8 @@
 #include <vector>
 #include <stdarg.h>
 
+#include "Location.h"
+
 class GUI {
 public:
 	GUI();
@@ -15,7 +17,7 @@ public:
 
 	// Out
 	static void ClearScreen();
-	static void RenderDescription( std::string p_short, std::vector<std::string> p_long );
+	static void RenderLocation( Location p_location );
 	static void RenderText( int numLines, ... );
 	static void RenderString( std::string p_string );
 	static void RenderTerminal();

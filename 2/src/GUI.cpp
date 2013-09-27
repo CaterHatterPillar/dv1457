@@ -21,14 +21,11 @@ void GUI::GetInput( std::string& io_input ) {
 void GUI::ClearScreen() {
 	std::cout << std::string( 100, '\n' );
 }
-void GUI::RenderDescription( std::string p_short, std::vector<std::string> p_long ) {
+void GUI::RenderLocation( Location p_location ) {
 	std::cout << "---" << std::endl
-		<< p_short << std::endl
+		<< p_location.getDescShort() << std::endl
 		<< "---" << std::endl;
-	for( unsigned i = 0; i < p_long.size(); i++ ) {
-		std::cout << p_long[i] << std::endl;
-	}
-	std::cout << std::endl;
+	std::cout << p_location.getDescLong() << std::endl;
 }
 void GUI::RenderText( int numLines, ... ) {
 	va_list list;

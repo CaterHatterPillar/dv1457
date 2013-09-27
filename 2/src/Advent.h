@@ -4,7 +4,7 @@
 #include "Adventurer.h"
 #include "AdventData.h"
 
-//#define ADVENT_DEBUG 1
+#define ADVENT_DEBUG 1
 
 const static std::string filepathAdventdat = "../advent/advent.dat";
 const static unsigned adventurerStartingLocation = 1;
