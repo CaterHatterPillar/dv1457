@@ -32,7 +32,6 @@ public:
 	void run();
 private:
 
-	void daemonize(const char* cmd);
 	void blockSignals();
 
 	static void* signalProcessing(void* p_threadId);

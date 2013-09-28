@@ -1,5 +1,6 @@
 #include "Server.h"
 #include "Game.h"
+#include "Daemon.h"
 
 int Server::s_sockfd;
 unsigned int Server::s_clientCnt;
@@ -20,7 +21,7 @@ Server::~Server()
 
 void Server::init()
 {
- 	daemonize("cave_server");
+ 	Daemon::daemonize("cave_server");
  	blockSignals();
 
  	pthread_mutex_init(&m_vecSockMutex, NULL);
@@ -52,77 +53,6 @@ void Server::run()
 	}
 
 	pthread_exit(NULL);
-}
-
-void Server::daemonize(const char* cmd)
-{
-	//clear file creation mask.
-	umask(0);
-	
-	//Get the maximum number of file descriptors.
-	struct rlimit rl;
-	if(getrlimit(RLIMIT_NOFILE, &rl) < 0)
-	{
-		printf("Can't get file limit\n");
-		exit(1);
-	}
-
-	//Become session leader to close controlling TTY.
-	pid_t pid;
-	if((pid = fork()) < 0)
-	{
-		printf("Can't fork\n");
-		exit(1);
-	}
-	else if(pid != 0)
-		exit(0);
-
-	setsid();
-
-	//Ensure futire opens won't allocate controlling TTYs
-	struct sigaction sa;
-	sa.sa_handler = SIG_IGN;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-
-	if(sigaction(SIGHUP, &sa, NULL) < 0)
-	{
-		printf("Can't ignore SIGHUP\n");
-		exit(1);
-	}
-	if((pid = fork()) < 0)
-	{
-		printf("Can't fork");
-		exit(1);
-	}
-	else if(pid != 0)
-		exit(0);
-
-	//Chanfe directory to root
-	if(chdir("/") < 0)
-	{
-		printf("Can't change directory to /\n");
-		exit(1);
-	}
-
-	//close all file descriptors.
-	if(rl.rlim_max == RLIM_INFINITY)
-		rl.rlim_max = 1024;
-	for(int i=0; i<rl.rlim_max; i++)
-		close(i);
-
-	//Attach file descriptors 0, 1 and 2 to /dev/null.
-	int fd0 = open("/dev/null", O_RDWR);
-	int fd1 = dup(0);
-	int fd2 = dup(0);
-
-	//Initiate log file.
-	openlog(cmd, LOG_CONS, LOG_DAEMON);
-	if(fd0 != 0 || fd1 != 1 || fd2 != 2)
-	{
-		syslog(LOG_ERR, "unexpected file descriptors %d, %d, %d", fd0, fd1, fd2);
-		exit(1);
-	}
 }
 
 void Server::blockSignals()
