@@ -58,6 +58,8 @@ Section 4: Vocabulary.
 		The word is an action verb (such as "carry" or "attack").  
 	else, if m=3
 		The word is a special case verb (such as "dig") and n mod 1000 is an index into section 6.  Objects from 50 to (currently, anyway) 79 are considered treasures (for pirate, closeout).
+	else if m=4
+		The word is a game-command, such as look or inventory.
 
 Section 5: Object descriptions.  
 	Each line contains a number (n), a tab, and a message.  
