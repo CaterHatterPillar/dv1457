@@ -10,6 +10,7 @@ public:
 	~Result();
 
 	void appendParam( std::string p_param );
+	void clear();
 
 	void setSummary( std::string p_summary );
 	void setParams( std::vector< std::string > p_params );

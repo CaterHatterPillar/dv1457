@@ -15,7 +15,8 @@ public:
 	~Location();
 
 	void appendDestination( Destination p_destination );
-	void appendObject( Object p_object );
+	void objectAppend( Object p_object );
+	void objectRemove( Object p_object );
 
 	void setId( unsigned p_id );
 	void setDescShort( std::string p_descShort );

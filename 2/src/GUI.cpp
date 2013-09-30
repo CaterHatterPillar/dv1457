@@ -50,3 +50,9 @@ void GUI::RenderTerminal() {
 void GUI::RenderObject( Object p_object ) {
 	std::cout << p_object.getName() << std::endl;
 }
+void GUI::RenderInventory( std::vector<Object> p_inventory ) {
+	std::cout << "Inventory:";
+	for( unsigned i = 0; i < p_inventory.size(); i++ ) {
+		std::cout << std::endl << "\t" << p_inventory[i].getName();
+	}
+}

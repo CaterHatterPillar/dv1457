@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Location.h"
 
 Location::Location() {
@@ -26,8 +28,20 @@ void Location::appendDescLong( std::string p_descLong ) {
 void Location::appendDestination( Destination p_destination ) {
 	m_destinations.push_back( p_destination );
 }
-void Location::appendObject( Object p_object ) {
+void Location::objectAppend( Object p_object ) {
 	m_objects.push_back( p_object );
+}
+void Location::objectRemove( Object p_object ) {
+	std::vector< Object >::iterator it;
+	it = std::find( m_objects.begin(), m_objects.end(), p_object );
+	m_objects.erase( it );
+	//bool removed = false;
+	//for( unsigned i = 0; i < m_objects.size() && removed==false; i++ ) {
+	//	if( p_object==m_objects[i] ) {
+	//		m_objects.erase( i );
+	//		removed = true;
+	//	}
+	//}
 }
 
 unsigned Location::getId() const {

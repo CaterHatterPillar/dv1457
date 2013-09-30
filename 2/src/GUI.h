@@ -23,6 +23,7 @@ public:
 	static void RenderString( std::string p_string );
 	static void RenderTerminal();
 	static void RenderObject( Object p_object );
+	static void RenderInventory( std::vector<Object> p_inventory );
 protected:
 private:
 };

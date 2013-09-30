@@ -1,3 +1,4 @@
+#include "Util.h"
 #include "Verb.h"
 
 Verb::Verb() {
@@ -9,6 +10,14 @@ Verb::~Verb() {
 
 void Verb::appendWord( std::string p_word ) {
 	m_words.push_back( p_word );
+}
+
+std::string Verb::toString() {
+	std::string s = Util::toString( m_id ) + ":";
+	for( unsigned i = 0; i < m_words.size(); i++ ) {
+		s += " " + m_words[ i ];
+	}
+	return s;
 }
 
 Verb& Verb::operator=( unsigned p_id ) {

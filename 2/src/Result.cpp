@@ -1,7 +1,7 @@
 #include "Result.h"
 
 Result::Result() {
-
+	m_summary = "";
 }
 Result::~Result() {
 	// Do nothing.
@@ -9,6 +9,10 @@ Result::~Result() {
 
 void Result::appendParam( std::string p_param ) {
 	m_params.push_back( p_param );
+}
+void Result::clear() {
+	m_summary = "";
+	m_params.clear();
 }
 
 void Result::setSummary( std::string p_summary ) {

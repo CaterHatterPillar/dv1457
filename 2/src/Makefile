@@ -16,7 +16,7 @@ interpreter: actions result vocabulary util error
 	g++ -c Interpreter.h Interpreter.cpp
 
 executioner: actions map error
-	g++ -c Executioner.h Executioner.cpp
+	g++ -c GameLogic.h GameLogic.cpp Executioner.h Executioner.cpp
 
 result:
 	g++ -c Result.h Result.cpp
@@ -33,7 +33,7 @@ datastructures: map vocabulary
 map: vocabulary
 	g++ -c Object.h Object.cpp Destination.h Destination.cpp Location.h Location.cpp Map.h Map.cpp
 
-vocabulary:
+vocabulary: util
 	g++ -c Verb.h Verb.cpp Vocabulary.h Vocabulary.cpp
 
 # Utilities and such

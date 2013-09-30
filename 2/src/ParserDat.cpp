@@ -102,7 +102,7 @@ void ParserDat::compileDependantData() {
 
 		for( unsigned i = 0; i < locations.size(); i++ ) {
 			unsigned location = locations[ i ];
-			m_ad->map[ location ].appendObject( object );
+			m_ad->map[ location ].objectAppend( object );
 		}
 	}
 }

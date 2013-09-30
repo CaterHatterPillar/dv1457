@@ -4,12 +4,16 @@
 #include <string>
 #include <vector>
 
+class Object;
+
 class Verb {
 public:
 	Verb();
 	~Verb();
 
 	void appendWord( std::string p_word );
+
+	std::string toString();
 
 	Verb& operator=( unsigned p_id );
 	bool operator==( const unsigned& p_id ) const;

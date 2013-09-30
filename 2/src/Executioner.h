@@ -13,10 +13,9 @@ public:
 	bool execute( Action* p_action );
 protected:
 private:
-	bool executeTravel( ActionTravel* p_action );
-
-	// Game logic-ish:
-	bool conditionsTravel( Destination p_destination, Location p_location );
+	bool executeTravel( 	ActionTravel* 	p_action );
+	bool executeInteract( 	ActionInteract* p_action );
+	bool executeGame( 		ActionGame*		p_action );
 };
 
 #endif // EXECUTIONER_H

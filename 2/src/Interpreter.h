@@ -19,12 +19,17 @@ public:
 		std::vector< Verb > vObject;
 		std::vector< Verb > vAction;
 		std::vector< Verb > vSpecial;
+		std::vector< Verb > vGame;
 	};
 protected:
 private:
 	Interpretation interpretType( std::vector< Verb > p_verbs );
 
-	Action* interpretActionTravel( Interpretation p_interpretation, Result& io_result );
+	// These methods all need their result-writebacks to be re-written. They are currently faulty.
+	Action* interpretAction( 			Interpretation p_interpretation, Result& io_result, ActionTypes p_actionType );
+	Action* interpretActionTravel( 		Interpretation p_interpretation, Result& io_result );
+	Action* interpretActionInteract( 	Interpretation p_interpretation, Result& io_result );
+	Action* interpretActionGame( 		Interpretation p_interpretation, Result& io_result );
 };
 
 #endif // INTERPRETER_H
