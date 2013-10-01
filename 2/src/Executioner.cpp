@@ -77,16 +77,17 @@ bool Executioner::executeInteract( ActionInteract* p_action, Result& io_result )
     Verb action = p_action->getAction();
     Verb target = p_action->getTarget();
     Location location = ad.adventurer.getLocation();
-    std::vector< Object > locationObjects = location.getObjects();
-    for( unsigned i = 0; i < locationObjects.size() && interact==false; i++ ) {
-        Object object = locationObjects[ i ];
+    std::vector< unsigned > locationObjectIds = location.getObjectIds();
+    for( unsigned i = 0; i < locationObjectIds.size() && interact==false; i++ ) {
+        unsigned objectId = locationObjectIds[ i ];
+        Object object = ad.map.getObject( objectId );
 
         interact = GameLogic::canTakeObject( target, object );
         if( interact==true && ad.adventurer.getInventory().isFull()==false ) {
             // Loot object:
             ad.adventurer.getInventory().appendItem( object );
             // Remove object from location:
-            ad.map[ location.getId() ].objectRemove( object );
+            ad.map[ location.getId() ].objectIdRemove( objectId );
 
             GUI::RenderString( s_confMessageObjectTaken );
 

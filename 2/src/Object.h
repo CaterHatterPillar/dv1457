@@ -39,8 +39,6 @@ private:
 	unsigned m_propertyValue;
 	std::string m_name;
 
-	// itsprop ???
-
 	bool m_immovable;
 	std::map< std::string, ObjectDescription > m_descriptions;
 };

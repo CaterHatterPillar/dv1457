@@ -15,8 +15,8 @@ public:
 	~Location();
 
 	void appendDestination( Destination p_destination );
-	void objectAppend( Object p_object );
-	void objectRemove( Object p_object );
+	void objectIdAppend( unsigned p_objectId );
+	void objectIdRemove( unsigned p_objectId );
 
 	void setId( unsigned p_id );
 	void setDescShort( std::string p_descShort );
@@ -26,7 +26,7 @@ public:
 	std::string getDescShort() const;
 	std::string getDescLong() const;
 	std::vector< std::string > getDescLongs() const;
-	std::vector< Object > getObjects() const;
+	std::vector< unsigned > getObjectIds() const;
 	unsigned getNumDestinations() const;
 
 	Destination& operator[]( unsigned p_id );
@@ -38,7 +38,7 @@ private:
 	std::vector< std::string > m_descLongs;
 
 	// Items:
-	std::vector< Object > m_objects;
+	std::vector< unsigned > m_objectIds;
 
 	// Travel:
 	std::vector<Destination> m_destinations; // Consider implementing the Location/Destination paradigm as a linked graph.

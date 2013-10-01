@@ -100,9 +100,13 @@ void ParserDat::compileDependantData() {
 		Object object = it->second.obj;
 		std::vector< unsigned > locations = it->second.locs;
 
+		// Add object to list of objects present in the game world:
+		m_ad->map.appendObject( object );
+
+		// Add object ID to location where that object is located:
 		for( unsigned i = 0; i < locations.size(); i++ ) {
 			unsigned location = locations[ i ];
-			m_ad->map[ location ].objectAppend( object );
+			m_ad->map[ location ].objectIdAppend( object.getId() );
 		}
 	}
 }

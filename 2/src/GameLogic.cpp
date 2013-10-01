@@ -23,6 +23,7 @@ bool GameLogic::canTravel( Destination p_destination, Location p_location ) {
         throw ExceptionAdventNotYetImplemented( "Travel - Special-case message." );
     }
 
+    // Note to self, developer and the world: By 'prop', the original author apperently mean object - so the property value of said object.
     if( m == 0 ) { // if m=0 It's unconditional.
         canTravel = true;
     } else if( (m > 0) && (m < 100) ) { // if 0<m<100 It is done with m% probability.
@@ -34,6 +35,10 @@ bool GameLogic::canTravel( Destination p_destination, Location p_location ) {
     } else if( (m > 200) && (m <= 300) ) { // if 200<m<=300 Must be carrying or in same room as m-200.
         throw ExceptionAdventNotYetImplemented( "Travel - Must be in same room as..." );
     } else if( (m > 300) && (m <= 400) ) { // if 300<m<=400 prop(m mod 100) must *not* be 0.
+        //unsigned prop = m % 100;
+        //if( prop!=0 ) {
+        //    canTravel = true;
+        //}
         throw ExceptionAdventNotYetImplemented( "Travel - prop(m mod 100) must *not* be 0." );
     } else if( (m > 400) && (m <= 500) ) { // if 400<m<=500 prop(m mod 100) must *not* be 1.
         throw ExceptionAdventNotYetImplemented( "Travel - prop(m mod 100) must *not* be 1." );
