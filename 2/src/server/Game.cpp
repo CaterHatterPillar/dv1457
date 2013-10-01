@@ -1,9 +1,9 @@
 #include "Game.h"
 
-Game::Game(int p_sockfd)
+Game::Game(int p_sockfd, std::string p_name)
 {
 	m_sockfd = p_sockfd;
-	m_name = "Unknown";
+	m_name 	 = p_name;
 }
 Game::~Game()
 {
@@ -11,108 +11,50 @@ Game::~Game()
 
 void Game::run()
 {
-	queryName();
-	
-	syslog(LOG_INFO,
-		"%s connected at socked %d",
-		m_name.c_str(),
-		m_sockfd);
-	
 	createFileName();
-	FileStatus fileStatus = openGame();
-	GameStatus gameStatus = GameStatus_NEW_GAME;
-	if(fileStatus == FileStatus_LOADED)
-		gameStatus = queryContinue();
-
-	if(gameStatus == GameStatus_LOAD_GAME)
-		loadGameData();
-
-	runGame();
 	
+	GameStatus status = queryLoadGame();
+	if(status == GameStatus_LOAD_GAME)
+		loadGame();
+	else if(status == GameStatus_NEW_GAME)
+		newGame();
+
+	std::string msg;
+	bool run = true;
+	while(run)
+	{
+		run = checkConnection();
+
+		msg = readMsg();
+		run = sendMsg(msg);
+	}
+
 	saveGame();
 }
 
-
-void Game::queryName()
+Game::GameStatus Game::queryLoadGame()
 {
-	std::string msg = "What is your name adventurer?";
-	sendMsg(msg);
-
-  	std::string name = readMsg();
-  	msg = "Welcome " + name;
-  	sendMsg(msg);
-
-  	m_name = name;
-}
-
-Game::FileStatus Game::openGame()
-{
-	printf("Open game\n");
-	std::string msg = "";
-	FileStatus status = openCaveFile();
-	if(status == FileStatus_MISSING)
+	GameStatus status = GameStatus_UNKNOWN;
+	bool fileExists = caveFileExists();
+	if(fileExists)
 	{
-		msg = "/new_game";
-		sendMsg(msg);
-	}
-	else
-	{
-		msg = "/prev_game";
-		sendMsg(msg);
-	}
-
-	return status;
-}	
-
-Game::GameStatus Game::queryContinue()
-{
-	GameStatus status;
-	std::string msg ="";
-	bool done = false;
-	while(!done)
-	{
-		msg = readMsg();
-		if(strcmp(msg.c_str(), "yes\n") == 0)
-		{
-			done = true;
-			msg = "/load_game";
-			sendMsg(msg);
+		sendMsg("/load_game");
+		std::string msg = readMsg();
+		if(strcmp(msg.c_str(), "/load_game") == 0)
 			status = GameStatus_LOAD_GAME;
-		}
-		else if(strcmp(msg.c_str(), "no\n") == 0)
-		{
-			done = true;
-			std::string msg = "/new_game";
-			sendMsg(msg);
+		else if(strcmp(msg.c_str(), "/new_game") == 0)
 			status = GameStatus_NEW_GAME;
-		}
-		else
-		{
-			msg = "/unknown";
-			sendMsg(msg);
-		}
+	}
+	else
+	{
+		sendMsg("/new_game");
+		std::string msg = readMsg();
+		status = GameStatus_NEW_GAME;
 	}
 	return status;
 }
 
-Game::FileStatus Game::openCaveFile()
-{
-	FileStatus status = FileStatus_UNKNOWN;
-
-	std::fstream file(m_filename.c_str());
-
-
-	printf("%s\n", m_filename.c_str());
-	if(file.is_open())
-		status = FileStatus_LOADED;
-	else
-		status = FileStatus_MISSING;
-
-	file.close();
-	return status;
-}
-
-void Game::loadGameData()
+void Game::loadGame()
 {
 	printf("Loading game\n");
 	std::fstream file(m_filename.c_str());
@@ -121,21 +63,9 @@ void Game::loadGameData()
 
 	file.close();
 }
-
-void Game::runGame()
+void Game::newGame()
 {
-	std::string msg;
- 	while(fcntl(m_sockfd, F_GETFD) >= 0)
- 	{
- 		msg = readMsg();
- 		if(msg.length() > 0)
- 		{
- 			if(msg.at(0) == '/')
- 				sysMsg(msg);
- 			else
- 				chatMsg(msg);
- 		}
-	}
+	//Set up for new game.
 }
 
 void Game::saveGame()
@@ -152,6 +82,12 @@ void Game::saveGame()
 	file.close();
 }
 
+bool Game::checkConnection()
+{
+	bool connected = true;
+	connected = sendMsg("/con");
+	return connected;
+}
 
 std::string Game::readMsg()
 {
@@ -164,11 +100,16 @@ std::string Game::readMsg()
  	return std::string(buffer);
 }
 
-void Game::sendMsg(std::string p_msg)
+bool Game::sendMsg(std::string p_msg)
 {
+	bool success = true;
 	int numBytes = send(m_sockfd, p_msg.c_str(), p_msg.length(), 0);
  	if(numBytes<0)
-  		printf("Error writing message.\n errno: %d\n", errno);
+ 	{
+ 		printf("Error writing message.\n errno: %d\n", errno);
+ 		success = false;
+ 	}
+  	return success;
 }
 
 void Game::chatMsg(std::string p_msg)
@@ -220,5 +161,16 @@ void Game::createFileName()
 		mkdir(dir.c_str(), 0700);
 
 	m_filename =dir + filename + ".cave";
+}
 
+bool Game::caveFileExists()
+{
+	bool success = false;
+	std::fstream file(m_filename.c_str());
+	if(file.is_open())
+	{
+		success = true;
+		file.close();
+	}
+	return success;
 }

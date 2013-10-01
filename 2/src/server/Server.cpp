@@ -2,11 +2,14 @@
 #include "Game.h"
 #include "Daemon.h"
 
-int Server::s_sockfd;
-unsigned int Server::s_clientCnt;
-sigset_t Server::s_mask;
-pthread_mutex_t Server::m_vecSockMutex;
-std::vector<int> Server::s_sockfds;
+int 				Server::s_sockfd;
+sigset_t 			Server::s_mask;
+unsigned int 		Server::s_clientCnt;
+pthread_mutex_t 	Server::s_vecSockMutex;
+std::vector<int> 	Server::s_sockfds;
+
+pthread_mutex_t 		 Server::s_vecNameMutex;
+std::vector<std::string> Server::s_names;
 
 Server::Server(int p_port)
 {
@@ -16,7 +19,6 @@ Server::Server(int p_port)
 }
 Server::~Server()
 {
-	
 }
 
 void Server::init()
@@ -24,7 +26,7 @@ void Server::init()
  	Daemon::daemonize("cave_server");
  	blockSignals();
 
- 	pthread_mutex_init(&m_vecSockMutex, NULL);
+ 	pthread_mutex_init(&s_vecSockMutex, NULL);
 
  	int err = pthread_create(&m_signalThread, NULL, signalProcessing, NULL);
  	if(err != 0)
@@ -46,7 +48,7 @@ void Server::run()
 		if(s_clientCnt < MAX_CLIENT_CNT)
 		{
 			pthread_t tid;
-			pthread_create(&tid, NULL, handleClient, NULL);
+			pthread_create(&threads[s_clientCnt], NULL, handleClient, NULL);
 			s_clientCnt++;
 		}	
 
@@ -107,25 +109,33 @@ void* Server::signalProcessing(void* p_threadId)
 }
 void Server::closeAllSockfds()
 {
-	pthread_mutex_lock(&m_vecSockMutex);
+	pthread_mutex_lock(&s_vecSockMutex);
 	for(unsigned int i=0; i<s_sockfds.size(); i++)
 	{
 		sendMsg(s_sockfds[i], "Server closing connection\n");
 		shutdown(s_sockfds[i], SHUT_RDWR);
 	}
-	pthread_mutex_unlock(&m_vecSockMutex);
+	pthread_mutex_unlock(&s_vecSockMutex);
 }
-
 
 void* Server::handleClient(void* p_threadId)
 {
 	int sockfd = acceptConnection();
-
 	addSockfd(sockfd);
 
-	Game game(sockfd);
-	game.run();
+	std::string name = queryName(sockfd);
 
+	syslog(LOG_INFO, "Client connected at socket: %d", sockfd);
+
+	if(name.length() > 0)
+	{
+		Game game(sockfd, name);
+		game.run();
+	}
+
+	syslog(LOG_INFO, "Client disconnected from socket: %d", sockfd);
+
+	removeName(name);
 	removeSockfd(sockfd);
  	pthread_exit(NULL);
 }
@@ -143,20 +153,82 @@ int Server::acceptConnection()
 
 void Server::addSockfd(int p_sockfd)
 {
-	pthread_mutex_lock(&m_vecSockMutex);
+	pthread_mutex_lock(&s_vecSockMutex);
 	s_sockfds.push_back(p_sockfd);
-	pthread_mutex_unlock(&m_vecSockMutex);
+	pthread_mutex_unlock(&s_vecSockMutex);
 }
 void Server::removeSockfd(int p_sockfd)
 {
-	pthread_mutex_lock(&m_vecSockMutex);
+	pthread_mutex_lock(&s_vecSockMutex);
 	for(unsigned int i=0; i<s_sockfds.size(); i++)
 	{
 		if(p_sockfd == s_sockfds[i])
 			s_sockfds.erase(s_sockfds.begin()+i);
 	}
-	pthread_mutex_unlock(&m_vecSockMutex);
+	pthread_mutex_unlock(&s_vecSockMutex);
 }
+
+std::string Server::queryName(int p_sockfd)
+{
+	std::string msg = "What is your name adventurer?";
+	std::string name = "Unknown";
+	
+	bool nameAdded = false;
+	bool run = sendMsg(p_sockfd, msg);
+	while(run)
+	{
+		name = readMsg(p_sockfd);
+		nameAdded = addName(name);
+		if(nameAdded)
+		{
+			msg = "Welcome " + name;
+			run = false;
+		}
+		else
+			msg = "An adventurer with that name already exists. New name: ";
+
+		sendMsg(p_sockfd, msg); 
+	}
+	return name;
+}
+bool Server::addName(std::string p_name)
+{
+	pthread_mutex_lock(&s_vecNameMutex);
+
+	bool nameFound = false;
+	bool success = false;
+
+	for(unsigned int i=0; i<s_names.size(); i++)
+	{
+		if(strcmp(s_names[i].c_str(), p_name.c_str()) == 0)
+			nameFound = true;
+	}
+	if(nameFound == false)
+	{
+		s_names.push_back(p_name);
+		success = true;
+	}
+	pthread_mutex_unlock(&s_vecNameMutex);
+
+	return success;
+}
+bool Server::removeName(std::string p_name)
+{
+	pthread_mutex_lock(&s_vecNameMutex);
+	bool success = false;
+	for(unsigned int i=0; i<s_names.size(); i++)
+	{
+		if(strcmp(s_names[i].c_str(), p_name.c_str()) == 0)
+		{
+			s_names.erase(s_names.begin()+i);
+			success = true;
+		}
+	}
+	pthread_mutex_unlock(&s_vecNameMutex);
+
+	return success;
+}
+
 
 std::string Server::readMsg(int p_sockfd)
 {
@@ -164,16 +236,22 @@ std::string Server::readMsg(int p_sockfd)
 	bzero((char*)buffer, 256);
  	int numBytes = recv(p_sockfd, buffer, 255, 0);
  	if(numBytes<0)
- 		printf("Error reading client message.\n errno: %d\n", errno);
+ 		syslog(LOG_INFO, "Error reading message.");
 
  	return std::string(buffer);
 }
 
-void Server::sendMsg(int p_sockfd, std::string p_msg)
+bool Server::sendMsg(int p_sockfd, std::string p_msg)
 {
+	bool success = true;
 	int numBytes = send(p_sockfd, p_msg.c_str(), p_msg.length(), 0);
  	if(numBytes<0)
-  		printf("Error writing message.\n errno: %d\n", errno);
+ 	{
+ 		syslog(LOG_INFO, "Error sending message.");
+ 		success = false;
+ 	}
+
+ 	return success;
 }
 
 void Server::createSock()

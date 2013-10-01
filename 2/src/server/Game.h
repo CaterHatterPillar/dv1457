@@ -17,15 +17,9 @@
 class Game
 {
 public:
-	Game(int p_sockfd);
+	Game(int p_sockfd, std::string p_name);
 	~Game();
 
-	enum FileStatus
-	{
-		FileStatus_UNKNOWN,
-		FileStatus_LOADED,
-		FileStatus_MISSING
-	};
 	enum GameStatus
 	{
 		GameStatus_UNKNOWN,
@@ -36,20 +30,21 @@ public:
 	void run();
 private:
 
-	void	 	queryName();
-	FileStatus 	openGame();
-	FileStatus 	openCaveFile();
-	GameStatus 	queryContinue();
-	void 		loadGameData();
-	void 		runGame();
-	void 		saveGame();
+	GameStatus queryLoadGame();
+
+	void loadGame();
+	void newGame();
+	void saveGame();
+
+	bool checkConnection();
 
 	std::string readMsg();
-	void 		sendMsg(std::string p_msg);
+	bool 		sendMsg(std::string p_msg);
 	void	 	chatMsg(std::string p_msg);
 	void 	 	sysMsg(std::string p_msg);
 
 	void createFileName();
+	bool caveFileExists();
 
 	int m_sockfd;
 	std::string m_name;

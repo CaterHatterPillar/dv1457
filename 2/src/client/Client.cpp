@@ -22,25 +22,22 @@ void Client::init()
 void Client::run()
 {
 	std::string msg;
-	bool exit = false;
+	bool run = true;
 
-	login();
+	answerName();
+	answerLoadGame();
 
-	while(!exit)
-	{
+	while(run)
+	{		
+		msg = readMsg(); //Server checking connection.
+
  		msg = readUserInput();
-
- 		if(strcmp(msg.c_str(), "/exit\n") == 0)
- 			exit = true;
-
+	 	
 	 	sendMsg(msg);
-		if(!exit)
-		{
-	 		msg = readMsg();
-	
-			printf("Answer: \n\t%s", msg.c_str());
-			printf("\n");
-		}
+
+	 	msg = readMsg();
+		printf("Answer: \n\t%s", msg.c_str());
+		printf("\n");
 	}
 }
 
@@ -60,56 +57,80 @@ std::string Client::readMsg()
 	int numBytes = recv(m_sockfd, buffer, 255, 0);
 	if(numBytes<0)
 		printf("Error reading from socket.\n errno: %d\n", errno);
+	if(numBytes == 0)
+		printf("Server has closed this clients socket.\n");
 
 	return std::string(buffer);
 }
 
-void Client::sendMsg(std::string p_msg)
+bool Client::sendMsg(std::string p_msg)
 {
+	bool success = true;
 	int numBytes = send(m_sockfd, p_msg.c_str(), p_msg.length(), 0);
-	if(numBytes < 0)
+	if(numBytes <= 0)
+	{
 		printf("Error writing to socket.\n errno: %d\n", errno);
+		success = false;
+	}
+
+	return success;
 }
 
-void Client::login()
+void Client::answerName()
 {
-	std::string msg = readMsg();
-	printf("%s\n", msg.c_str());
-
-	msg = readUserInput();
-	sendMsg(msg);
-	msg = readMsg();
-	printf("%s\n", msg.c_str());
-
-	msg = readMsg();
-	if(strcmp(msg.c_str(), "/new_game") == 0)
-		printf("Starting new game...\n");
-	else if(strcmp(msg.c_str(), "/prev_game") == 0)
-		loadGame();
-}
-
-void Client::loadGame()
-{
-	printf("You have been here before! Continue from last save? (yes/no)\n");
-	std::string msg = "";
+	std::string msg;
 	bool done = false;
+	
+	msg = readMsg();
+	printf("%s\n", msg.c_str());
 	while(!done)
 	{
 		msg = readUserInput();
 		sendMsg(msg);
+
 		msg = readMsg();
-		if(strcmp(msg.c_str(), "/new_game") == 0)
-		{
+		if(msg.at(0) == 'W')
 			done = true;
-			printf("Starting new game... \n");
-		}
-		else if(strcmp(msg.c_str(), "/load_game") == 0)
+		printf("%s\n", msg.c_str());
+	}
+}
+
+void Client::answerLoadGame()
+{
+	printf("answerLoadGame()\n");
+
+	std::string input;
+	std::string msg;
+	msg = readMsg();
+
+	bool done = false;
+
+	if(strcmp(msg.c_str(), "/load_game") == 0)
+	{
+		printf("You have been here before, continue from last save? (yes/no)\n");
+		while(!done)
 		{
-			done = true;
-			printf("Loading game...\n");
+			input = readUserInput();
+			if(strcmp(input.c_str(), "yes\n") == 0)
+			{
+				done = true;
+				sendMsg("/load_game");
+				printf("Loading game...\n");
+			}
+			else if(strcmp(input.c_str(), "no\n") == 0)
+			{
+				done = true;
+				sendMsg("/new_game");
+				printf("Starting new game...\n");
+			}
+			else
+				printf("You must answer either \"yes\" or \"no\"\n");
 		}
-		else
-			printf("You must answer \"yes\" or \"no\" \n");
+	}
+	else
+	{
+		sendMsg("/new_game");
+		printf("Starting new game...\n");
 	}
 }
 

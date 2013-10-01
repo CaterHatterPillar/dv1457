@@ -26,10 +26,11 @@ private:
 
 	std::string readUserInput();
 	std::string readMsg();
-	void 		sendMsg(std::string p_msg);
+	bool 		sendMsg(std::string p_msg);
 
-	void login();
-	void loadGame();
+	void answerName();
+	void answerLoadGame();
+
 	void createAddr();
 	void createSock();
 	void connectToServer();

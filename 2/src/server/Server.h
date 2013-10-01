@@ -41,8 +41,12 @@ private:
 	static void  addSockfd(int p_sockfd);
 	static void  removeSockfd(int p_sockfd);
 	
+	static std::string queryName(int p_sockfd);
+	static bool addName(std::string p_name);
+	static bool removeName(std::string p_name);
+
 	static std::string 	readMsg(int p_sockfd);
-	static void 		sendMsg(int p_sockfd, std::string p_msg);
+	static bool 		sendMsg(int p_sockfd, std::string p_msg);
 
 	void createSock();
 	void createAddr();
@@ -53,8 +57,13 @@ private:
 	pthread_t			m_signalThread;
 	static unsigned int s_clientCnt;
 
-	static pthread_mutex_t 	m_vecSockMutex;
+	static pthread_mutex_t 	s_vecSockMutex;
 	static std::vector<int> s_sockfds;
+
+	static pthread_mutex_t s_vecNameMutex;
+	static std::vector<std::string> s_names;
+
+	pthread_t threads[MAX_CLIENT_CNT];
 
 	sockaddr_in m_addr;
 	int 		m_port;
