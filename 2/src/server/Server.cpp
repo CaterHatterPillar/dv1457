@@ -24,6 +24,13 @@ Server::~Server()
 void Server::init()
 {
  	Daemon::daemonize("cave_server");
+
+ 	if(Daemon::alreadyRunning())
+ 	{
+ 		syslog(LOG_ERR, "Daemon already running");
+ 		exit(1);
+ 	}
+
  	blockSignals();
 
  	pthread_mutex_init(&s_vecSockMutex, NULL);

@@ -152,15 +152,12 @@ void Game::createFileName()
 	std::string filename = m_name;
 	filename.erase(filename.end()-1);
 
-	struct passwd *pw = getpwuid(getuid());
-	std::string user(pw->pw_name);
-
-	std::string dir ="/home/" + user + "/cave/";
+	std::string dir = "/var/cave/";
 	struct stat st={0};
 	if( stat(dir.c_str(), &st) == -1)
 		mkdir(dir.c_str(), 0700);
 
-	m_filename =dir + filename + ".cave";
+	m_filename = dir + filename + ".cave";
 }
 
 bool Game::caveFileExists()
