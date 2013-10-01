@@ -19,7 +19,8 @@ bool Executioner::execute( Action* p_action ) {
 	ActionTypes actionType = p_action->getType(); 
 	switch( actionType ) {
 		case ActionTypes_INVALID:
-			break; // Print debug info
+            executed = false;
+			break;
 		case ActionTypes_TRAVEL:
 			executed = executeTravel( (ActionTravel*)p_action );
 			break;
@@ -110,4 +111,6 @@ bool Executioner::executeGame( ActionGame* p_action ) {
             throw ExceptionAdventNotYetImplemented( "Encountered unknown ActionGameTypes: " + std::string( ActionGameTypesString[ agt ] ) + "." );
             break;
     }
+
+    return recognizedGameCommand;
 }

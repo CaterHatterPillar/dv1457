@@ -19,7 +19,7 @@ Action* Interpreter::interpret( std::vector< Verb > p_verbs, Result& io_result )
 		a = interpretAction( interpretation, io_result, (ActionTypes)actionType );
 	}
 
-	if( a->isValid()==false ) {
+	if( p_verbs.size()==0 ) {
 		io_result.setSummary( s_confMessageInvalidCommand );
 	}
 	return a;
@@ -84,46 +84,56 @@ Action* Interpreter::interpretAction(
 }
 Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vTravel.size()==1 ) {
-		delete action;
-		action = ActionFactory::actionTravel( p_interpretation.vTravel.front() );
-	} else {
-		io_result.setSummary( s_confMessageInvalidTravel );
-		/*io_result.setParams( p_interpretation.vTravel );*/
+	if( p_interpretation.vTravel.size() > 0 ) {
+		// ToDoIst: implement support for handling not-just-one verb for commands.
+		if( p_interpretation.vTravel.size()==1 ) {
+			delete action;
+			action = ActionFactory::actionTravel( p_interpretation.vTravel.front() );
+		} else {
+			io_result.setSummary( s_confMessageInvalidTravel );
+			/*io_result.setParams( p_interpretation.vTravel );*/
+		}
 	}
+	
 	return action;
 }
 Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vAction.size()==1 && p_interpretation.vObject.size()==1 ) {
-		delete action;
-		action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject.front() );
-	} else {
-		io_result.setSummary( s_confMessageInvalidInteract );
-		/*io_setParams( p_interpretation.vAction );
-		for( unsigned i = 0; i < p_interpretation.vObject.size(); i++ ) {
-			io_result.appendParam( p_interpretation.vObject[ i ] );
-		}*/
+	if( p_interpretation.vAction.size() > 0 ) {
+		// ToDoIst: implement support for handling not-just-one verb for commands.
+		if( p_interpretation.vAction.size()==1 && p_interpretation.vObject.size()==1 ) {
+			delete action;
+			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject.front() );
+		} else {
+			io_result.setSummary( s_confMessageInvalidInteract );
+			/*io_setParams( p_interpretation.vAction );
+			for( unsigned i = 0; i < p_interpretation.vObject.size(); i++ ) {
+				io_result.appendParam( p_interpretation.vObject[ i ] );
+			}*/
+		}
 	}
 
 	return action;
 }
 Action* Interpreter::interpretActionGame( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vGame.size()==1 ) {
-		delete action;
-		unsigned gameCommand = p_interpretation.vGame.front().getId();
-		switch( gameCommand ) {
-			case 4001: // Present terrain
-				action = ActionFactory::actionGame( ActionGameTypes_PRESENT_LOCATION );
-				break;
-			case 4002: // Present inventory
-				action = ActionFactory::actionGame( ActionGameTypes_PRESENT_INVENTORY );
-				break;
+	if( p_interpretation.vGame.size() > 0 ) {
+		// ToDoIst: implement support for handling not-just-one verb for commands.
+		if( p_interpretation.vGame.size()==1 ) {
+			delete action;
+			unsigned gameCommand = p_interpretation.vGame.front().getId();
+			switch( gameCommand ) {
+				case 4001: // Present terrain
+					action = ActionFactory::actionGame( ActionGameTypes_PRESENT_LOCATION );
+					break;
+				case 4002: // Present inventory
+					action = ActionFactory::actionGame( ActionGameTypes_PRESENT_INVENTORY );
+					break;
+			}
+		} else {
+			io_result.setSummary( s_confMessageInvalidGame );
+			/*io_result.setParams( p_interpretation.vGame );*/
 		}
-	} else {
-		io_result.setSummary( s_confMessageInvalidGame );
-		/*io_result.setParams( p_interpretation.vGame );*/
 	}
 
 	return action;

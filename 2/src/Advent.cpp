@@ -66,12 +66,10 @@ void Advent::gameLoop() {
 	// Interpret input:
 	Result result;
 	Action* action = m_interpreter.interpret( m_formatter.format( input ), result );
-	bool success = m_executioner.execute( action );
-	if( success==true ) {
-#ifndef ADVENT_DEBUG
-		GUI::ClearScreen(); // Do not clear screen if in debug-mode.
-#endif // ADVENT_DEBUG
-	} else {
-		GUI::RenderString( result.getSummary() );
+	bool success = m_executioner.execute( action ); // ToDoIst: make executioner recieve an inout result-argument, so that executioner may also report errors or inconsistensies in the command.
+
+	// Print response if the command was not executed correctly.
+	if( success==false ) {
+        GUI::RenderString( result.getSummary() );
 	}
 }
