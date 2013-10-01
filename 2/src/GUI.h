@@ -7,6 +7,7 @@
 #include <stdarg.h>
 
 #include "Location.h"
+#include "Inventory.h"
 
 class GUI {
 public:
@@ -23,7 +24,7 @@ public:
 	static void RenderString( std::string p_string );
 	static void RenderTerminal();
 	static void RenderObject( Object p_object );
-	static void RenderInventory( std::vector<Object> p_inventory );
+	static void RenderInventory( Inventory p_inventory );
 protected:
 private:
 };

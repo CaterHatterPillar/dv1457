@@ -51,9 +51,6 @@ void Advent::gameLoop() {
 
 	GUI::RenderLocation( ad.adventurer.getLocation() );
 	// Render objects here.
-#ifdef ADVENT_DEBUG
-	GUI::RenderString( "DEBUG INFO: \nCurrent location: " + Util::toString( ad.adventurer.getLocation().getId() ) + "\n");
-#endif // ADVENT_DEBUG
 	GUI::RenderTerminal();
 
 	// Aqcuire input:

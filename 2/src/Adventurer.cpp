@@ -14,16 +14,13 @@ Adventurer::~Adventurer() {
 void Adventurer::adventTravelTo( Location p_location ) {
 	m_location = p_location;
 }
-void Adventurer::adventTakeObject( Object p_object ) {
-	m_inventory.push_back( p_object );
-}
 
 Location Adventurer::getLocation() {
 	return Singleton<AdventData>::get().map[ m_location.getId() ];
 }
+Inventory& Adventurer::getInventory() {
+	return m_inventory;
+}
 void Adventurer::setLocation( Location p_location ) {
 	m_location = p_location;
-}
-std::vector< Object > Adventurer::getInventory() const {
-	return m_inventory;
 }

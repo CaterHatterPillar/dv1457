@@ -6,42 +6,44 @@ main: advent gui
 	g++ -c main.cpp
 # ---
 
-advent: datastructures parser error util formatter interpreter executioner
+advent: common datastructures parser formatter interpreter executioner
 	g++ -c Advent.h Advent.cpp
 
-formatter: error
+formatter: common
 	g++ -c Formatter.h Formatter.cpp
 
-interpreter: actions result vocabulary util error
+interpreter: common actions result vocabulary
 	g++ -c Interpreter.h Interpreter.cpp
 
-executioner: actions map error
+executioner: common actions map
 	g++ -c GameLogic.h GameLogic.cpp Executioner.h Executioner.cpp
 
-result:
+result: common
 	g++ -c Result.h Result.cpp
 
-actions: vocabulary
+actions: common vocabulary
 	g++ -c Action.h Action.cpp ActionFactory.h ActionFactory.cpp
 
-parser: datastructures util
+parser: common datastructures
 	g++ -c ParserDat.h ParserDat.cpp
 
-datastructures: map vocabulary
-	g++ -c Singleton.h AdventData.h Adventurer.h Adventurer.cpp
+datastructures: common map vocabulary player
+	g++ -c Singleton.h AdventData.h
 
-map: vocabulary
+player: common map
+	g++ -c Inventory.h Inventory.cpp Adventurer.h Adventurer.cpp
+
+map: common vocabulary
 	g++ -c Object.h Object.cpp Destination.h Destination.cpp Location.h Location.cpp Map.h Map.cpp
 
-vocabulary: util
+vocabulary: common
 	g++ -c Verb.h Verb.cpp Vocabulary.h Vocabulary.cpp
 
-# Utilities and such
-gui:
+gui: common
 	g++ -c GUI.h GUI.cpp
 
-error:
-	g++ -c ExceptionAdventNotYetImplemented.h
+common: clean
+	g++ -c  Common.h AdventConf.h Util.h Util.cpp ExceptionAdventNotYetImplemented.h
 
-util:
-	g++ -c Util.h Util.cpp
+clean:
+	rm *.gch *.o

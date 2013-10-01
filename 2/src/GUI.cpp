@@ -50,9 +50,13 @@ void GUI::RenderTerminal() {
 void GUI::RenderObject( Object p_object ) {
 	std::cout << p_object.getName() << std::endl;
 }
-void GUI::RenderInventory( std::vector<Object> p_inventory ) {
-	std::cout << "Inventory:";
-	for( unsigned i = 0; i < p_inventory.size(); i++ ) {
-		std::cout << std::endl << "\t" << p_inventory[i].getName();
+void GUI::RenderInventory( Inventory p_inventory ) {
+	if( p_inventory.getNumItems() > 0 ) {
+		std::cout << "Inventory:";
+		for( unsigned i = 0; i < p_inventory.getNumItems(); i++ ) {
+			std::cout << std::endl << " *\t" << p_inventory[i].getName();
+		}
+	} else {
+		std::cout << "You are carrying nothing.";
 	}
 }

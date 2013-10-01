@@ -83,9 +83,9 @@ bool Executioner::executeInteract( ActionInteract* p_action ) {
         Object object = locationObjects[ i ];
 
         canInteract = GameLogic::canTakeObject( target, object );
-        if( canInteract==true ) {
+        if( canInteract==true && ad.adventurer.getInventory().isFull()==false ) {
             // Loot object:
-            ad.adventurer.adventTakeObject( object );
+            ad.adventurer.getInventory().appendItem( object );
             // Remove object from location:
             ad.map[ location.getId() ].objectRemove( object );
 
