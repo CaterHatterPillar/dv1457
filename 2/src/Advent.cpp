@@ -56,7 +56,7 @@ void Advent::gameLoop() {
 	AdventData& ad = Singleton<AdventData>::get();
 
 	// Render objects here.
-	GUI::RenderNewLine( 2 );
+	GUI::RenderNewLine( s_confTerminalLineSpacing );
 	GUI::RenderTerminal();
 
 	// Aqcuire input:
@@ -66,10 +66,11 @@ void Advent::gameLoop() {
 	// Interpret input:
 	Result result;
 	Action* action = m_interpreter.interpret( m_formatter.format( input ), result );
-	bool success = m_executioner.execute( action ); // ToDoIst: make executioner recieve an inout result-argument, so that executioner may also report errors or inconsistensies in the command.
+	bool success = m_executioner.execute( action, result ); // ToDoIst: make executioner recieve an inout result-argument, so that executioner may also report errors or inconsistensies in the command.
 
 	// Print response if the command was not executed correctly.
 	if( success==false ) {
         GUI::RenderString( result.getSummary() );
+        // Be sure to print the stored parameters as well.
 	}
 }

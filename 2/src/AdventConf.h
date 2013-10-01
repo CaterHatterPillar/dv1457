@@ -21,6 +21,7 @@ static const std::string s_confMessageInvalidGame 		= "I understand you as far a
 
 // Inventory and objects:
 static const std::string s_confMessageObjectTaken 		= "Taken.";
+static const std::string s_confMessageObjectNotFound	= "You can't see any such thing.";
 static const std::string s_confMessageInventoryEmpty 	= "You are carrying nothing.";
 static const std::string s_confMessageInventoryHeader 	= "You are carrying:";
 

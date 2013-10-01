@@ -12,7 +12,7 @@ Executioner::~Executioner() {
 	// Do nothing.
 }
 
-bool Executioner::execute( Action* p_action ) {
+bool Executioner::execute( Action* p_action, Result& io_result ) {
 	assert( p_action );
 
 	bool executed = false;
@@ -22,13 +22,13 @@ bool Executioner::execute( Action* p_action ) {
             executed = false;
 			break;
 		case ActionTypes_TRAVEL:
-			executed = executeTravel( (ActionTravel*)p_action );
+			executed = executeTravel( (ActionTravel*)p_action, io_result );
 			break;
         case ActionTypes_INTERACT:
-            executed = executeInteract( (ActionInteract*)p_action );
+            executed = executeInteract( (ActionInteract*)p_action, io_result );
             break;
         case ActionTypes_GAME:
-            executed = executeGame( (ActionGame*)p_action );
+            executed = executeGame( (ActionGame*)p_action, io_result );
             break;
 		default:
 			throw ExceptionAdventNotYetImplemented( "Encountered unknown ActionTypes: " + std::string( ActionTypesString[ actionType ] ) + "." );
@@ -40,14 +40,14 @@ bool Executioner::execute( Action* p_action ) {
 	return executed;
 }
 
-bool Executioner::executeTravel( ActionTravel* p_action ) {
+bool Executioner::executeTravel( ActionTravel* p_action, Result& io_result ) {
 	AdventData& ad = Singleton<AdventData>::get();
 
-    bool canTravel = false;
+    bool travel = false;
 
     Verb target = p_action->getTarget();
     Location location = ad.adventurer.getLocation();
-    for( unsigned i = 0; i < location.getNumDestinations() && canTravel==false; i++ ) {
+    for( unsigned i = 0; i < location.getNumDestinations() && travel==false; i++ ) {
         Destination destination = location[ i ];
 
         // If the word does not correspond to any word used for travel at the current location - skip to the next destination:
@@ -55,19 +55,21 @@ bool Executioner::executeTravel( ActionTravel* p_action ) {
             continue;
         }
 
-        canTravel = GameLogic::canTravel( destination, location );
-        if( canTravel==true ) {
+        travel = GameLogic::canTravel( destination, location );
+        if( travel==true ) {
             ad.adventurer.adventTravelTo( ad.map[ destination.getId() ] );
-            GUI::RenderLocation( ad.adventurer.getLocation() );
         }
     }
 
-    return canTravel;
+    // The location is printing whether or not the travel was successful.
+    GUI::RenderLocation( ad.adventurer.getLocation() );
+
+    return travel;
 }
-bool Executioner::executeInteract( ActionInteract* p_action ) {
+bool Executioner::executeInteract( ActionInteract* p_action, Result& io_result ) {
     AdventData& ad = Singleton<AdventData>::get();
 
-    bool canInteract = false;
+    bool interact = false;
     // Establish what kind of object to perform here.
     // ...then call the correct function.
     
@@ -76,11 +78,11 @@ bool Executioner::executeInteract( ActionInteract* p_action ) {
     Verb target = p_action->getTarget();
     Location location = ad.adventurer.getLocation();
     std::vector< Object > locationObjects = location.getObjects();
-    for( unsigned i = 0; i < locationObjects.size() && canInteract==false; i++ ) {
+    for( unsigned i = 0; i < locationObjects.size() && interact==false; i++ ) {
         Object object = locationObjects[ i ];
 
-        canInteract = GameLogic::canTakeObject( target, object );
-        if( canInteract==true && ad.adventurer.getInventory().isFull()==false ) {
+        interact = GameLogic::canTakeObject( target, object );
+        if( interact==true && ad.adventurer.getInventory().isFull()==false ) {
             // Loot object:
             ad.adventurer.getInventory().appendItem( object );
             // Remove object from location:
@@ -88,13 +90,17 @@ bool Executioner::executeInteract( ActionInteract* p_action ) {
 
             GUI::RenderString( s_confMessageObjectTaken );
 
-            canInteract = true;
+            interact = true;
         }
     }
 
-    return canInteract;
+    if( interact==false ) {
+        io_result.setSummary( s_confMessageObjectNotFound );
+    }
+
+    return interact;
 }
-bool Executioner::executeGame( ActionGame* p_action ) {
+bool Executioner::executeGame( ActionGame* p_action, Result& io_result ) {
     AdventData& ad = Singleton<AdventData>::get();
 
     bool recognizedGameCommand = true;
