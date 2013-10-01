@@ -17,3 +17,9 @@ A:
 	* Start from the point where it was at the time of exit
 	* Start the game from initial point.
 	* Each player should have unique ID
+
+Tasks:
+	Unlock grate with key
+	Open grate
+	Turn on lamp
+	Say XYZZY
