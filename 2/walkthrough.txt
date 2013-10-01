@@ -1,0 +1,192 @@
+
+http://www.sierrahelp.com/Walkthroughs/AdventureWalkthrough.html#in
+ 
+Adventure (Colossal Cave) Walkthrough
+
+
+Commands
+Scoring Levels
+Treasure Listing
+Getting In to the Caves
+Level 1 - Snakes and Plughs
+Level 3 - Vases and Pearls
+Level 3 - Emeralds and Pyramids
+Plant Level - Eggs and Tridents
+Level 2 - Bears and Trolls
+Secret Level - Dragons and Mirrors
+Game End
+
+
+MAPS!
+Level 1
+Level 2
+Level 3
+Plant Level
+Secret Level
+
+Commands
+
+Part of the frustrating part with this game is you WANT to do something but you can't figure out HOW to do it. A lot of the time, it's because it's not something you CAN do :)
+
+Here are some commands that you need to know.
+
+    take all
+    look
+    unlock grate with keys
+    throw axe at dwarf
+    fill bottle
+    take bear
+    throw bear
+    xyzzy (in debris room)
+    plugh (in Y2 room)
+    plover (in plover room)
+    blast (in very final room)
+
+NOTE: the lamp is NOT an oil lamp so you can't fill it with oil! You should be able to solve the game, but if you really want to, you can buy a new BATTERY at the vending machine in the maze. It does mean you can't get top prize, because you lose your coins doing this.
+
+Scoring Levels
+
+The more points you get, the higher your scoring rank gets. You can type SCORE at any point to see what your score is.
+
+68, 87 - Adventurer
+117 - Experienced Adventurer
+159, 199 - Seasoned Adventurer
+233, 263 - Junior Master
+304 - Master 2nd Class
+366 - Master 1st Class
+
+Treasure Listing
+
+This game is mostly about collecting treasures and figuring out how to return them to the Well House. Here's a list of all 15, and how to get them!
+
+    Gold Nugget: South of Hall of Mists, have to use PLUGH to get out.
+    Jewelry: South of Snake Room
+    Coins: East of Snake Room
+    Silver: North of Snake Room
+    Diamonds: Cross Fissure by Waving Wand
+    Treasure Chest: Hidden in Pirate Maze
+    Rug: in secret Dragon Room, kill him to take
+    Ming Vase: in Oriental room, drop on pillow
+    Emerald: in Plover Room, must carry east alone and retrieve later
+    Pyramid: in Dark Room, must use PLUGH from Y2 to get
+    Pearl: in Cul De Sac, must open oyster with Trident
+    Gold Chain: in Bear Room, must feed bear to get to unlock it
+    Spices: in boulders
+    Golden Eggs: up plant, must water twice
+    Trident: past Rusty Door, must oil to open
+
+Getting In to the Caves
+
+    'Enter' building
+    'take' the keys and lamp
+    Go 'out' of the building
+    Go down, down to the slit in the rock
+    Go South to the grate
+    Unlock grate with key
+    Open grate
+    Go down
+    Go west
+    take the cage
+    Go west again
+    turn on the lamp
+    Grab the rod and say XYZZY. POOF you're back in the well house! Say XYZZY again to return to the Debris Room.
+    Go west to the sloping room
+    Drop the rod
+    Go west to the Orange River Chamber
+    Grab the bird (it's afraid of the rod)
+    Now go east and get the rod
+    Head back west again
+    Go down into the pit, You're in the caves!
+
+[+25 points to your score]
+
+Level 1 - Snakes and Plughs
+
+Level 1 is pretty easy. You start at the Hall of Mists. Head south and grab the gold (+7 score, +9 to drop off). Head north. Hall of the Mountain King, with a snake. Open the cage so the bird drives away the snake. OK, passages in all directions.
+
+To the west is a West Side Chamber with coins (+7 score, +5 drop off). Grab and go east again. To the south is the South Side Chamber with jewelry (+7 score, +5 drop off). Grab it and go north again. To the north is a chamber with a hole in it, with silver. Grab the silver (+7 score, +5 drop off).
+
+Go north one more room, to the Y2 room. Say "plugh" to zap back to the Well House. Drop off your treasures.
+
+Drop off the keys for now, then say "plugh" to return to Y2.
+
+If you hit a dwarf in here anywhere, and he throws an axe, take it! Then when you see him again, "throw axe at dwarf" to get him. If you miss, just "take axe" and throw it again.
+
+OK, now head to the Fissure, west of the Hall of Mists. Wave the Rod to make a crystal bridge appear. Cross it to grab the diamonds. Now head west and south to get into the Pirate Maze. You want to go EAST, SOUTH, then NORTH to get to the chest. When you take it, head SOUTHEAST, WEST and SOUTH to get down to the Orange Room. Just go east twice and then say XYZZY to pop back to the well house.
+
+Level 3 - Vases and Pearls
+
+Level 2 is really short and at this point is just used to get through to Level 3. When you PLUGH back to Y2, go south, down, west and down to get to Level 3. This is a pretty big level.
+
+You start in the Complex Junction. First, go north to the oyster. Open it with the axe (depending on your version, in some you have to wait until you get the Trident) and a pearl will pop out. Go down, down to get where it rolled to. +7 points for picking it up, +9 at the house. Heading east gets you into the Bedquilt which leads to all sorts of interesting rooms.
+
+If you get into the Slab Room, head south then east to the eastern Two Pit room. Go down into the eastern pit and get some oil to refuel your lamp. Go east to the Swiss Cheese room.
+
+From here go E to the Soft room for the pillow. Go west and NW to the Oriental room for the Ming Vase (+7 to pick up, +9 to drop ON THE PILLOW at the house). Go back SE and NE to the bedquilt and drop off your treasures. Note that you must drop your pillow FIRST, then drop the vase so it lands on the pillow.
+
+Level 3 - Emeralds and Pyramids
+
+Use PLUGH and return back to the Oriental room. Head north and east to the alcove and drop everything. Go in, say Plover to activate the plover command which takes you between this room and the Y2 room. Say plover to return, Note that using PLOVER will NOT carry the emerald, so you can't use that word to pop the emerald out. So take the emerald and walk W.
+
+Get your stuff and walk around back to the Y2 room. Use PLUGH to drop the emerald off before you start using that PLOVER word. Now say Plover to pop in, and head ne to get the pyramid. Return to the plover room. PLOVER back to Y2, PLUGH back to home and drop off the pyramid (+32 to get, +9 to drop off).
+
+OK, for the next section, grab the food, the keys, and the bottle.
+
+Plant Level - Eggs and Tridents
+
+It's time to use that bottle. Fill it with water and then PLUGH back to the Y2 room. Go around to the TWO PIT WEST room, which is two to the west of the Swiss Cheese room. Go down in the pit. Water the plant. The closest water is east and down from the Dirty Room - the one just below where you picked up the silver. Go to that stream and grab more water, then return here and water the plant again. It'll sprout into a beanstalk.
+
+Climb up and head west. You'll see some eggs, plus FEE FIE FOE FOO. Take the eggs. Head back to the two pits room, and now go down into the eastern pit. Take some oil in the bottle, and go back up the beanstalk. North of the eggs room is a rusty door. Oil it to open it. You can drop the bottle now. Head north and get the trident.
+
+If you haven't gotten the pearl yet, use the trident to go open up the clam. Drop the trident and the pearl (if you just got it) back home, but keep the eggs on you.
+
+Level 2 - Bears and Trolls
+
+OK, the eggs have a special property that they zap home when you say FEE FIE FOE FOO. So let's put this to good use. Go to the long, low room, an dhead sw and up to the troll. Try to CROSS BRIDGE and he'll appear. Use THROW EGGS AT TROLL and he'll catch them and vanish. OK, now CROSS BRIDGE and head NE. Go east and se and s and IN to get in to the bear.
+
+Feed the bear to calm it, and then unlock the chain with the keys. You can drop the keys now. Take the chain, then take the bear so it follows you. Head back to the fork and then east to get some special spices. You can go north from Warm Walls to see the view, but it's just pretty. Now go back to the troll.
+
+This is one of the tricky parts. You know you want to have the bear attack the troll, but it's hard figuring out how! The command is THROW BEAR. The bear will scare off the troll. Don't try to TAKE BEAR now - he's too heavy for the bridge. Cross the bridge on your own, and go back to the eggs room.
+
+Say:
+FEE
+FIE
+FOE
+FOO
+
+on separate lines to have the eggs pop back here. Pick them up, and return the spices, chain and eggs to your home.
+
+Secret Level - Dragons and Mirrors
+
+You're on the last treasure. Go back to the snake room and head SW. Yeah, I know, you'd have to guess every direction in every room to find this one. Head east to the dragon. The inanity gets even better. Say KILL DRAGON. It'll ask you if you just want to use your bare hands. Say YES. You kill him! Take the rug.
+
+You can head north to realize that that window you've been madly trying to "solve" west of Y2 is just a mirror. You'll see a pretty reservoir. Nothing else up here though. Bring the rug back to the room, and you now have all the treasures.
+
+Game End
+
+OK, you have all the treasures. Now what? You wander around aimlessly until your lantern runs out of juice? Well, it seems the game designers sort of didn't know what to do at this point.
+
+Go back to the magazine, just east of the Complex Junction. Take it one room right to Witt's End and drop it. You get a point.
+
+Now try out the various directions, to prove you're lost. Then turn off the lamp in the middle of Witt's End and WAIT. You'll get zapped to the NE Repository with tons of little cages and birds and dwarves and so on. You get 10 points for getting here.
+
+Head SW and get the rod that's there. Bring it back NW and drop it. Now head SW to where it's safe.
+
+Depending on your version of the game, type BLAST or DETONATE. Yes, I know. You never used this word before and there's no way you'd know to use it here. In any case, it'll blast a way out of the room, and you will win the game!
+
+ 
+
+    You can help keep The Sierra Help Pages alive by helping to defray some of the costs of hosting this site. If it has been of help to you, please consider contributing to help keep it online.
+    Thank you.
+
+pixe
+Top
+
+    Back
+    Main Adventure (Colossal Cave) Help Page
+    Main Walkthroughs Page
+
+Home | Sierra Game Help | Walkthroughs | Hints, Tips & Spoilers | Utilities | Links | Forums | Search
+
+© 2006 to present The Sierra Help Pages. All rights reserved. All Sierra games, artwork and music © Sierra.
+  
