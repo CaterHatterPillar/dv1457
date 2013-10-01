@@ -1,9 +1,6 @@
-#include "Util.h"
-#include "Singleton.h"
-#include "AdventData.h"
+#include "Common.h"
 #include "Interpreter.h"
 #include "ActionFactory.h"
-#include "ExceptionAdventNotYetImplemented.h"
 
 Interpreter::Interpreter() {
 
@@ -23,7 +20,7 @@ Action* Interpreter::interpret( std::vector< Verb > p_verbs, Result& io_result )
 	}
 
 	if( a->isValid()==false ) {
-		io_result.setSummary( "That's not a verb I recognise." );
+		io_result.setSummary( s_confMessageInvalidCommand );
 	}
 	return a;
 }
@@ -65,13 +62,19 @@ Action* Interpreter::interpretAction(
 	Action* action;
 	switch( p_actionType ) {
 		case ActionTypes_TRAVEL:
-			action = interpretActionTravel( p_interpretation, io_result );
+			//if( p_interpretation.vTravel.size() > 0 ) {
+				action = interpretActionTravel( p_interpretation, io_result );
+			//}
 			break;
 		case ActionTypes_INTERACT:
-			action = interpretActionInteract( p_interpretation, io_result );
+			//if( p_interpretation.vAction.size() > 0 ) {
+				action = interpretActionInteract( p_interpretation, io_result );
+			//}
 			break;
 		case ActionTypes_GAME:
-			action = interpretActionGame( p_interpretation, io_result );
+			//if( p_interpretation.vGame.size() > 0 ) {
+				action = interpretActionGame( p_interpretation, io_result );
+			//}
 			break;
 		default:
 			action = ActionFactory::actionInvalid();
@@ -85,7 +88,8 @@ Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Res
 		delete action;
 		action = ActionFactory::actionTravel( p_interpretation.vTravel.front() );
 	} else {
-		io_result.setSummary( "I understand you as far as that you would like to travel. However, you have specified too many destinations: " );
+		io_result.setSummary( s_confMessageInvalidTravel );
+		/*io_result.setParams( p_interpretation.vTravel );*/
 	}
 	return action;
 }
@@ -95,7 +99,11 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 		delete action;
 		action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject.front() );
 	} else {
-		io_result.setSummary( "I understand you as far as that you would like to interact with something. However, you have specified too many actions and/or objects: " );
+		io_result.setSummary( s_confMessageInvalidInteract );
+		/*io_setParams( p_interpretation.vAction );
+		for( unsigned i = 0; i < p_interpretation.vObject.size(); i++ ) {
+			io_result.appendParam( p_interpretation.vObject[ i ] );
+		}*/
 	}
 
 	return action;
@@ -114,7 +122,8 @@ Action* Interpreter::interpretActionGame( Interpretation p_interpretation, Resul
 				break;
 		}
 	} else {
-		io_result.setSummary( "I understand you as far as that you have specified a special game-command. However, you have specified too many game-commands: " );
+		io_result.setSummary( s_confMessageInvalidGame );
+		/*io_result.setParams( p_interpretation.vGame );*/
 	}
 
 	return action;

@@ -3,11 +3,7 @@
 #include "Common.h"
 #include "Object.h"
 #include "GameLogic.h"
-#include "AdventData.h"
 #include "Executioner.h"
-#include "ExceptionAdventNotYetImplemented.h"
-
-#include <iostream> // remove me
 
 Executioner::Executioner() {
 
@@ -94,6 +90,8 @@ bool Executioner::executeInteract( ActionInteract* p_action ) {
             canInteract = true;
         }
     }
+
+    return canInteract;
 }
 bool Executioner::executeGame( ActionGame* p_action ) {
     AdventData& ad = Singleton<AdventData>::get();
