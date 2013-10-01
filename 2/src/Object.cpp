@@ -67,6 +67,9 @@ bool Object::operator==( const Verb& p_verb ) const {
 unsigned Object::getId() const {
 	return m_id;
 }
+unsigned Object::getPropertyValue() const {
+	return m_propertyValue;
+}
 std::string Object::getName() const {
 	return m_name;
 }

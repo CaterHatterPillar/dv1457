@@ -23,6 +23,7 @@ public:
 	void setImmovable( bool p_isImmovable );
 
 	unsigned getId() const;
+	unsigned getPropertyValue() const;
 	std::string getName() const;
 	bool isImmovable() const;
 
