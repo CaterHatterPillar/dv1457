@@ -11,6 +11,8 @@ static const unsigned s_confInventorySize = 5;
 // ***
 // Output and UI-settings
 // ***
+static const unsigned s_confTerminalLineSpacing = 2;
+
 static const std::string s_confTerminalIndicator = "> ";
 
 // Commands, Syntax & Help

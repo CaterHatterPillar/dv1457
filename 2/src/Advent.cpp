@@ -3,11 +3,8 @@
 #include <sstream>
 #include <algorithm>
 
-#include "GUI.h"
-#include "Util.h"
+#include "Common.h"
 #include "ParserDat.h"
-#include "AdventData.h"
-#include "ExceptionAdventNotYetImplemented.h"
 
 #include "Advent.h"
 
