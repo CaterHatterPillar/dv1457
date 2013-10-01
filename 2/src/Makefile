@@ -44,4 +44,4 @@ common: clean
 
 # Clean solution first of all:
 clean:
-	rm *.gch *.o
+	rm -f *.gch *.o

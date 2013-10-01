@@ -17,6 +17,9 @@ private:
 	bool executeTravel( 	ActionTravel* 	p_action, Result& io_result );
 	bool executeInteract( 	ActionInteract* p_action, Result& io_result );
 	bool executeGame( 		ActionGame*		p_action, Result& io_result );
+
+	bool interactTake(Verb p_target);
+	bool interactDrop(Verb p_target);
 };
 
 #endif // EXECUTIONER_H

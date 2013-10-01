@@ -11,6 +11,12 @@ public:
 	Verb();
 	~Verb();
 
+	enum VerbIds
+	{
+		VerbIds_TAKE = 2001,
+		VerbIds_DROP = 2002
+	};
+
 	void appendWord( std::string p_word );
 
 	std::string toString();

@@ -18,8 +18,17 @@ bool Inventory::appendItem( Object p_object ) {
 	return addedItem;
 }
 bool Inventory::removeItem( Object p_object ) {
-	throw ExceptionAdventNotYetImplemented( "Non-implemented method Inventory::removeItem called." );
-	return false; // tmp
+	bool removed = false;
+	for(unsigned int i=0; i<m_items.size() && !removed; i++) {
+		if(m_items[i].getId() == p_object.getId())
+		{
+			m_items.erase(m_items.begin()+i);
+			removed = true;
+		}
+	}
+
+	//throw ExceptionAdventNotYetImplemented( "Non-implemented method Inventory::removeItem called." );
+	return removed; // tmp
 }
 bool Inventory::isFull() {
 	bool isFull = false;

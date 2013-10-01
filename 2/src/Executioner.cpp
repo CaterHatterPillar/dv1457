@@ -76,22 +76,17 @@ bool Executioner::executeInteract( ActionInteract* p_action, Result& io_result )
     // Currently, we assume it's picking up objects.
     Verb action = p_action->getAction();
     Verb target = p_action->getTarget();
-    Location location = ad.adventurer.getLocation();
-    std::vector< Object > locationObjects = location.getObjects();
-    for( unsigned i = 0; i < locationObjects.size() && interact==false; i++ ) {
-        Object object = locationObjects[ i ];
-
-        interact = GameLogic::canTakeObject( target, object );
-        if( interact==true && ad.adventurer.getInventory().isFull()==false ) {
-            // Loot object:
-            ad.adventurer.getInventory().appendItem( object );
-            // Remove object from location:
-            ad.map[ location.getId() ].objectRemove( object );
-
-            GUI::RenderString( s_confMessageObjectTaken );
-
-            interact = true;
-        }
+   
+    switch(action.getId())
+    {
+    case Verb::VerbIds_TAKE:
+        interact = interactTake(target);
+        break;
+    case Verb::VerbIds_DROP:
+        interact = interactDrop(target);
+        break;
+    default:
+        break;
     }
 
     if( interact==false ) {
@@ -119,4 +114,51 @@ bool Executioner::executeGame( ActionGame* p_action, Result& io_result ) {
     }
 
     return recognizedGameCommand;
+}
+
+bool Executioner::interactTake(Verb p_target) {
+    AdventData& ad = Singleton<AdventData>::get();
+    bool interact = false;
+
+    Location location = ad.adventurer.getLocation();
+    std::vector< Object > locationObjects = location.getObjects();
+    for( unsigned i = 0; i < locationObjects.size() && interact==false; i++ ) {
+        Object object = locationObjects[ i ];
+
+        interact = GameLogic::canTakeObject( p_target, object );
+        if( interact==true && ad.adventurer.getInventory().isFull()==false ) {
+            // Loot object:
+            ad.adventurer.getInventory().appendItem( object );
+            // Remove object from location:
+            ad.map[ location.getId() ].objectRemove( object );
+
+            GUI::RenderString( s_confMessageObjectTaken );
+
+            interact = true;
+        }
+    }
+    return interact;
+}
+
+bool Executioner::interactDrop(Verb p_target) {
+    AdventData& ad = Singleton<AdventData>::get();
+    Location location = ad.adventurer.getLocation();
+    bool interact = false;
+
+    unsigned int targetId = p_target.getId();
+    unsigned int objectId = targetId % 1000;
+
+    for(unsigned int i=0; i<ad.adventurer.getInventory().getNumItems(); i++)
+    {
+        Object obj = ad.adventurer.getInventory()[i];
+        if(obj.getId() == objectId)
+        {
+            ad.adventurer.getInventory().removeItem(obj);
+            ad.map[ location.getId() ].objectAppend( obj );
+            GUI::RenderString( s_confMessageObjectDropped );
+            interact = true;
+        }
+    }
+
+    return interact;
 }
