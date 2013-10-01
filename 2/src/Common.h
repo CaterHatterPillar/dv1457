@@ -4,7 +4,10 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <algorithm>
 
+#include "GUI.h"
+#include "Util.h"
 #include "AdventData.h"
 #include "AdventConf.h"
 #include "ExceptionAdventNotYetImplemented.h"

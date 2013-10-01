@@ -19,12 +19,18 @@ Advent::~Advent() {
 }
 
 void Advent::play() {
+	AdventData& ad = Singleton<AdventData>::get();
+
+	// Load the game's .dat-file:
 	load();
 
 	GUI::ClearScreen();
 #ifdef ADVENT_DEBUG
 	GUI::RenderString( "Starting adventure in DEBUG-mode.\n" );
 #endif // ADVENT_DEBUG
+
+	// Render the starting location, then start the game-loop.
+	GUI::RenderLocation( ad.adventurer.getLocation() );
 	while( m_running==true ) {
 		gameLoop();
 	}
@@ -49,8 +55,8 @@ void Advent::load() {
 void Advent::gameLoop() {
 	AdventData& ad = Singleton<AdventData>::get();
 
-	GUI::RenderLocation( ad.adventurer.getLocation() );
 	// Render objects here.
+	GUI::RenderNewLine( 2 );
 	GUI::RenderTerminal();
 
 	// Aqcuire input:

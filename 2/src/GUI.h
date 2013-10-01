@@ -23,10 +23,11 @@ public:
 	static void RenderText( int numLines, ... );
 	static void RenderString( std::string p_string );
 	static void RenderTerminal();
-	static void RenderObject( Object p_object );
 	static void RenderInventory( Inventory p_inventory );
+	static void RenderNewLine( unsigned p_numNewLine );
 protected:
 private:
+	static void RenderObject( Object p_object );
 };
 
 #endif // GUI_H

@@ -1,7 +1,6 @@
 #include <cassert>
 
-#include "GUI.h"
-#include "Util.h"
+#include "Common.h"
 #include "Object.h"
 #include "GameLogic.h"
 #include "AdventData.h"
@@ -62,6 +61,7 @@ bool Executioner::executeTravel( ActionTravel* p_action ) {
         canTravel = GameLogic::canTravel( destination, location );
         if( canTravel==true ) {
             ad.adventurer.adventTravelTo( ad.map[ destination.getId() ] );
+            GUI::RenderLocation( ad.adventurer.getLocation() );
         }
     }
 
@@ -89,6 +89,8 @@ bool Executioner::executeInteract( ActionInteract* p_action ) {
             // Remove object from location:
             ad.map[ location.getId() ].objectRemove( object );
 
+            GUI::RenderString( s_confMessageObjectTaken );
+
             canInteract = true;
         }
     }
@@ -100,6 +102,7 @@ bool Executioner::executeGame( ActionGame* p_action ) {
     ActionGameTypes agt = p_action->getActionGameType();
     switch( agt ) {
         case ActionGameTypes_PRESENT_LOCATION:
+            GUI::RenderLocation( ad.adventurer.getLocation() );
             break;
         case ActionGameTypes_PRESENT_INVENTORY:
             GUI::RenderInventory( ad.adventurer.getInventory() );

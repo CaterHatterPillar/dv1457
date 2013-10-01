@@ -1,7 +1,9 @@
 #include "Object.h"
+#include "Common.h"
 
 Object::Object() {
 	m_id = 0;
+	m_propertyValue = 0;
 	m_name = "";
 	
 	m_immovable = false;
@@ -19,8 +21,25 @@ std::string Object::toString() {
 	return object;
 }
 
+std::vector< std::string > Object::getDescription() {
+	// the message should be the description of the preceding object when itsprop value is n/100.
+	std::string descVal = Util::toString( m_propertyValue ) + '0' + '0';
+
+	std::vector< std::string > description;
+	if( m_descriptions.find( descVal )!=m_descriptions.end() ) {
+		description = m_descriptions[ descVal ].description;
+	} else {
+		throw ExceptionAdventNotYetImplemented( "Objects with empty descriptions not yet implemented. See Object::getDescription()." );
+	}
+
+	return description;
+}
+
 void Object::setId( unsigned p_id ) {
 	m_id = p_id;
+}
+void Object::setPropertyValue( unsigned p_propertyValue ) {
+	m_propertyValue = p_propertyValue;
 }
 void Object::setName( std::string p_name ) {
 	m_name = p_name;

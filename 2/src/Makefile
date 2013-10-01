@@ -2,7 +2,7 @@
 all: main
 	g++ -o main *.o
 
-main: advent gui
+main: advent
 	g++ -c main.cpp
 # ---
 
@@ -39,11 +39,9 @@ map: common vocabulary
 vocabulary: common
 	g++ -c Verb.h Verb.cpp Vocabulary.h Vocabulary.cpp
 
-gui: common
-	g++ -c GUI.h GUI.cpp
-
 common: clean
-	g++ -c  Common.h AdventConf.h Util.h Util.cpp ExceptionAdventNotYetImplemented.h
+	g++ -c GUI.h GUI.cpp Common.h AdventConf.h Util.h Util.cpp ExceptionAdventNotYetImplemented.h
 
+# Clean solution first of all:
 clean:
 	rm *.gch *.o
