@@ -8,6 +8,16 @@ Inventory::~Inventory() {
 	// Do nothing.
 }
 
+bool Inventory::carriesItem( unsigned p_objectId ) {
+	bool carriesItem = false;
+	for( unsigned i = 0; i < m_items.size(); i++ ) {
+		if( p_objectId==m_items[ i ].getId() ) {
+			carriesItem = true;
+			break;
+		}
+	}
+	return carriesItem;
+}
 bool Inventory::appendItem( Object p_object ) {
 	bool addedItem = true;
 	if( getNumItems() >= m_size ) {

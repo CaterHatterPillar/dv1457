@@ -41,6 +41,17 @@ void Location::objectIdRemove( unsigned p_objectId ) {
 		throw ExceptionAdvent( "Object ID " + Util::toString( p_objectId ) + " not found in m_objectIds (see Location::objectIdRemove)." );
 	}
 }
+bool Location::objectAtLocation( unsigned p_objectId ) {
+	bool objectAtLocation = false;
+
+	std::vector< unsigned >::iterator it;
+	it = std::find( m_objectIds.begin(), m_objectIds.end(), p_objectId );
+	if( it!=m_objectIds.end() ) {
+		objectAtLocation = true;
+	}
+
+	return objectAtLocation;
+}
 
 unsigned Location::getId() const {
 	return m_id;

@@ -77,12 +77,13 @@ bool Executioner::executeInteract( ActionInteract* p_action, Result& io_result )
     switch( action.getId() )
     {
     case VerbIds_TAKE:
-        interact = interactTake(target);
+        interact = interactTake( target, io_result );
         break;
     case VerbIds_DROP:
-        interact = interactDrop(target);
+        interact = interactDrop( target, io_result );
         break;
     case VerbIds_OPEN:
+        interact = interactOpen( target, io_result );
         break;
     default:
         break;
@@ -115,7 +116,7 @@ bool Executioner::executeGame( ActionGame* p_action, Result& io_result ) {
     return recognizedGameCommand;
 }
 
-bool Executioner::interactTake(Verb p_target) {
+bool Executioner::interactTake( Verb p_target, Result& io_result ) {
     AdventData& ad = Singleton<AdventData>::get();
     bool interact = false;
 
@@ -140,7 +141,7 @@ bool Executioner::interactTake(Verb p_target) {
     return interact;
 }
 
-bool Executioner::interactDrop(Verb p_target) {
+bool Executioner::interactDrop( Verb p_target, Result& io_result ) {
     AdventData& ad = Singleton<AdventData>::get();
     Location location = ad.adventurer.getLocation();
     bool interact = false;
@@ -161,4 +162,36 @@ bool Executioner::interactDrop(Verb p_target) {
     }
 
     return interact;
+}
+bool Executioner::interactOpen( Verb p_target, Result& io_result ) {
+    bool opened = false;
+
+    AdventData& ad = Singleton<AdventData>::get();
+    Location location = ad.adventurer.getLocation();
+    unsigned objectId = p_target.getId() % 1000;
+
+    // Check whether or not target is something one may open in the first place:
+    bool objectIsOpenable = false;
+    for( unsigned i = 0; i < s_objectsOpenableSize; i++ ) {
+        if( objectId==ObjectsOpenable[ i ] ) {
+            objectIsOpenable = true;
+            break;
+        }
+    }
+
+    // This case needs some refactoring.
+    // Currently assumes grate being unlocked and checks whether or not the player carries keys.
+    if( objectIsOpenable==true
+        && ad.adventurer.getInventory().carriesItem( 1 )==true // hack
+        && location.objectAtLocation( objectId )==true ) {
+        Object& object = ad.map.getObject( objectId );
+        object.setPropertyValue( 1 ); // This is very sketchy. Try to find out a better way to edit property values according to a certain set of standards.
+        opened = true;
+
+        GUI::RenderString( s_confMessageObjectOpened );
+    } else {
+        io_result.setSummary( s_confMessageObjectNotOpenable );
+    }
+
+    return opened;
 }

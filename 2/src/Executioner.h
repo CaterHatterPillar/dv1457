@@ -19,8 +19,9 @@ private:
 	bool executeInteract( 	ActionInteract* p_action, Result& io_result );
 	bool executeGame( 		ActionGame*		p_action, Result& io_result );
 
-	bool interactTake(Verb p_target);
-	bool interactDrop(Verb p_target);
+	bool interactTake( Verb p_target, Result& io_result );
+	bool interactDrop( Verb p_target, Result& io_result );
+	bool interactOpen( Verb p_target, Result& io_result );
 };
 
 #endif // EXECUTIONER_H

@@ -5,11 +5,14 @@
 
 #include "Object.h"
 
+// This class needs some refactoring.
+// Consider storing only object ids instead of objects!
 class Inventory {
 public:
 	Inventory();
 	~Inventory();
 
+	bool carriesItem( unsigned p_objectId );
 	bool appendItem( Object p_object );
 	bool removeItem( Object p_object );
 	bool isFull();
@@ -19,7 +22,6 @@ public:
 protected:
 private:
 	unsigned m_size;
-	// Consider storing only object ids instead of objects.
 	std::vector< Object > m_items;
 };
 
