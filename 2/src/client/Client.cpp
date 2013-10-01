@@ -2,6 +2,8 @@
 
 Client::Client(char* p_ip, int p_port)
 {
+	m_run = true;
+
 	m_ip = p_ip;
 	m_port = p_port;
 
@@ -22,14 +24,15 @@ void Client::init()
 void Client::run()
 {
 	std::string msg;
-	bool run = true;
 
 	answerName();
 	answerLoadGame();
 
-	while(run)
+	while(m_run)
 	{		
 		msg = readMsg(); //Server checking connection.
+		if(!m_run)
+			break;
 
  		msg = readUserInput();
 	 	
@@ -56,24 +59,26 @@ std::string Client::readMsg()
 	bzero(buffer, 256);
 	int numBytes = recv(m_sockfd, buffer, 255, 0);
 	if(numBytes<0)
+	{
 		printf("Error reading from socket.\n errno: %d\n", errno);
+		m_run = false;
+	}
 	if(numBytes == 0)
+	{
 		printf("Server has closed this clients socket.\n");
-
+		m_run = false;
+	}
 	return std::string(buffer);
 }
 
-bool Client::sendMsg(std::string p_msg)
+void Client::sendMsg(std::string p_msg)
 {
-	bool success = true;
 	int numBytes = send(m_sockfd, p_msg.c_str(), p_msg.length(), 0);
 	if(numBytes <= 0)
 	{
 		printf("Error writing to socket.\n errno: %d\n", errno);
-		success = false;
+		m_run = false;
 	}
-
-	return success;
 }
 
 void Client::answerName()

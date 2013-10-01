@@ -26,7 +26,13 @@ void Game::run()
 		run = checkConnection();
 
 		msg = readMsg();
-		run = sendMsg(msg);
+		if(msg.length() > 0)
+		{
+			if(msg.at(0) == '/')
+				run = sysMsg(msg);
+			else
+				run = gameMsg(msg);
+		}
 	}
 
 	saveGame();
@@ -112,39 +118,44 @@ bool Game::sendMsg(std::string p_msg)
   	return success;
 }
 
-void Game::chatMsg(std::string p_msg)
+bool Game::gameMsg(std::string p_msg)
 {
 	/*
 	NOTE. All incoming messges must be answered by the server.
 	The client runs on a single thread and will therefore be blocked
 	on next call to recieve until the server answers.
 	*/
+	bool success = true;
 
-	printf("Message at socket %d: \n\t%s", m_sockfd, p_msg.c_str());
-	sendMsg(p_msg);
+	success = sendMsg(p_msg);
+
+	return success;
 }
 
-void Game::sysMsg(std::string p_msg)
+bool Game::sysMsg(std::string p_msg)
 {
 	/*
 	NOTE. All incoming messges must be answered by the server.
 	The client runs on a single thread and will therefore be blocked
 	on next call to recieve until the server answers.
 	*/
+
+	bool success = true;
 
 	if(strcmp(p_msg.c_str(), "/exit\n") == 0)
 	{
-		syslog(LOG_INFO,
-			"%s disconnected from socked %d",
-			m_name.c_str(),
-			m_sockfd);
+		success = sendMsg("Client disconnecting");
 		shutdown(m_sockfd, SHUT_RDWR);
 	}
  	else if(strcmp(p_msg.c_str(), "/save\n") == 0)
  	{
  		saveGame();
- 		sendMsg("Game saved!");
+ 		success = sendMsg("Game saved!");
  	}
+ 	else
+ 		success = sendMsg("Unknown command");
+
+ 	return success;
 }
 
 void Game::createFileName()

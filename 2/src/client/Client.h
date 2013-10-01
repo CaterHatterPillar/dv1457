@@ -26,7 +26,7 @@ private:
 
 	std::string readUserInput();
 	std::string readMsg();
-	bool 		sendMsg(std::string p_msg);
+	void 		sendMsg(std::string p_msg);
 
 	void answerName();
 	void answerLoadGame();
@@ -35,6 +35,7 @@ private:
 	void createSock();
 	void connectToServer();
 
+	bool 		m_run;
 	char* 		m_ip;
 	sockaddr_in m_addr;
 	int 		m_sockfd;

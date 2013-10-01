@@ -40,8 +40,8 @@ private:
 
 	std::string readMsg();
 	bool 		sendMsg(std::string p_msg);
-	void	 	chatMsg(std::string p_msg);
-	void 	 	sysMsg(std::string p_msg);
+	bool	 	gameMsg(std::string p_msg);
+	bool 	 	sysMsg(std::string p_msg);
 
 	void createFileName();
 	bool caveFileExists();
