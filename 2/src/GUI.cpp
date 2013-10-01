@@ -20,14 +20,16 @@ void GUI::ClearScreen() {
 	std::cout << std::string( 100, '\n' );
 }
 void GUI::RenderLocation( Location p_location ) {
+	AdventData& ad = Singleton< AdventData >::get();
+
 	// Render the terrain:
 	std::string descShort = p_location.getDescShort();
 	std::cout << descShort << std::endl << p_location.getDescLong();
 
 	// Render objects:
-	std::vector< Object > objects = p_location.getObjects();
-	for( unsigned i = 0; i < objects.size(); i++ ) {
-		Object object = objects[ i ];
+	std::vector< unsigned > objectIds = p_location.getObjectIds();
+	for( unsigned i = 0; i < objectIds.size(); i++ ) {
+		Object object = ad.map.getObject( objectIds[ i ] );
 		RenderObject( object );
 	}
 }

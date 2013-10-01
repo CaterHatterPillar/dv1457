@@ -10,6 +10,7 @@
 #include "Util.h"
 #include "AdventData.h"
 #include "AdventConf.h"
+#include "ExceptionAdvent.h"
 #include "ExceptionAdventNotYetImplemented.h"
 
 #endif // COMMON_H

@@ -3,6 +3,7 @@
 
 #include<map> // haha
 
+#include "Object.h"
 #include "Location.h"
 
 class Map {
@@ -10,10 +11,14 @@ public:
 	Map();
 	~Map();
 
-	Location& operator[]( unsigned p_id );
+	void appendObject( Object p_object );
+	Object& getObject( unsigned p_idObject );
+
+	Location& operator[]( unsigned p_idLocation );
 protected:
 private:
-	std::map< unsigned, Location > m_locs;
+	std::map< unsigned, Object > m_objects;
+	std::map< unsigned, Location > m_locations;
 };
 
 #endif // MAP_H

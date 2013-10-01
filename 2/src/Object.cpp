@@ -29,7 +29,8 @@ std::vector< std::string > Object::getDescription() {
 	if( m_descriptions.find( descVal )!=m_descriptions.end() ) {
 		description = m_descriptions[ descVal ].description;
 	} else {
-		throw ExceptionAdventNotYetImplemented( "Objects with empty descriptions not yet implemented. See Object::getDescription()." );
+		// Properties which produce no message should be given the message ">$<".
+		description.push_back( s_confMessageObjectNoDescription );
 	}
 
 	return description;
@@ -65,6 +66,9 @@ bool Object::operator==( const Verb& p_verb ) const {
 
 unsigned Object::getId() const {
 	return m_id;
+}
+unsigned Object::getPropertyValue() const {
+	return m_propertyValue;
 }
 std::string Object::getName() const {
 	return m_name;

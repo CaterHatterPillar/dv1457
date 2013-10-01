@@ -19,6 +19,7 @@ public:
 protected:
 private:
 	unsigned m_size;
+	// Consider storing only object ids instead of objects.
 	std::vector< Object > m_items;
 };
 
