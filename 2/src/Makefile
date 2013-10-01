@@ -40,7 +40,7 @@ vocabulary: common
 	g++ -c Verb.h Verb.cpp Vocabulary.h Vocabulary.cpp
 
 common: clean
-	g++ -c GUI.h GUI.cpp Common.h AdventConf.h Util.h Util.cpp ExceptionAdventNotYetImplemented.h
+	g++ -c GUI.h GUI.cpp Common.h AdventConf.h Util.h Util.cpp ExceptionAdvent.h ExceptionAdventNotYetImplemented.h
 
 # Clean solution first of all:
 clean:

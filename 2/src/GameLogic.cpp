@@ -1,5 +1,5 @@
+#include "Common.h"
 #include "GameLogic.h"
-#include "ExceptionAdventNotYetImplemented.h"
 
 GameLogic::GameLogic() {
 
@@ -9,7 +9,9 @@ GameLogic::~GameLogic() {
 }
 
 bool GameLogic::canTravel( Destination p_destination, Location p_location ) {
-	bool canTravel = false;
+	AdventData& ad = Singleton< AdventData >::get();
+
+    bool canTravel = false;
 	
  	unsigned x = p_location.getId();        // Current location.
     unsigned y = p_destination.getId();     // Possible location to which one might travel.
@@ -23,6 +25,7 @@ bool GameLogic::canTravel( Destination p_destination, Location p_location ) {
         throw ExceptionAdventNotYetImplemented( "Travel - Special-case message." );
     }
 
+    // Note to self, developer and the world: By 'prop', the original author apperently mean object - so the property value of said object.
     if( m == 0 ) { // if m=0 It's unconditional.
         canTravel = true;
     } else if( (m > 0) && (m < 100) ) { // if 0<m<100 It is done with m% probability.
@@ -34,7 +37,11 @@ bool GameLogic::canTravel( Destination p_destination, Location p_location ) {
     } else if( (m > 200) && (m <= 300) ) { // if 200<m<=300 Must be carrying or in same room as m-200.
         throw ExceptionAdventNotYetImplemented( "Travel - Must be in same room as..." );
     } else if( (m > 300) && (m <= 400) ) { // if 300<m<=400 prop(m mod 100) must *not* be 0.
-        throw ExceptionAdventNotYetImplemented( "Travel - prop(m mod 100) must *not* be 0." );
+        unsigned prop = m % 100;
+        unsigned propValue = ad.map.getObject( prop ).getPropertyValue();
+        if( propValue!=0 ) {
+            canTravel = true;
+        }
     } else if( (m > 400) && (m <= 500) ) { // if 400<m<=500 prop(m mod 100) must *not* be 1.
         throw ExceptionAdventNotYetImplemented( "Travel - prop(m mod 100) must *not* be 1." );
     } else if( (m > 500) && (m <= 600) ) { // if 500<m<=600 prop(m mod 100) must *not* be 2, etc.

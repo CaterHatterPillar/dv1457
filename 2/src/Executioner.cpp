@@ -70,10 +70,7 @@ bool Executioner::executeInteract( ActionInteract* p_action, Result& io_result )
     AdventData& ad = Singleton<AdventData>::get();
 
     bool interact = false;
-    // Establish what kind of object to perform here.
-    // ...then call the correct function.
     
-    // Currently, we assume it's picking up objects.
     Verb action = p_action->getAction();
     Verb target = p_action->getTarget();
    
@@ -121,16 +118,17 @@ bool Executioner::interactTake(Verb p_target) {
     bool interact = false;
 
     Location location = ad.adventurer.getLocation();
-    std::vector< Object > locationObjects = location.getObjects();
-    for( unsigned i = 0; i < locationObjects.size() && interact==false; i++ ) {
-        Object object = locationObjects[ i ];
+    std::vector< unsigned > locationObjectIds = location.getObjectIds();
+    for( unsigned i = 0; i < locationObjectIds.size() && interact==false; i++ ) {
+        unsigned objectId = locationObjectIds[ i ];
+        Object object = ad.map.getObject( objectId );
 
         interact = GameLogic::canTakeObject( p_target, object );
         if( interact==true && ad.adventurer.getInventory().isFull()==false ) {
             // Loot object:
             ad.adventurer.getInventory().appendItem( object );
             // Remove object from location:
-            ad.map[ location.getId() ].objectRemove( object );
+            ad.map[ location.getId() ].objectIdRemove( objectId );
 
             GUI::RenderString( s_confMessageObjectTaken );
 
@@ -154,7 +152,7 @@ bool Executioner::interactDrop(Verb p_target) {
         if(obj.getId() == objectId)
         {
             ad.adventurer.getInventory().removeItem(obj);
-            ad.map[ location.getId() ].objectAppend( obj );
+            ad.map[ location.getId() ].objectIdAppend( objectId );
             GUI::RenderString( s_confMessageObjectDropped );
             interact = true;
         }

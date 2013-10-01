@@ -23,6 +23,7 @@ public:
 	void setImmovable( bool p_isImmovable );
 
 	unsigned getId() const;
+	unsigned getPropertyValue() const;
 	std::string getName() const;
 	bool isImmovable() const;
 
@@ -38,8 +39,6 @@ private:
 	unsigned m_id;
 	unsigned m_propertyValue;
 	std::string m_name;
-
-	// itsprop ???
 
 	bool m_immovable;
 	std::map< std::string, ObjectDescription > m_descriptions;
