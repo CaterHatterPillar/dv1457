@@ -62,19 +62,13 @@ Action* Interpreter::interpretAction(
 	Action* action;
 	switch( p_actionType ) {
 		case ActionTypes_TRAVEL:
-			//if( p_interpretation.vTravel.size() > 0 ) {
-				action = interpretActionTravel( p_interpretation, io_result );
-			//}
+			action = interpretActionTravel( p_interpretation, io_result );
 			break;
 		case ActionTypes_INTERACT:
-			//if( p_interpretation.vAction.size() > 0 ) {
-				action = interpretActionInteract( p_interpretation, io_result );
-			//}
+			action = interpretActionInteract( p_interpretation, io_result );
 			break;
 		case ActionTypes_GAME:
-			//if( p_interpretation.vGame.size() > 0 ) {
-				action = interpretActionGame( p_interpretation, io_result );
-			//}
+			action = interpretActionGame( p_interpretation, io_result );
 			break;
 		default:
 			action = ActionFactory::actionInvalid();

@@ -74,13 +74,15 @@ bool Executioner::executeInteract( ActionInteract* p_action, Result& io_result )
     Verb action = p_action->getAction();
     Verb target = p_action->getTarget();
    
-    switch(action.getId())
+    switch( action.getId() )
     {
-    case Verb::VerbIds_TAKE:
+    case VerbIds_TAKE:
         interact = interactTake(target);
         break;
-    case Verb::VerbIds_DROP:
+    case VerbIds_DROP:
         interact = interactDrop(target);
+        break;
+    case VerbIds_OPEN:
         break;
     default:
         break;
