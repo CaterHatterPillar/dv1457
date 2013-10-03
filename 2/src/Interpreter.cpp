@@ -43,7 +43,8 @@ Interpreter::Interpretation Interpreter::interpretType( std::vector< Verb > p_ve
 				interpretation.vAction.push_back( verb );
 				break;
 			case 3: // Denotes special-case.
-				throw ExceptionAdventNotYetImplemented( "Command - Special-case." );
+				interpretation.vSpecial.push_back( verb );
+				//throw ExceptionAdventNotYetImplemented( "Command - Special-case." );
 				break;
 			case 4: // Denotes certain game-mechanics, such as look or inventory.
 				interpretation.vGame.push_back( verb );
@@ -78,7 +79,14 @@ Action* Interpreter::interpretAction(
 }
 Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vTravel.size() > 0 ) {
+	bool travel = true;
+	if(p_interpretation.vAction.size() == 1) {
+		if(p_interpretation.vAction.front().getId() == VerbIds_SAY) {
+			travel = false;
+		}
+	}
+
+	if( p_interpretation.vTravel.size() > 0 && travel) {
 		// ToDoIst: implement support for handling not-just-one verb for commands.
 		if( p_interpretation.vTravel.size()==1 ) {
 			delete action;
@@ -98,7 +106,16 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 		if( p_interpretation.vAction.size()==1 && p_interpretation.vObject.size()==1 ) {
 			delete action;
 			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject.front() );
-		} else {
+		} 
+		else if( p_interpretation.vAction.size() == 1 && p_interpretation.vSpecial.size() == 1) {
+			delete action;
+			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vSpecial.front() );	
+		}
+		else if( p_interpretation.vAction.size() == 1 && p_interpretation.vTravel.size() == 1) {
+			delete action;
+			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vTravel.front() );
+		}
+		else {
 			io_result.setSummary( s_confMessageInvalidInteract );
 			/*io_setParams( p_interpretation.vAction );
 			for( unsigned i = 0; i < p_interpretation.vObject.size(); i++ ) {

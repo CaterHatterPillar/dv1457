@@ -73,23 +73,22 @@ bool Executioner::executeInteract( ActionInteract* p_action, Result& io_result )
     
     Verb action = p_action->getAction();
     Verb target = p_action->getTarget();
-   
+
     switch( action.getId() )
     {
     case VerbIds_TAKE:
-        interact = interactTake(target);
+        interact = interactTake(target, io_result);
         break;
     case VerbIds_DROP:
-        interact = interactDrop(target);
+        interact = interactDrop(target, io_result);
         break;
     case VerbIds_OPEN:
         break;
+    case VerbIds_SAY:
+        interact = interactSay(target, io_result);
+        break;
     default:
         break;
-    }
-
-    if( interact==false ) {
-        io_result.setSummary( s_confMessageObjectNotFound );
     }
 
     return interact;
@@ -115,7 +114,7 @@ bool Executioner::executeGame( ActionGame* p_action, Result& io_result ) {
     return recognizedGameCommand;
 }
 
-bool Executioner::interactTake(Verb p_target) {
+bool Executioner::interactTake(Verb p_target, Result& io_result) {
     AdventData& ad = Singleton<AdventData>::get();
     bool interact = false;
 
@@ -137,10 +136,13 @@ bool Executioner::interactTake(Verb p_target) {
             interact = true;
         }
     }
+    if( interact==false ) {
+        io_result.setSummary( s_confMessageObjectNotFound );
+    }
     return interact;
 }
 
-bool Executioner::interactDrop(Verb p_target) {
+bool Executioner::interactDrop(Verb p_target, Result& io_result) {
     AdventData& ad = Singleton<AdventData>::get();
     Location location = ad.adventurer.getLocation();
     bool interact = false;
@@ -159,6 +161,27 @@ bool Executioner::interactDrop(Verb p_target) {
             interact = true;
         }
     }
+    if( interact==false ) {
+        io_result.setSummary( s_confMessageObjectNotFound );
+    }
+    return interact;
+}
 
+bool Executioner::interactSay(Verb p_target, Result& io_result) {
+    AdventData& ad = Singleton<AdventData>::get();
+    Location location = ad.adventurer.getLocation();
+    bool interact = false;
+
+    /*
+    Words that have meaning:
+    xyzzy, plugh, plover
+    fee, fie, foe, foo (in order)
+    */
+
+    
+
+
+    if(interact == false)
+        io_result.setSummary("(to yourself) \nNothing happens.");
     return interact;
 }
