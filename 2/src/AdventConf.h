@@ -28,8 +28,8 @@ static const std::string s_confMessageObjectNoDescription = ">$<";
 static const std::string s_confMessageObjectNotFound	= "You can't see any such thing.";
 static const std::string s_confMessageInventoryEmpty 	= "You are carrying nothing.";
 static const std::string s_confMessageInventoryHeader 	= "You are carrying:";
-static const std::string s_confMessageObjectNotOpenable = "That is no object you may unlock or open.";
-static const std::string s_confMessageObjectOpened = "Opened.";
+static const std::string s_confMessageObjectNotOpenable = "You cannot open that item. Are you missing something?";
+static const std::string s_confMessageObjectOpened		= "Opened.";
 
 // ***
 // Commands & Interpretation

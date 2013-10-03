@@ -18,11 +18,11 @@ protected:
 	void parseDescShort( 		std::istringstream& p_ss );
 	void parseTravelTable( 		std::istringstream& p_ss );
 	void parseVocabulary( 		std::istringstream& p_ss );
-	void parseMsgs( 			std::istringstream& p_ss, std::map<unsigned, std::string>& p_target );
+	void parseMsgsArbitrary(	std::istringstream& p_ss );
 	void parseObjLoc( 			std::istringstream& p_ss );
 	void parseObjDesc( 			std::istringstream& p_ss ); // Can only parse up to 100 objects.
-	void parseActionDefaults( 	std::istringstream& p_ss );
-	void parseLiquidAssets( 	std::istringstream& p_ss ); // This function is not yet used.
+	/*void parseActionDefaults( 	std::istringstream& p_ss );
+	void parseLiquidAssets( 	std::istringstream& p_ss );*/ // This function is not yet used.
 private:
 	std::ifstream* m_ifs;
 	AdventData* m_ad; // Result

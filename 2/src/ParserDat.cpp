@@ -1,7 +1,4 @@
-#include <string>
-#include <sstream>
-
-#include "Util.h"
+#include "Common.h"
 #include "ParserDat.h"
 
 enum Sections {
@@ -57,24 +54,25 @@ void ParserDat::init() {
 				parseObjDesc( ss );
 				break;
 			case Sections_ARBITRARY_MESSAGES:
-				parseMsgs( ss, m_ad->dataMsgsArbitrary );
+				parseMsgsArbitrary( ss );
 				break;
 			case Sections_OBJECT_LOCATIONS:
 				parseObjLoc( ss );
 				break;
 			case Sections_ACTION_DEFAULTS:
-				parseActionDefaults( ss );
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Action Defaults." );
 				break;
 			case Sections_LIQUID_ASSETS:
-				// We're not parsing liquid assets yet.
-				// parseLiquidAssets( ss );
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Liquid Assets" );
 				break;
 			case Sections_CLASS_MESSAGES:
-				parseMsgs( ss, m_ad->dataMsgsClass );
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Class Messages." );
 				break;
 			case Sections_HINTS:
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Sections_HINTS." );
 				break;
 			case Sections_MAGIC_MESSAGES:
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Magic Messages." );
 				break;
 		}
 	}
@@ -169,14 +167,15 @@ void ParserDat::parseVocabulary( std::istringstream& p_ss ) {
 	// Append unique word to vocabulary:
 	m_ad->vocabulary.addWord( id, word ); // This is used to map unique words to common verbs.
 }
-void ParserDat::parseMsgs( std::istringstream& p_ss, std::map<unsigned, std::string>& p_map ) {
+void ParserDat::parseMsgsArbitrary( std::istringstream& p_ss ) {
 	unsigned msgId;
-	std::string msgStr;
+	std::string msgLine;
 
 	p_ss >> msgId;
-	std::getline( p_ss, msgStr );
+	std::getline( p_ss, msgLine );
 
-	p_map[ msgId ] = msgStr;
+	m_ad->letterbox[ msgId ].id = msgId;
+	m_ad->letterbox[ msgId ].lines.push_back( msgLine );
 }
 void ParserDat::parseObjLoc( std::istringstream& p_ss ) {
 	unsigned objId;
@@ -223,7 +222,7 @@ void ParserDat::parseObjDesc( std::istringstream& p_ss ) {
 	// "Properties which produce no message should be given the message ">$<"."
 	// Considering giving objects with empty description-lists the above description? Unclear.
 }
-void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
+/*void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
 	unsigned a, d;
 
 	p_ss >> a >> d;
@@ -231,4 +230,4 @@ void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
 }
 void ParserDat::parseLiquidAssets( std::istringstream& p_ss ) {
 	// Do nothing.
-}
+}*/

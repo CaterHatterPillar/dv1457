@@ -16,7 +16,7 @@ interpreter: common actions result vocabulary
 	g++ -c Interpreter.h Interpreter.cpp
 
 executioner: common actions map
-	g++ -c GameLogic.h GameLogic.cpp Executioner.h Executioner.cpp
+	g++ -c Executioner.h Executioner.cpp
 
 result: common
 	g++ -c Result.h Result.cpp
@@ -28,7 +28,7 @@ parser: common datastructures
 	g++ -c ParserDat.h ParserDat.cpp
 
 datastructures: common map vocabulary player
-	g++ -c Singleton.h AdventData.h
+	g++ -c Singleton.h Letterbox.h Letterbox.cpp AdventData.h
 
 player: common map
 	g++ -c Inventory.h Inventory.cpp Adventurer.h Adventurer.cpp

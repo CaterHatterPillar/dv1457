@@ -44,6 +44,11 @@ void GUI::RenderText( int numLines, ... ) {
 void GUI::RenderString( std::string p_string ) {
 	std::cout << p_string;
 }
+void GUI::RenderLines( std::vector< std::string > p_lines ) {
+	for( unsigned i = 0; i < p_lines.size(); i++ ) {
+		std::cout << std::endl << p_lines[ i ];
+	}
+}
 void GUI::RenderTerminal() {
 	std::cout << s_confTerminalIndicator;
 }

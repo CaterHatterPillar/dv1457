@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Map.h"
+#include "Letterbox.h"
 #include "Vocabulary.h"
 #include "Adventurer.h"
 
@@ -19,15 +20,12 @@ public:
 	Map map;
 	Vocabulary vocabulary;
 	Adventurer adventurer;
+	Letterbox letterbox;
 
 	// Everything below is temporary. Ought not be stored in this way.
-	std::map< unsigned, std::string > dataMsgsArbitrary;
-	std::map< unsigned, std::string > dataMsgsClass;
-
-	std::map< unsigned, unsigned > dataActionDefaults;
-
+	//std::map< unsigned, std::string > dataMsgsClass;
+	//std::map< unsigned, unsigned > dataActionDefaults;
 	// std::map< unsigned, std::vector<unsigned> > dataLiquidAssets;
-	// ^ We're not parsing this yet.
 protected:
 private:
 };

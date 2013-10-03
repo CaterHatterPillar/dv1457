@@ -22,6 +22,7 @@ public:
 	static void RenderLocation( Location p_location );
 	static void RenderText( int numLines, ... );
 	static void RenderString( std::string p_string );
+	static void RenderLines( std::vector< std::string > p_lines );
 	static void RenderTerminal();
 	static void RenderInventory( Inventory p_inventory );
 	static void RenderNewLine( unsigned p_numNewLine );
