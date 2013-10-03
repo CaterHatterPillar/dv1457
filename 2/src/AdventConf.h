@@ -30,6 +30,10 @@ static const std::string s_confMessageInventoryEmpty 	= "You are carrying nothin
 static const std::string s_confMessageInventoryHeader 	= "You are carrying:";
 static const std::string s_confMessageObjectNotOpenable = "You cannot open that item. Are you missing something?";
 static const std::string s_confMessageObjectOpened		= "Opened.";
+static const std::string s_confMessageObjectOn 			= "Item activated.";
+
+static const std::string s_confDescShortDarkness = "\tDARKNESS";
+static const std::string s_confDescLongDarkness = "\tIT IS PITCH DARK, AND YOU CAN'T SEE A THING.";
 
 // ***
 // Commands & Interpretation
@@ -68,6 +72,34 @@ enum VerbIds {
 	VerbIds_SUSPE	= 2030,
 	VerbIds_HOURS	= 2031,
 };
+
+enum LiquidAssets {
+	LiquidAssets_LIT 					= 0,
+	LiquidAssets_LIQUID_TYPE 			= 1,
+	LiquidAssets_LIQUID 				= 2,
+	LiquidAssets_NO_PIRATES_ALLOWED 	= 3,
+	LiquidAssets_TRYING_INTO_CAVE 		= 4,
+	LiquidAssets_TRYING_CATCH_BIRD 		= 5,
+	LiquidAssets_TRYING_DEAL_WITH_SNAKE = 6,
+	LiquidAssets_LOST_IN_MAZE 			= 7,
+	LiquidAssets_PONDERING_DARK_ROOM 	= 8,
+	LiquidAssets_AT_WITTS_END 			= 9
+};
+
+/*
+The cond bits currently assigned are:
+	0	light
+	1	if bit 2 is on: on for oil, off for water
+	2	liquid asset, see bit 1
+	3	pirate doesn't go here unless following player
+Other bits are used to indicate areas of interest to "hint" routines:
+	4	trying to get into cave
+	5	trying to catch bird
+	6	trying to deal with snake
+	7	lost in maze
+	8	pondering dark room
+	9	at witt's end
+*/
 
 // Structured this way so that one may loop through ids that may be opened.
 enum ObjectsOpenableIds {

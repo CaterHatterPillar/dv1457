@@ -9,6 +9,12 @@
 #include "Location.h"
 #include "Inventory.h"
 
+/*
+Some of these methods are not used.
+Remove them.
+Also, be sure to watch Pacific Rim.
+*/
+
 class GUI {
 public:
 	GUI();

@@ -21,17 +21,30 @@ void GUI::ClearScreen() {
 }
 void GUI::RenderLocation( Location p_location ) {
 	AdventData& ad = Singleton< AdventData >::get();
+	std::string descShort, descLong, descObjects = "";
 
-	// Render the terrain:
-	std::string descShort = p_location.getDescShort();
-	std::cout << descShort << std::endl << p_location.getDescLong();
+	bool canSee = p_location.isLit();
+	canSee |= ad.adventurer.isIlluminated();
+	if( canSee ) {
+		descShort = p_location.getDescShort();
+		descLong = p_location.getDescLong();
 
-	// Render objects:
-	std::vector< unsigned > objectIds = p_location.getObjectIds();
-	for( unsigned i = 0; i < objectIds.size(); i++ ) {
-		Object object = ad.map.getObject( objectIds[ i ] );
-		RenderObject( object );
+		std::vector< unsigned > objectIds = p_location.getObjectIds();
+		for( unsigned i = 0; i < objectIds.size(); i++ ) {
+			Object object = ad.map.getObject( objectIds[ i ] );
+			descObjects += '\n';
+
+			std::vector< std::string > description = object.getDescription();
+			for( unsigned i = 0; i < description.size(); i++ ) {
+				descObjects += description[i];
+			}
+		}
+	} else {
+		descShort = s_confDescShortDarkness;
+		descLong = s_confDescLongDarkness;
 	}
+
+	std::cout << descShort << std::endl << descLong << descObjects;
 }
 void GUI::RenderText( int numLines, ... ) {
 	va_list list;

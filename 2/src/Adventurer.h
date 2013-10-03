@@ -13,6 +13,7 @@ public:
 	~Adventurer();
 
 	void adventTravelTo( Location p_location );
+	bool isIlluminated();
 
 	Location getLocation();
 	Inventory& getInventory();

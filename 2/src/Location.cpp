@@ -5,6 +5,7 @@
 
 Location::Location() {
 	m_id = 0;
+	m_lit = false;
 	m_descShort = "";
 }
 Location::Location( unsigned p_id, std::string p_descShort, std::vector< std::string > p_descLongs ) {
@@ -18,6 +19,9 @@ Location::~Location() {
 
 void Location::setId( unsigned p_id ) {
 	m_id = p_id;
+}
+void Location::setLit( bool p_isLit ) {
+	m_lit = p_isLit;
 }
 void Location::setDescShort( std::string p_descShort ) {
 	m_descShort = p_descShort;
@@ -55,6 +59,9 @@ bool Location::objectAtLocation( unsigned p_objectId ) {
 
 unsigned Location::getId() const {
 	return m_id;
+}
+bool Location::isLit() const {
+	return m_lit;
 }
 std::string Location::getDescShort() const {
 	return m_descShort;
