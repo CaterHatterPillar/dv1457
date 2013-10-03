@@ -1,6 +1,8 @@
 #ifndef EXECUTIONER_H
 #define EXECUTIONER_H
 
+#include <vector>
+
 #include "Action.h"
 #include "Result.h"
 #include "Location.h"
@@ -22,6 +24,20 @@ private:
 	bool interactTake(Verb p_target, Result& io_result);
 	bool interactDrop(Verb p_target, Result& io_result);
 	bool interactSay(Verb p_target, Result& io_result);
+
+	bool sayXyzzy(Verb p_target, Result& io_result);
+	bool sayPlugh(Verb p_target, Result& io_result);
+	bool sayPlover(Verb p_target, Result& io_result);
+
+	bool teleport(Verb p_target, bool p_canTeleport, Result& io_result);
+	void discoverMagicWords(int p_locationId);
+	bool feefie(unsigned p_wordIndex, Result& io_result);
+	std::vector<bool> m_feefie;
+
+	bool m_xyzzy;
+	bool m_plugh;
+	bool m_plover;
+	bool m_fee;
 };
 
 #endif // EXECUTIONER_H

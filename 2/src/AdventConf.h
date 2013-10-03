@@ -67,4 +67,25 @@ enum VerbIds {
 	VerbIds_HOURS	= 2031,
 };
 
+enum MeaningfulWords
+{
+	MeaningfulWords_XYZZY = 62,
+	MeaningfulWords_PLUGH = 65,
+	MeaningfulWords_PLOVE = 71,
+
+	MeaningfulWords_FEE = 3001,
+	MeaningfulWords_FIE = 3002,
+	MeaningfulWords_FOE = 3003,
+	MeaningfulWords_FOO = 3004,
+	MeaningfulWords_FUM = 3005,
+};
+
+enum MagicWordLocations
+{
+	MagicWordLocations_XYZZY = 11,
+	MagicWordLocations_PLUGH = 33,
+	MagicWordLocations_PLOVER = 100,
+	MagicWordLocations_FEE = 92,
+};
+
 #endif // ADVENTCONF_H

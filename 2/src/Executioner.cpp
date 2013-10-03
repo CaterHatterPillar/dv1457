@@ -1,12 +1,17 @@
 #include <cassert>
 
+#include "ActionFactory.h"
 #include "Common.h"
 #include "Object.h"
 #include "GameLogic.h"
 #include "Executioner.h"
 
 Executioner::Executioner() {
-
+    m_feefie.resize(0, false);
+    m_xyzzy  = false;
+    m_plugh  = false;
+    m_plover = false;
+    m_fee    = false;
 }
 Executioner::~Executioner() {
 	// Do nothing.
@@ -62,7 +67,12 @@ bool Executioner::executeTravel( ActionTravel* p_action, Result& io_result ) {
     }
 
     // The location is printing whether or not the travel was successful.
-    GUI::RenderLocation( ad.adventurer.getLocation() );
+    if(travel) {
+        GUI::RenderLocation( ad.adventurer.getLocation() );
+        discoverMagicWords( ad.adventurer.getLocation().getId() );
+    }
+    else
+        io_result.setSummary("You can't go that way");
 
     return travel;
 }
@@ -172,16 +182,106 @@ bool Executioner::interactSay(Verb p_target, Result& io_result) {
     Location location = ad.adventurer.getLocation();
     bool interact = false;
 
-    /*
-    Words that have meaning:
-    xyzzy, plugh, plover
-    fee, fie, foe, foo (in order)
-    */
-
-    
-
-
-    if(interact == false)
+    switch(p_target.getId())
+    {
+    case MeaningfulWords_XYZZY:
+        teleport(p_target, m_xyzzy, io_result);
+        break;
+    case MeaningfulWords_PLUGH:
+        teleport(p_target, m_plugh, io_result);
+        break;
+    case MeaningfulWords_PLOVE:
+        teleport(p_target, m_plover, io_result);
+        break;
+    case MeaningfulWords_FEE:
+        feefie(0, io_result);
+        break;
+    case MeaningfulWords_FIE:
+        feefie(1, io_result);
+        break;
+    case MeaningfulWords_FOE:
+        feefie(2, io_result);
+        break;
+    case MeaningfulWords_FOO:
+        feefie(3, io_result);
+        break;
+    case MeaningfulWords_FUM:
+        feefie(4, io_result);
+        break;
+    default:
         io_result.setSummary("(to yourself) \nNothing happens.");
+        break;
+    }
+    
     return interact;
+}
+
+bool Executioner::teleport(Verb p_target, bool p_canTeleport, Result& io_result)
+{
+    bool success = false;
+
+    if(p_canTeleport) {
+        Action* action = ActionFactory::actionTravel( p_target );
+        success = executeTravel((ActionTravel*)action, io_result);
+    }
+    
+    if(!success)
+        io_result.setSummary("Nothinh happens!");
+
+    return success;
+}
+
+void Executioner::discoverMagicWords(int p_locationId)
+{
+    switch(p_locationId)
+    {
+    case MagicWordLocations_XYZZY:
+        m_xyzzy = true;
+        break;
+    case MagicWordLocations_PLUGH:
+        m_plugh = true;
+        break;
+    case MagicWordLocations_PLOVER:
+        m_plover = true;
+        break;
+    case MagicWordLocations_FEE:
+        m_fee = true;
+        break;
+    }
+
+}
+
+bool Executioner::feefie(unsigned p_wordIndex, Result& io_result)
+{
+    bool success = true;
+    
+    if(p_wordIndex == 0)
+        m_feefie.push_back(true);
+    else {
+        if(p_wordIndex > m_feefie.size())
+            success = false;
+        if(success){
+            for(unsigned int i=0; i<m_feefie.size() && success; i++)
+                success = m_feefie[i];
+        }
+        
+        if(success)
+            m_feefie.push_back(true);
+        else
+            m_feefie.resize(0, false);    
+    }
+    if(success && p_wordIndex == 3) {
+        GUI::RenderString("Correct sequence!");
+        m_feefie.resize(0, false);
+        if(m_fee) {
+            GUI::RenderString("Move eggs back to the giant room. Not yet implemented");
+        }
+        else {
+            GUI::RenderString("Nothing happens!");
+        }
+    }
+    else if(success)
+        GUI::RenderString("Ok!");
+    else
+        io_result.setSummary("Get it right dummy!");
 }
