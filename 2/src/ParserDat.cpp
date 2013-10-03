@@ -60,7 +60,7 @@ void ParserDat::init() {
 				parseObjLoc( ss );
 				break;
 			case Sections_ACTION_DEFAULTS:
-				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Action Defaults." );
+				parseActionDefaults( ss );
 				break;
 			case Sections_LIQUID_ASSETS:
 				parseLiquidAssets( ss );
@@ -262,10 +262,8 @@ void ParserDat::parseLiquidAssets( std::istringstream& p_ss ) {
     	m_liquidAssets[ locs[ i ] ].push_back( n );
     }
 }
-
-/*void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
+void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
 	unsigned a, d;
-
 	p_ss >> a >> d;
-	m_ad->dataActionDefaults[a] = d;
-}*/
+	m_ad->letterbox.appendActionDefault( a, d );
+}
