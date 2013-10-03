@@ -56,10 +56,10 @@ bool Executioner::executeTravel( ActionTravel* p_action, Result& io_result ) {
         unsigned m = y / 1000;              // How to travel (might actually not be travel, could even be a goto (!)).
         unsigned n = y % 1000;              // Conditions of travel.
 
-        std::cout << "FROM: " << Util::toString( x ) << std::endl
-        << "TO: " << Util::toString( y ) << std::endl
-        << "m: " << Util::toString( m ) << std::endl
-        << "n: " << Util::toString( n ) << std::endl;
+        // std::cout << "FROM: " << Util::toString( x ) << std::endl
+        // << "TO: " << Util::toString( y ) << std::endl
+        // << "m: " << Util::toString( m ) << std::endl
+        // << "n: " << Util::toString( n ) << std::endl;
 
         // Note to self, developer and the world: By 'prop', the original author apperently mean object - so the property value of said object.
         if( m == 0 ) { // if m=0 It's unconditional.
