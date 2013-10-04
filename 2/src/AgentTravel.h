@@ -13,6 +13,9 @@ protected:
 private:
 	static bool executeLook();
 	static bool executeTravel( ActionTravel* p_action, Result& io_result );
+
+	static bool condObjectCarry(unsigned int p_objectId);
+	static bool condObjectLocation(unsigned int p_objectId);
 };
 
 #endif // AGENTTRAVEL_H
