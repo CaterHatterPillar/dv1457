@@ -75,7 +75,7 @@ Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Res
 	Action* action = ActionFactory::actionInvalid();
 	bool travel = true;
 	if(p_interpretation.vAction.size() == 1) {
-		if(p_interpretation.vAction.front().getId() == VerbIds_SAY) {
+		if(p_interpretation.vAction.front().getId() == VerbIdsAction_SAY) {
 			travel = false;
 		}
 	}

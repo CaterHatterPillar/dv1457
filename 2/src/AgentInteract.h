@@ -10,6 +10,9 @@ public:
 
 	static bool execute( ActionInteract* p_action, Result& io_result );
 protected:
+	static bool executeAction( 		ActionInteract* p_action, Result& io_result );
+	static bool executeInteract( 	ActionInteract* p_action, Result& io_result );
+	static bool executeInteracts( 	ActionInteract* p_action, Result& io_result );
 private:
 	static bool executeTake( Verb p_target, Result& io_result );
 	static bool executeDrop( Verb p_target, Result& io_result );

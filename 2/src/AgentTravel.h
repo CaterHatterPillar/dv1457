@@ -9,7 +9,10 @@ public:
 	~AgentTravel();
 
 	static bool execute( ActionTravel* p_action, Result& io_result );
+protected:
 private:
+	static bool executeLook();
+	static bool executeTravel( ActionTravel* p_action, Result& io_result );
 };
 
 #endif // AGENTTRAVEL_H

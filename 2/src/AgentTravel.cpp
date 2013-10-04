@@ -9,7 +9,32 @@ AgentTravel::~AgentTravel() {
 }
 
 bool AgentTravel::execute( ActionTravel* p_action, Result& io_result ) {
-	AdventData& ad = Singleton<AdventData>::get();
+    AdventData& ad = Singleton<AdventData>::get();
+    bool executed = false;
+
+    Verb target = p_action->getTarget();
+    unsigned idTarget = target.getId();
+    /* Treat special-case motion-verbs: */
+    switch( idTarget ) {
+        case VerbIdsMotion_LOOK:
+            executed = executeLook();
+            break;
+        default:
+            executed = executeTravel( p_action, io_result );
+            break;
+    } // case Magic...
+
+    // The location is printing whether or not the travel was successful.
+    GUI::RenderLocation( ad.adventurer.getLocation() );
+
+    return executed;
+}
+
+bool AgentTravel::executeLook() {
+    return true; // Since location is printed regardless of result, we only wish to mark the command as sucessful to indicate no error.
+}
+bool AgentTravel::executeTravel( ActionTravel* p_action, Result& io_result ) {
+    AdventData& ad = Singleton<AdventData>::get();
     bool satisfiesConditions = false;
 
     Verb target = p_action->getTarget();
@@ -61,15 +86,8 @@ bool AgentTravel::execute( ActionTravel* p_action, Result& io_result ) {
         } 
     }
 
-    // The location is printing whether or not the travel was successful.
-    GUI::RenderLocation( ad.adventurer.getLocation() );
-    if(satisfiesConditions)
-        ad.adventurer.getMagic().discoverMagicWords();
-
     return satisfiesConditions;
 }
-
-
 
 /*
 std::cout << "FROM: " << Util::toString( x ) << std::endl
