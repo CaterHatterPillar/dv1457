@@ -41,37 +41,44 @@ Verb ActionTravel::getTarget() const {
 }
 
 // ActionInteract
-ActionInteract::ActionInteract( Verb p_action, Verb p_target ) : Action( ActionTypes_INTERACT ) {
+ActionInteract::ActionInteract( Verb p_action, std::vector< Verb > p_targets ) : Action( ActionTypes_INTERACT ) {
 	m_action = p_action;
-	m_target = p_target;
+	m_targets = p_targets;
 }
 ActionInteract::~ActionInteract() {
 	// Do nothing.
 }
 
 std::string ActionInteract::toString() {
-	return Action::toString() + " - Interact with target verb: [" + m_target.toString() + "] with verb [" + m_action.toString() + "].";
+	std::string interact = Action::toString() + " - Interact with target verbs: [ ";
+	for( unsigned i = 0; i < m_targets.size(); i++ ) {
+		interact += m_targets[ 0 ].toString() + " ";
+	}
+	interact += "] with verb [" + m_action.toString() + "].";
+	return interact;
+}
+ActionInteract::ActionInteractTypes ActionInteract::getTypeActionInteract() {
+	ActionInteractTypes type;
+	switch( getNumTargets() ) {
+		case 0:
+			type = ActionInteractTypes_ACTION;
+			break;
+		case 1:
+			type = ActionInteractTypes_INTERACT;
+			break;
+		default: // More than one.
+			type = ActionInteractTypes_INTERACTS;
+			break;
+	}
+	return type;
 }
 
 Verb ActionInteract::getAction() const {
 	return m_action;
 }
-Verb ActionInteract::getTarget() const {
-	return m_target;
+std::vector< Verb > ActionInteract::getTargets() const {
+	return m_targets;
 }
-
-// ActionGame
-ActionGame::ActionGame( ActionGameTypes p_actionGameType ) : Action( ActionTypes_GAME ) {
-	m_actionGameType = p_actionGameType;
-}
-ActionGame::~ActionGame() {
-	// Do nothing.
-}
-
-std::string ActionGame::toString() {
-	return Action::toString() + " - " + std::string( ActionGameTypesString[ m_actionGameType ] ) + ".";
-}
-
-ActionGameTypes ActionGame::getActionGameType() const {
-	return m_actionGameType;
+unsigned ActionInteract::getNumTargets() const {
+	return m_targets.size();
 }

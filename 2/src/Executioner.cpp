@@ -7,7 +7,6 @@
 #include "Object.h"
 #include "Location.h"
 #include "Destination.h"
-#include "AgentGame.h"
 #include "Executioner.h"
 #include "AgentTravel.h"
 #include "AgentInteract.h"
@@ -33,9 +32,6 @@ bool Executioner::execute( Action* p_action, Result& io_result ) {
 			break;
         case ActionTypes_INTERACT:
             executed = AgentInteract::execute( (ActionInteract*)p_action, io_result );
-            break;
-        case ActionTypes_GAME:
-            executed = AgentGame::execute( (ActionGame*)p_action, io_result );
             break;
 		default:
 			throw ExceptionAdventNotYetImplemented( "Encountered unknown ActionTypes: " + std::string( ActionTypesString[ actionType ] ) + "." );

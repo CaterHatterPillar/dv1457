@@ -26,6 +26,8 @@ void GUI::RenderLocation( Location p_location ) {
 	bool canSee = p_location.isLit();
 	canSee |= ad.adventurer.isIlluminated();
 	if( canSee ) {
+		ad.adventurer.getMagic().discoverMagicWords();
+		
 		descShort = p_location.getDescShort();
 		descLong = p_location.getDescLong();
 
