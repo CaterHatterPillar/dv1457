@@ -10,6 +10,8 @@ public:
 
 	static bool execute( ActionTravel* p_action, Result& io_result );
 private:
+	static bool condObjectCarry(unsigned int p_objectId);
+	static bool condObjectLocation(unsigned int p_objectId);
 };
 
 #endif // AGENTTRAVEL_H

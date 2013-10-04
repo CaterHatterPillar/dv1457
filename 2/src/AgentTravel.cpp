@@ -1,6 +1,8 @@
 #include "Common.h"
 #include "AgentTravel.h"
 
+#include <iostream>
+
 AgentTravel::AgentTravel() {
 
 }
@@ -35,9 +37,12 @@ bool AgentTravel::execute( ActionTravel* p_action, Result& io_result ) {
         } else if( m==100 ) { // if m=100 Unconditional, but forbidden to dwarves.
             throw ExceptionAdventNotYetImplemented( " Travel - Restrictions to dwarves apply." );
         } else if( (m>100) && (m<=200) ) { // if 100<m<=200 He must be carrying object m-100.
-            throw ExceptionAdventNotYetImplemented( "Travel - Must carry certain object." );
+            satisfiesConditions = condObjectCarry(m-100);
         } else if( (m>200) && (m<=300) ) { // if 200<m<=300 Must be carrying or in same room as m-200.
-            throw ExceptionAdventNotYetImplemented( "Travel - Must be in same room as..." );
+            std::cout << "Required object: " << m-200 << std::endl;
+            satisfiesConditions = condObjectCarry(m-200);
+            if(satisfiesConditions)
+                satisfiesConditions = condObjectLocation(m-200);    
         } else if( (m>300) && (m<=400) ) { // if 300<m<=400 prop(m mod 100) must *not* be 0.
             unsigned prop = m % 100;
             unsigned propValue = ad.map.getObject( prop ).getPropertyValue();
@@ -69,7 +74,33 @@ bool AgentTravel::execute( ActionTravel* p_action, Result& io_result ) {
     return satisfiesConditions;
 }
 
+bool AgentTravel::condObjectCarry(unsigned int p_objectId) {
+    AdventData& ad = Singleton<AdventData>::get();
 
+    bool success = false;
+
+    Inventory invent = ad.adventurer.getInventory();
+    for(unsigned int i=0; i<invent.getNumItems(); i++) {
+        if(p_objectId == invent[i].getId()) {
+            success = true;
+        }
+    }
+
+    return success;
+}
+bool AgentTravel::condObjectLocation(unsigned int p_objectId) {
+    AdventData& ad = Singleton<AdventData>::get();
+
+    bool success = false;
+    Location location = ad.adventurer.getLocation();
+    std::vector< unsigned > locationObjectIds = location.getObjectIds();
+    for( unsigned i = 0; i < locationObjectIds.size(); i++ ) {
+        if(p_objectId == locationObjectIds[i]) {
+            success = true;
+        }
+    }
+    return success;
+}
 
 /*
 std::cout << "FROM: " << Util::toString( x ) << std::endl
