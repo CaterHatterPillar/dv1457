@@ -16,3 +16,6 @@ Action* ActionFactory::actionTravel( Verb p_target ) {
 Action* ActionFactory::actionInteract( Verb p_action, std::vector< Verb > p_targets ) {
 	return new ActionInteract( p_action, p_targets );
 }
+Action* ActionFactory::actionMagic( Verb p_spell ) {
+	return new ActionMagic( p_spell );
+}

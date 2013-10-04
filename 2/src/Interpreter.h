@@ -23,16 +23,17 @@ public:
 	enum ActionIntents {
 		ActionIntents_UNKNOWN,
 		ActionIntents_TRAVEL,
-		ActionIntents_INTERACT
+		ActionIntents_INTERACT,
+		ActionIntents_MAGIC
 	};
 protected:
 private:
-	// These methods all need their result-writebacks to be re-written. They are currently faulty.
 	Action* interpretAction( 			Interpretation p_interpretation, Result& io_result, ActionTypes p_actionType );
 	Action* interpretWildcard( 			Interpretation p_interpretation, Result& io_result );
 
 	Action* interpretActionTravel( 		Interpretation p_interpretation, Result& io_result );
 	Action* interpretActionInteract( 	Interpretation p_interpretation, Result& io_result );
+	Action* interpretActionMagic( 		Interpretation p_interpretation, Result& io_result );
 
 	Interpretation interpretVerbs( std::vector< Verb > p_verbs );
 	ActionIntents interpretIntent( Interpretation p_interpretation );

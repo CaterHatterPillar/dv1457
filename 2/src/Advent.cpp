@@ -68,6 +68,12 @@ void Advent::gameLoop() {
 	// Print response if the command was not executed correctly.
 	if( success==false ) {
         GUI::RenderString( result.getSummary() );
+#ifdef ADVENT_DEBUG
+        GUI::RenderString( action->toString() );
+#endif // ADVENT_DEBUG
         // Be sure to print the stored parameters as well.
 	}
+
+	// Don't forget to clean up.
+	delete action;
 }

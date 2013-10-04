@@ -8,10 +8,11 @@ enum ActionTypes {
 	
 	ActionTypes_INVALID		= 1,
 	ActionTypes_TRAVEL		= 2,
-	ActionTypes_INTERACT	= 3,/*,
+	ActionTypes_INTERACT	= 3,
+	ActionTypes_MAGIC		= 4,/*,
 	ActionTypes_SPECIAL*/
 
-	ActionTypes_INDEX_END	= 4
+	ActionTypes_INDEX_END	= 5
 };
 	
 static const char* ActionTypesString[] = { 
@@ -19,7 +20,8 @@ static const char* ActionTypesString[] = {
 
 	"ActionTypes_INVALID", 
 	"ActionTypes_TRAVEL",
-	"ActionTypes_INTERACT",/*,
+	"ActionTypes_INTERACT",
+	"ActionTypes_MAGIC",/*,
 	"ActionTypes_SPECIAL"*/
 
 	"ActionTypes_INDEX_END" // hack
@@ -76,6 +78,19 @@ protected:
 private:
 	Verb m_action;
 	std::vector< Verb > m_targets;
+};
+
+class ActionMagic : public Action {
+public:
+	ActionMagic( Verb p_spell );
+	~ActionMagic();
+
+	std::string toString();
+
+	Verb getSpell() const;
+protected:
+private:
+	Verb m_spell;
 };
 
 #endif // ACTION_H

@@ -16,7 +16,7 @@ interpreter: common actions result vocabulary
 	g++ -c Interpreter.h Interpreter.cpp
 
 executioner: common actions map
-	g++ -c Executioner.h Executioner.cpp AgentTravel.h AgentTravel.cpp AgentInteract.h AgentInteract.cpp
+	g++ -c Executioner.h Executioner.cpp AgentTravel.h AgentTravel.cpp AgentInteract.h AgentInteract.cpp AgentMagic.h AgentMagic.cpp
 
 result: common
 	g++ -c Result.h Result.cpp

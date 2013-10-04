@@ -24,12 +24,14 @@ Action* Interpreter::interpret( std::vector< Verb > p_verbs, Result& io_result )
 		case ActionIntents_INTERACT:
 			a = interpretAction( interpretation, io_result, ActionTypes_INTERACT );
 			break;
+		case ActionIntents_MAGIC:
+			a = interpretAction( interpretation, io_result, ActionTypes_MAGIC );
+			break;
 		// ...or attempt to interpret it anyway if not successful:
 		default:
 			a = interpretWildcard( interpretation, io_result );
 			break;
 	}
-
 	if( p_verbs.size()==0 ) {
 		io_result.setSummary( s_confMessageInvalidCommand );
 	}
@@ -48,6 +50,9 @@ Action* Interpreter::interpretAction(
 			break;
 		case ActionTypes_INTERACT:
 			action = interpretActionInteract( p_interpretation, io_result );
+			break;
+		case ActionTypes_MAGIC:
+			action = interpretActionMagic( p_interpretation, io_result );
 			break;
 		default:
 			action = ActionFactory::actionInvalid();
@@ -89,30 +94,7 @@ Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Res
 }
 Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vAction.size() > 0 ) {
-		// ToDoIst: implement support for handling not-just-one verb for commands.
-		if( p_interpretation.vAction.size()==1 && p_interpretation.vObject.size()==1 ) {
-			delete action;
-			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject );
-		} 
-		else if( p_interpretation.vAction.size() == 1 && p_interpretation.vSpecial.size() == 1) {
-			delete action;
-			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vSpecial );	
-		}
-		else if( p_interpretation.vAction.size() == 1 && p_interpretation.vTravel.size() == 1) {
-			delete action;
-			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vTravel );
-		}
-		else {
-			io_result.setSummary( s_confMessageInvalidInteract );
-			/*io_setParams( p_interpretation.vAction );
-			for( unsigned i = 0; i < p_interpretation.vObject.size(); i++ ) {
-				io_result.appendParam( p_interpretation.vObject[ i ] );
-			}*/
-		}
-	}
 
-	/*
 	bool validAction = false;
 	if( p_interpretation.vAction.size()==1 ) {
 		validAction = true;
@@ -134,7 +116,33 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 		delete action;
 		action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject );
 	}
-	*/
+
+	return action;
+}
+Action* Interpreter::interpretActionMagic( Interpretation p_interpretation, Result& io_result ) {
+	Action* action = ActionFactory::actionInvalid();
+
+	std::vector< Verb > spellsTravel = p_interpretation.vTravel;	// Some spells are motion-verbs, such as XYZZY.
+	std::vector< Verb > spellsSpecial = p_interpretation.vSpecial;	// Others are special, such as fee fie fum - yadda yadda.
+
+	std::vector< Verb > spells = spellsTravel;
+	spells.insert( spells.end(), spellsSpecial.begin(), spellsSpecial.end() );
+
+	Verb spell;
+	bool validSpell = false;
+	if( spells.size()==0 ) {
+		io_result.setSummary( "Those are not magic words." );
+	} else if( spells.size()>1 ) {
+		io_result.setSummary( "That spell is too long. Limit your spell to single words." );
+	} else { // ==1
+		spell = spells.front();
+		validSpell = true;
+	}
+
+	if( validSpell==true ) {
+		delete action;
+		action = ActionFactory::actionMagic( spell );
+	}
 
 	return action;
 }
@@ -174,6 +182,8 @@ Interpreter::ActionIntents Interpreter::interpretIntent( Interpreter::Interpreta
 		unsigned actionId = action.getId();
 		if( actionId==VerbIdsAction_WALK ) {
 			intent = ActionIntents_TRAVEL;
+		} else if( actionId==VerbIdsAction_SAY ) {
+			intent = ActionIntents_MAGIC;
 		} else {
 			intent = ActionIntents_INTERACT;
 		}
