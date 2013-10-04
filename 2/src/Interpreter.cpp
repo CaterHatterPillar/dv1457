@@ -10,47 +10,31 @@ Interpreter::~Interpreter() {
 }
 
 Action* Interpreter::interpret( std::vector< Verb > p_verbs, Result& io_result ) {
-	// Order verbs into groups indicating actions:
-	Interpretation interpretation = interpretType( p_verbs );
+	Action* a;
 
-	Action* a = ActionFactory::actionInvalid();
-	for( unsigned actionType = ActionTypes_INDEX_BEGIN; actionType < ActionTypes_INDEX_END && a->isValid()==false; actionType++ ) {
-		delete a;
-		a = interpretAction( interpretation, io_result, (ActionTypes)actionType );
+	// Order verbs into groups indicating actions:
+	Interpretation interpretation = interpretVerbs( p_verbs );
+	// Attempt to predict intent based off Action-verbs:
+	ActionIntents intent = interpretIntent( interpretation );
+	// Call corresponding action if intent has been predicted...
+	switch( intent ) {
+		case ActionIntents_TRAVEL:
+			a = interpretAction( interpretation, io_result, ActionTypes_TRAVEL );
+			break;
+		case ActionIntents_INTERACT:
+			a = interpretAction( interpretation, io_result, ActionTypes_INTERACT );
+			break;
+		// ...or attempt to interpret it anyway if not successful:
+		default:
+			a = interpretWildcard( interpretation, io_result );
+			break;
 	}
 
 	if( p_verbs.size()==0 ) {
 		io_result.setSummary( s_confMessageInvalidCommand );
 	}
+
 	return a;
-}
-
-Interpreter::Interpretation Interpreter::interpretType( std::vector< Verb > p_verbs ) {
-	Interpretation interpretation;
-	for( unsigned i = 0; i < p_verbs.size(); i++ ) {
-		Verb verb = p_verbs[ i ];
-
-		unsigned vId = verb.getId();
-		unsigned vType = vId / 1000;
-		switch( vType ) {
-			case 0: // Denotes travel.
-				interpretation.vTravel.push_back( verb );
-				break;
-			case 1: // Denotes object.
-				interpretation.vObject.push_back( verb );
-				break;
-			case 2: // Denotes action.
-				interpretation.vAction.push_back( verb );
-				break;
-			case 3: // Denotes special-case.
-				interpretation.vSpecial.push_back( verb );
-				//throw ExceptionAdventNotYetImplemented( "Command - Special-case." );
-				break;
-			default:
-				throw ExceptionAdventNotYetImplemented( "Unknown verb type: " + Util::toString( vType ) + " caused by Verb: " + Util::toString( vId ) + "."  );
-		}
-	}
-	return interpretation;
 }
 
 Action* Interpreter::interpretAction( 
@@ -71,24 +55,34 @@ Action* Interpreter::interpretAction(
 	}
 	return action;
 }
+Action* Interpreter::interpretWildcard( Interpretation p_interpretation, Result& io_result ) {
+	Action* a = ActionFactory::actionInvalid();
+	for( unsigned actionType = ActionTypes_INDEX_BEGIN; actionType < ActionTypes_INDEX_END && a->isValid()==false; actionType++ ) {
+		delete a;
+		a = interpretAction( p_interpretation, io_result, (ActionTypes)actionType );
+	}
+	return a;
+}
+
 Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-	bool travel = true;
-	if(p_interpretation.vAction.size() == 1) {
-		if(p_interpretation.vAction.front().getId() == VerbIdsAction_SAY) {
-			travel = false;
-		}
+
+	bool validTarget = false;
+	switch( p_interpretation.vTravel.size() ) {
+		case 0:
+			io_result.setSummary( "No target specified. Where-to do you wish to travel?" );
+			break;
+		case 1:
+			validTarget = true;
+			break;
+		default:
+			io_result.setSummary( "Too many targets specified. Please specify only one destination." );
+			break;
 	}
 
-	if( p_interpretation.vTravel.size() > 0 && travel) {
-		// ToDoIst: implement support for handling not-just-one verb for commands.
-		if( p_interpretation.vTravel.size()==1 ) {
-			delete action;
-			action = ActionFactory::actionTravel( p_interpretation.vTravel.front() );
-		} else {
-			io_result.setSummary( s_confMessageInvalidTravel );
-			/*io_result.setParams( p_interpretation.vTravel );*/
-		}
+	if( validTarget==true ) {
+		delete action;
+		action = ActionFactory::actionTravel( p_interpretation.vTravel.front() );
 	}
 	
 	return action;
@@ -143,4 +137,47 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 	*/
 
 	return action;
+}
+
+Interpreter::Interpretation Interpreter::interpretVerbs( std::vector< Verb > p_verbs ) {
+	Interpretation interpretation;
+	for( unsigned i = 0; i < p_verbs.size(); i++ ) {
+		Verb verb = p_verbs[ i ];
+
+		unsigned vId = verb.getId();
+		unsigned vType = vId / 1000;
+		switch( vType ) {
+			case 0: // Denotes travel.
+				interpretation.vTravel.push_back( verb );
+				break;
+			case 1: // Denotes object.
+				interpretation.vObject.push_back( verb );
+				break;
+			case 2: // Denotes action.
+				interpretation.vAction.push_back( verb );
+				break;
+			case 3: // Denotes special-case.
+				interpretation.vSpecial.push_back( verb );
+				//throw ExceptionAdventNotYetImplemented( "Command - Special-case." );
+				break;
+			default:
+				throw ExceptionAdventNotYetImplemented( "Unknown verb type: " + Util::toString( vType ) + " caused by Verb: " + Util::toString( vId ) + "."  );
+		}
+	}
+	return interpretation;
+}
+Interpreter::ActionIntents Interpreter::interpretIntent( Interpreter::Interpretation p_interpretation ) {
+	ActionIntents intent = ActionIntents_UNKNOWN;
+	if( p_interpretation.vAction.size() > 0 ) {
+		Verb action = p_interpretation.vAction.front();
+		
+		unsigned actionId = action.getId();
+		if( actionId==VerbIdsAction_WALK ) {
+			intent = ActionIntents_TRAVEL;
+		} else {
+			intent = ActionIntents_INTERACT;
+		}
+	}
+
+	return intent;
 }
