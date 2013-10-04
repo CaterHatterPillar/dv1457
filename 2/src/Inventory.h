@@ -15,6 +15,7 @@ public:
 	bool carriesItem( unsigned p_objectId );
 	bool appendItem( Object p_object );
 	bool removeItem( Object p_object );
+	bool removeItem( int p_objectId );
 	bool isFull();
 	unsigned getNumItems() const;
 

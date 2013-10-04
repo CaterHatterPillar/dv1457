@@ -36,6 +36,9 @@ bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
         break;
     case VerbIds_SAY:
         interact = AgentInteract::executeSay( target, io_result );
+    case VerbIds_EAT:
+        interact = executeEat(target, io_result);
+        break;
     default:
         break;
     }
@@ -243,7 +246,6 @@ bool AgentInteract::executeSay(Verb p_target, Result& io_result) {
     
     return interact;
 }
-
 bool AgentInteract::teleport(Verb p_target, bool p_canTeleport, Result& io_result)
 {
     bool success = false;
@@ -296,3 +298,78 @@ bool AgentInteract::feefie(unsigned p_wordIndex, Result& io_result)
 
     return success;
 }
+
+bool AgentInteract::executeEat(Verb p_target, Result& io_result) {
+    AdventData& ad = Singleton<AdventData>::get();
+
+    unsigned targetId = p_target.getId();
+    unsigned objectId = targetId % 1000;
+
+    bool fromInventory = false;
+    bool fromLocation = false;
+
+    int id = searchInventory(objectId);
+    if( id != -1) {
+        fromInventory = true;
+    }
+    else {
+        id = searchLocation(objectId);
+        if(id != -1)
+            fromLocation = true;
+    }
+
+    bool success = false;
+    if(id != -1) {
+        success = eatObject(id, io_result);
+        if(success && fromInventory)
+            ad.adventurer.getInventory().removeItem(id);
+        else if(success && fromLocation)
+            ad.map[ad.adventurer.getLocation().getId()].objectIdRemove(id);
+    }
+    else
+        io_result.setSummary("You see no such thing.");
+    return success;
+}
+
+bool AgentInteract::eatObject(int p_objId, Result& io_result) {
+    bool success = false;
+
+    if(p_objId == ObjectIds_FOOD) {
+        GUI::RenderString("Delecious!");
+        success = true;
+    }
+    else if(p_objId == ObjectIds_BIRD) {
+        io_result.setSummary("If you take it out of the cage the bird will likely fly away from you.");
+    }
+    else {
+        io_result.setSummary("That's plainly inedible.");
+    }
+
+    return success;
+}
+
+int AgentInteract::searchInventory(int p_objId) {
+    AdventData& ad = Singleton<AdventData>::get();
+    int id = -1;
+
+    for(unsigned int i=0; i<ad.adventurer.getInventory().getNumItems(); i++) {
+        if(p_objId == ad.adventurer.getInventory()[i].getId()) {
+            id = p_objId;
+        }
+    }
+    return id;   
+}
+int AgentInteract::searchLocation(int p_objId) {
+    AdventData& ad = Singleton<AdventData>::get();
+    int id = -1;
+
+    Location location = ad.adventurer.getLocation();
+    std::vector< unsigned > locationObjectIds = location.getObjectIds();
+    for(unsigned int i = 0; i < locationObjectIds.size(); i++) {
+        if(p_objId == locationObjectIds[i]) {
+            id = locationObjectIds[i];
+        }
+    }
+    return id;
+}
+
