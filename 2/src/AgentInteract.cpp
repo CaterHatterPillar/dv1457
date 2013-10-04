@@ -54,11 +54,23 @@ bool AgentInteract::executeTake( Verb p_target, Result& io_result ) {
 
         unsigned targetId = p_target.getId();
         unsigned objectIdForTarget = targetId % 1000;
-        if( objectIdForTarget==object.getId() && object.isImmovable()==false ) {
+        if( objectIdForTarget==object.getId()) {
             interact = true;
         }
+        else {
+            io_result.setSummary("You see no such item.");
+        }
 
-        if( interact==true && ad.adventurer.getInventory().isFull()==false ) {
+        if(interact == true && object.isImmovable()==true) {
+            interact = false;
+            io_result.setSummary("You cannot take that item.");
+        }
+        if(interact == true && ad.adventurer.getInventory().isFull()==true) {
+            interact = false;
+            io_result.setSummary("Your inventory is full.");
+        }
+
+        if( interact==true ) {
             if(object.getId() == ObjectIds_BIRD) {
                 interact = takeBird(object, io_result);
             }
