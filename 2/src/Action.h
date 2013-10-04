@@ -10,9 +10,8 @@ enum ActionTypes {
 	ActionTypes_TRAVEL		= 2,
 	ActionTypes_INTERACT	= 3,/*,
 	ActionTypes_SPECIAL*/
-	ActionTypes_GAME		= 4,
 
-	ActionTypes_INDEX_END	= 5
+	ActionTypes_INDEX_END	= 4
 };
 	
 static const char* ActionTypesString[] = { 
@@ -22,7 +21,6 @@ static const char* ActionTypesString[] = {
 	"ActionTypes_TRAVEL",
 	"ActionTypes_INTERACT",/*,
 	"ActionTypes_SPECIAL"*/
-	"ActionTypes_GAME",
 
 	"ActionTypes_INDEX_END" // hack
 };
@@ -70,27 +68,6 @@ protected:
 private:
 	Verb m_action;
 	Verb m_target;
-};
-
-enum ActionGameTypes {
-	ActionGameTypes_PRESENT_LOCATION 	= 0,
-	ActionGameTypes_PRESENT_INVENTORY	= 1
-};
-static const char* ActionGameTypesString[] = { 
-	"ActionGameTypes_PRESENT_LOCATION", 
-	"ActionGameTYpes_PRESENT_INVENTORY"
-};
-class ActionGame : public Action {
-public:
-	ActionGame( ActionGameTypes p_actionGameType );
-	~ActionGame();
-
-	std::string toString();
-
-	ActionGameTypes getActionGameType() const;
-protected:
-private:
-	ActionGameTypes m_actionGameType;
 };
 
 #endif // ACTION_H

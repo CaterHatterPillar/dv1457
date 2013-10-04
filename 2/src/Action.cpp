@@ -59,19 +59,3 @@ Verb ActionInteract::getAction() const {
 Verb ActionInteract::getTarget() const {
 	return m_target;
 }
-
-// ActionGame
-ActionGame::ActionGame( ActionGameTypes p_actionGameType ) : Action( ActionTypes_GAME ) {
-	m_actionGameType = p_actionGameType;
-}
-ActionGame::~ActionGame() {
-	// Do nothing.
-}
-
-std::string ActionGame::toString() {
-	return Action::toString() + " - " + std::string( ActionGameTypesString[ m_actionGameType ] ) + ".";
-}
-
-ActionGameTypes ActionGame::getActionGameType() const {
-	return m_actionGameType;
-}

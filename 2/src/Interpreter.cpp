@@ -67,9 +67,6 @@ Action* Interpreter::interpretAction(
 		case ActionTypes_INTERACT:
 			action = interpretActionInteract( p_interpretation, io_result );
 			break;
-		case ActionTypes_GAME:
-			action = interpretActionGame( p_interpretation, io_result );
-			break;
 		default:
 			action = ActionFactory::actionInvalid();
 			break;
@@ -104,29 +101,6 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 			for( unsigned i = 0; i < p_interpretation.vObject.size(); i++ ) {
 				io_result.appendParam( p_interpretation.vObject[ i ] );
 			}*/
-		}
-	}
-
-	return action;
-}
-Action* Interpreter::interpretActionGame( Interpretation p_interpretation, Result& io_result ) {
-	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vGame.size() > 0 ) {
-		// ToDoIst: implement support for handling not-just-one verb for commands.
-		if( p_interpretation.vGame.size()==1 ) {
-			delete action;
-			unsigned gameCommand = p_interpretation.vGame.front().getId();
-			switch( gameCommand ) {
-				case 4001: // Present terrain
-					action = ActionFactory::actionGame( ActionGameTypes_PRESENT_LOCATION );
-					break;
-				case 4002: // Present inventory
-					action = ActionFactory::actionGame( ActionGameTypes_PRESENT_INVENTORY );
-					break;
-			}
-		} else {
-			io_result.setSummary( s_confMessageInvalidGame );
-			/*io_result.setParams( p_interpretation.vGame );*/
 		}
 	}
 

@@ -11,7 +11,6 @@ public:
 	static Action* actionInvalid();
 	static Action* actionTravel( Verb p_target );
 	static Action* actionInteract( Verb p_action, Verb p_target );
-	static Action* actionGame( ActionGameTypes p_actionGameType );
 protected:
 private:
 };

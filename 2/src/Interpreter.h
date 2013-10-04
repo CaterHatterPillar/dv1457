@@ -29,7 +29,6 @@ private:
 	Action* interpretAction( 			Interpretation p_interpretation, Result& io_result, ActionTypes p_actionType );
 	Action* interpretActionTravel( 		Interpretation p_interpretation, Result& io_result );
 	Action* interpretActionInteract( 	Interpretation p_interpretation, Result& io_result );
-	Action* interpretActionGame( 		Interpretation p_interpretation, Result& io_result );
 };
 
 #endif // INTERPRETER_H

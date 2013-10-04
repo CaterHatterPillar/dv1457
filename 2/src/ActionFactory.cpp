@@ -16,6 +16,3 @@ Action* ActionFactory::actionTravel( Verb p_target ) {
 Action* ActionFactory::actionInteract( Verb p_action, Verb p_target ) {
 	return new ActionInteract( p_action, p_target );
 }
-Action* ActionFactory::actionGame( ActionGameTypes p_actionGameType ) {
-	return new ActionGame( p_actionGameType );
-}
