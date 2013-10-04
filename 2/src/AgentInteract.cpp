@@ -59,18 +59,51 @@ bool AgentInteract::executeTake( Verb p_target, Result& io_result ) {
         }
 
         if( interact==true && ad.adventurer.getInventory().isFull()==false ) {
-            // Loot object:
-            ad.adventurer.getInventory().appendItem( object );
-            // Remove object from location:
-            ad.map[ location.getId() ].objectIdRemove( objectId );
-
-            GUI::RenderString( s_confMessageObjectTaken );
-
-            interact = true;
+            if(object.getId() == ObjectIds_BIRD) {
+                interact = takeBird(object, io_result);
+            }
+            else {
+                takeObject(object);
+            }
         }
     }
     return interact;
 }
+void AgentInteract::takeObject(Object p_object) {
+    AdventData& ad = Singleton<AdventData>::get();
+    //Loot object.
+    ad.adventurer.getInventory().appendItem( p_object );
+    // Remove object from location:
+    ad.map[ad.adventurer.getLocation().getId()].objectIdRemove(p_object.getId());
+    GUI::RenderString( s_confMessageObjectTaken );
+}
+bool AgentInteract::takeBird(Object p_object, Result& io_result) {
+    AdventData& ad = Singleton<AdventData>::get();
+    
+    bool success = false;
+    bool hasRod  = false;
+    bool hasCage = false;
+    
+    Inventory invent = ad.adventurer.getInventory();
+    for(unsigned int i=0; i<invent.getNumItems(); i++) {
+        if(invent[i].getId() == ObjectIds_ROD)
+            hasRod = true;
+        if(invent[i].getId() == ObjectIds_CAGE)
+            hasCage = true;   
+    }
+
+    if(hasRod == false && hasCage == true) {
+        takeObject(p_object);
+        success = true;
+    }
+    else if(hasCage == false)
+        io_result.setSummary("You can catch the bird but you cannot carry it.");
+    else if(hasRod == true)
+        io_result.setSummary("The bird was unafraid as you entered, but as you approach it becomes disturbed and you cannot catch it.");
+
+    return success;
+}
+
 bool AgentInteract::executeDrop( Verb p_target, Result& io_result ) {
 	AdventData& ad = Singleton<AdventData>::get();
     Location location = ad.adventurer.getLocation();

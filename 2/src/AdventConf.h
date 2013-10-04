@@ -73,6 +73,13 @@ enum VerbIds {
 	VerbIds_HOURS	= 2031,
 };
 
+enum ObjectIds
+{
+	ObjectIds_CAGE = 4,
+	ObjectIds_ROD  = 5,
+	ObjectIds_BIRD = 8,
+};
+
 enum MeaningfulWords
 {
 	MeaningfulWords_XYZZY = 62,
