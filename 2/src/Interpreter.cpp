@@ -46,9 +46,6 @@ Interpreter::Interpretation Interpreter::interpretType( std::vector< Verb > p_ve
 				interpretation.vSpecial.push_back( verb );
 				//throw ExceptionAdventNotYetImplemented( "Command - Special-case." );
 				break;
-			case 4: // Denotes certain game-mechanics, such as look or inventory.
-				interpretation.vGame.push_back( verb );
-				break;
 			default:
 				throw ExceptionAdventNotYetImplemented( "Unknown verb type: " + Util::toString( vType ) + " caused by Verb: " + Util::toString( vId ) + "."  );
 		}
@@ -67,9 +64,6 @@ Action* Interpreter::interpretAction(
 			break;
 		case ActionTypes_INTERACT:
 			action = interpretActionInteract( p_interpretation, io_result );
-			break;
-		case ActionTypes_GAME:
-			action = interpretActionGame( p_interpretation, io_result );
 			break;
 		default:
 			action = ActionFactory::actionInvalid();
@@ -105,15 +99,15 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 		// ToDoIst: implement support for handling not-just-one verb for commands.
 		if( p_interpretation.vAction.size()==1 && p_interpretation.vObject.size()==1 ) {
 			delete action;
-			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject.front() );
+			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject );
 		} 
 		else if( p_interpretation.vAction.size() == 1 && p_interpretation.vSpecial.size() == 1) {
 			delete action;
-			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vSpecial.front() );	
+			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vSpecial );	
 		}
 		else if( p_interpretation.vAction.size() == 1 && p_interpretation.vTravel.size() == 1) {
 			delete action;
-			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vTravel.front() );
+			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vTravel );
 		}
 		else {
 			io_result.setSummary( s_confMessageInvalidInteract );
@@ -124,28 +118,29 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 		}
 	}
 
-	return action;
-}
-Action* Interpreter::interpretActionGame( Interpretation p_interpretation, Result& io_result ) {
-	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vGame.size() > 0 ) {
-		// ToDoIst: implement support for handling not-just-one verb for commands.
-		if( p_interpretation.vGame.size()==1 ) {
-			delete action;
-			unsigned gameCommand = p_interpretation.vGame.front().getId();
-			switch( gameCommand ) {
-				case 4001: // Present terrain
-					action = ActionFactory::actionGame( ActionGameTypes_PRESENT_LOCATION );
-					break;
-				case 4002: // Present inventory
-					action = ActionFactory::actionGame( ActionGameTypes_PRESENT_INVENTORY );
-					break;
-			}
-		} else {
-			io_result.setSummary( s_confMessageInvalidGame );
-			/*io_result.setParams( p_interpretation.vGame );*/
-		}
+	/*
+	bool validAction = false;
+	if( p_interpretation.vAction.size()==1 ) {
+		validAction = true;
+	} else {
+		// Temp output. Be sure to refine the comment and put it into AdventConf.h:
+		io_result.setSummary( "You have specified too many actions. Please limit your command to a single action." );
 	}
+	bool validTargets = false;
+	if( p_interpretation.vObject.size()>=0 &&
+		p_interpretation.vObject.size()<=2 ) {
+		validTargets = true;
+	} else {
+		// Temp output. Be sure to refine the comment and put it into AdventConf.h:
+		io_result.setSummary( "You have specified too many targets. Please limit the number of objects in your command to two or less." );
+	}
+
+	if( validAction==true && 
+		validTargets==true ) {
+		delete action;
+		action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject );
+	}
+	*/
 
 	return action;
 }

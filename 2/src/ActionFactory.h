@@ -10,8 +10,7 @@ public:
 
 	static Action* actionInvalid();
 	static Action* actionTravel( Verb p_target );
-	static Action* actionInteract( Verb p_action, Verb p_target );
-	static Action* actionGame( ActionGameTypes p_actionGameType );
+	static Action* actionInteract( Verb p_action, std::vector< Verb > p_targets );
 protected:
 private:
 };

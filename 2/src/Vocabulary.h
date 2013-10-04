@@ -2,6 +2,7 @@
 #define VOCABULARY_H
 
 #include <map>
+#include <vector>
 #include <string>
 
 #include "Verb.h"
@@ -18,7 +19,7 @@ public:
 protected:
 private:
 	std::map< unsigned, Verb > m_verbs;
-	std::map< std::string, unsigned > m_wordToVerb; // Used to establish legit words.
+	std::map< std::string, std::vector< unsigned > > m_wordToVerb; // Used to establish legit words.
 };
 
 #endif // VOCABULARY_H
