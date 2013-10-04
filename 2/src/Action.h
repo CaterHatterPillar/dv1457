@@ -57,17 +57,25 @@ private:
 
 class ActionInteract : public Action {
 public:
-	ActionInteract( Verb p_action, Verb p_target );
+	ActionInteract( Verb p_action, std::vector< Verb > p_targets );
 	~ActionInteract();
 
+	enum ActionInteractTypes {
+		ActionInteractTypes_ACTION,
+		ActionInteractTypes_INTERACT,
+		ActionInteractTypes_INTERACTS
+	};
+
 	std::string toString();
+	ActionInteractTypes getTypeActionInteract();
 
 	Verb getAction() const;
-	Verb getTarget() const;
+	std::vector< Verb > getTargets() const;
+	unsigned getNumTargets() const;
 protected:
 private:
 	Verb m_action;
-	Verb m_target;
+	std::vector< Verb > m_targets;
 };
 
 #endif // ACTION_H

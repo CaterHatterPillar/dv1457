@@ -14,7 +14,7 @@ bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
     bool interact = false;
     
     Verb action = p_action->getAction();
-    Verb target = p_action->getTarget();
+    Verb target = p_action->getTargets().front();
    
     switch( action.getId() )
     {

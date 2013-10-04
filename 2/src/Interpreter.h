@@ -19,7 +19,6 @@ public:
 		std::vector< Verb > vObject;
 		std::vector< Verb > vAction;
 		std::vector< Verb > vSpecial;
-		std::vector< Verb > vGame;
 	};
 protected:
 private:

@@ -45,9 +45,6 @@ Interpreter::Interpretation Interpreter::interpretType( std::vector< Verb > p_ve
 			case 3: // Denotes special-case.
 				throw ExceptionAdventNotYetImplemented( "Command - Special-case." );
 				break;
-			case 4: // Denotes certain game-mechanics, such as look or inventory.
-				interpretation.vGame.push_back( verb );
-				break;
 			default:
 				throw ExceptionAdventNotYetImplemented( "Unknown verb type: " + Util::toString( vType ) + " caused by Verb: " + Util::toString( vId ) + "."  );
 		}
@@ -90,18 +87,27 @@ Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Res
 }
 Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-	if( p_interpretation.vAction.size() > 0 ) {
-		// ToDoIst: implement support for handling not-just-one verb for commands.
-		if( p_interpretation.vAction.size()==1 && p_interpretation.vObject.size()==1 ) {
-			delete action;
-			action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject.front() );
-		} else {
-			io_result.setSummary( s_confMessageInvalidInteract );
-			/*io_setParams( p_interpretation.vAction );
-			for( unsigned i = 0; i < p_interpretation.vObject.size(); i++ ) {
-				io_result.appendParam( p_interpretation.vObject[ i ] );
-			}*/
-		}
+
+	bool validAction = false;
+	if( p_interpretation.vAction.size()==1 ) {
+		validAction = true;
+	} else {
+		// Temp output. Be sure to refine the comment and put it into AdventConf.h:
+		io_result.setSummary( "You have specified too many actions. Please limit your command to a single action." );
+	}
+	bool validTargets = false;
+	if( p_interpretation.vObject.size()>=0 &&
+		p_interpretation.vObject.size()<=2 ) {
+		validTargets = true;
+	} else {
+		// Temp output. Be sure to refine the comment and put it into AdventConf.h:
+		io_result.setSummary( "You have specified too many targets. Please limit the number of objects in your command to two or less." );
+	}
+
+	if( validAction==true && 
+		validTargets==true ) {
+		delete action;
+		action = ActionFactory::actionInteract( p_interpretation.vAction.front(), p_interpretation.vObject );
 	}
 
 	return action;
