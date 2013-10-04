@@ -17,12 +17,15 @@ public:
 	void appendDestination( Destination p_destination );
 	void objectIdAppend( unsigned p_objectId );
 	void objectIdRemove( unsigned p_objectId );
+	bool objectAtLocation( unsigned p_objectId );
 
 	void setId( unsigned p_id );
+	void setLit( bool p_isLit );
 	void setDescShort( std::string p_descShort );
 	void appendDescLong( std::string p_descLong );
 
 	unsigned getId() const;
+	bool isLit() const;
 	std::string getDescShort() const;
 	std::string getDescLong() const;
 	std::vector< std::string > getDescLongs() const;
@@ -34,6 +37,7 @@ protected:
 private:
 	// Data describing the location:
 	unsigned m_id; // x
+	bool m_lit;
 	std::string m_descShort;
 	std::vector< std::string > m_descLongs;
 

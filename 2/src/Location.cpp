@@ -5,6 +5,7 @@
 
 Location::Location() {
 	m_id = 0;
+	m_lit = false;
 	m_descShort = "";
 }
 Location::Location( unsigned p_id, std::string p_descShort, std::vector< std::string > p_descLongs ) {
@@ -18,6 +19,9 @@ Location::~Location() {
 
 void Location::setId( unsigned p_id ) {
 	m_id = p_id;
+}
+void Location::setLit( bool p_isLit ) {
+	m_lit = p_isLit;
 }
 void Location::setDescShort( std::string p_descShort ) {
 	m_descShort = p_descShort;
@@ -41,9 +45,23 @@ void Location::objectIdRemove( unsigned p_objectId ) {
 		throw ExceptionAdvent( "Object ID " + Util::toString( p_objectId ) + " not found in m_objectIds (see Location::objectIdRemove)." );
 	}
 }
+bool Location::objectAtLocation( unsigned p_objectId ) {
+	bool objectAtLocation = false;
+
+	std::vector< unsigned >::iterator it;
+	it = std::find( m_objectIds.begin(), m_objectIds.end(), p_objectId );
+	if( it!=m_objectIds.end() ) {
+		objectAtLocation = true;
+	}
+
+	return objectAtLocation;
+}
 
 unsigned Location::getId() const {
 	return m_id;
+}
+bool Location::isLit() const {
+	return m_lit;
 }
 std::string Location::getDescShort() const {
 	return m_descShort;

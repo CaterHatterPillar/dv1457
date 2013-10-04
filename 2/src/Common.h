@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <cassert>
+#include <sstream>
 #include <algorithm>
 
 #include "GUI.h"

@@ -16,7 +16,7 @@ interpreter: common actions result vocabulary
 	g++ -c Interpreter.h Interpreter.cpp
 
 executioner: common actions map
-	g++ -c GameLogic.h GameLogic.cpp Executioner.h Executioner.cpp
+	g++ -c Executioner.h Executioner.cpp AgentTravel.h AgentTravel.cpp AgentInteract.h AgentInteract.cpp AgentGame.h AgentGame.cpp
 
 result: common
 	g++ -c Result.h Result.cpp
@@ -28,10 +28,13 @@ parser: common datastructures
 	g++ -c ParserDat.h ParserDat.cpp
 
 datastructures: common map vocabulary player
-	g++ -c Singleton.h AdventData.h
+	g++ -c Singleton.h Letterbox.h Letterbox.cpp AdventData.h
 
-player: common map
+player: common map magic
 	g++ -c Inventory.h Inventory.cpp Adventurer.h Adventurer.cpp
+
+magic: common
+	g++ -c Magic.h Magic.cpp
 
 map: common vocabulary
 	g++ -c Object.h Object.cpp Destination.h Destination.cpp Location.h Location.cpp Map.h Map.cpp

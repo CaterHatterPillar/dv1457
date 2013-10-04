@@ -1,7 +1,4 @@
-#include <string>
-#include <sstream>
-
-#include "Util.h"
+#include "Common.h"
 #include "ParserDat.h"
 
 enum Sections {
@@ -57,24 +54,25 @@ void ParserDat::init() {
 				parseObjDesc( ss );
 				break;
 			case Sections_ARBITRARY_MESSAGES:
-				parseMsgs( ss, m_ad->dataMsgsArbitrary );
+				parseMsgsArbitrary( ss );
 				break;
 			case Sections_OBJECT_LOCATIONS:
 				parseObjLoc( ss );
 				break;
 			case Sections_ACTION_DEFAULTS:
-				parseActionDefaults( ss );
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Action Defaults." );
 				break;
 			case Sections_LIQUID_ASSETS:
-				// We're not parsing liquid assets yet.
-				// parseLiquidAssets( ss );
+				parseLiquidAssets( ss );
 				break;
 			case Sections_CLASS_MESSAGES:
-				parseMsgs( ss, m_ad->dataMsgsClass );
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Class Messages." );
 				break;
 			case Sections_HINTS:
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Sections_HINTS." );
 				break;
 			case Sections_MAGIC_MESSAGES:
+				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Magic Messages." );
 				break;
 		}
 	}
@@ -95,8 +93,8 @@ void ParserDat::compileDependantData() {
 	}
 
 	// Compile object-descriptions:
-	typedef std::map< unsigned, ObjectDesc >::iterator iterator;
-	for( iterator it = m_objectDescs.begin(); it != m_objectDescs.end(); it++ ) {
+	typedef std::map< unsigned, ObjectDesc >::iterator uoIt;
+	for( uoIt it = m_objectDescs.begin(); it!=m_objectDescs.end(); it++ ) {
 		Object object = it->second.obj;
 		std::vector< unsigned > locations = it->second.locs;
 
@@ -107,6 +105,26 @@ void ParserDat::compileDependantData() {
 		for( unsigned i = 0; i < locations.size(); i++ ) {
 			unsigned location = locations[ i ];
 			m_ad->map[ location ].objectIdAppend( object.getId() );
+		}
+	}
+
+	// Compile liquid assets:
+	typedef std::map< unsigned, std::vector< unsigned > >::iterator uvIt;
+	for( uvIt it = m_liquidAssets.begin(); it!=m_liquidAssets.end(); it++ ) {
+		unsigned loc = it->first;
+		std::vector< unsigned > assets = it->second;
+		for( unsigned i = 0; i < assets.size(); i++ ) {
+			unsigned asset = assets[ i ];
+			// Currently only supports LIT-attribute:
+			switch( asset ) {
+				case LiquidAssets_LIT:
+				std::cout << std::endl << "Set lit for loc: " + Util::toString( loc);
+					m_ad->map[ loc ].setLit( true );
+					break;
+				default:
+					// Do nothing.
+					break;
+			}
 		}
 	}
 }
@@ -169,14 +187,15 @@ void ParserDat::parseVocabulary( std::istringstream& p_ss ) {
 	// Append unique word to vocabulary:
 	m_ad->vocabulary.addWord( id, word ); // This is used to map unique words to common verbs.
 }
-void ParserDat::parseMsgs( std::istringstream& p_ss, std::map<unsigned, std::string>& p_map ) {
+void ParserDat::parseMsgsArbitrary( std::istringstream& p_ss ) {
 	unsigned msgId;
-	std::string msgStr;
+	std::string msgLine;
 
 	p_ss >> msgId;
-	std::getline( p_ss, msgStr );
+	std::getline( p_ss, msgLine );
 
-	p_map[ msgId ] = msgStr;
+	m_ad->letterbox[ msgId ].id = msgId;
+	m_ad->letterbox[ msgId ].lines.push_back( msgLine );
 }
 void ParserDat::parseObjLoc( std::istringstream& p_ss ) {
 	unsigned objId;
@@ -223,12 +242,30 @@ void ParserDat::parseObjDesc( std::istringstream& p_ss ) {
 	// "Properties which produce no message should be given the message ">$<"."
 	// Considering giving objects with empty description-lists the above description? Unclear.
 }
-void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
+void ParserDat::parseLiquidAssets( std::istringstream& p_ss ) {
+	// Get asset num:
+	unsigned n;
+	p_ss >> n;
+
+	// Get relevant locations:
+	std::string loc;
+	std::vector< unsigned > locs;
+    while( std::getline( p_ss, loc, '\t') ) {
+    	if( loc.size() > 0 ) { // Necessary?
+    		unsigned l = Util::toInt( loc.c_str() );
+    		locs.push_back( l );
+    	}
+    }
+
+    // Add liquid asset to location:
+    for( unsigned i = 0; i < locs.size(); i++ ) {
+    	m_liquidAssets[ locs[ i ] ].push_back( n );
+    }
+}
+
+/*void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
 	unsigned a, d;
 
 	p_ss >> a >> d;
 	m_ad->dataActionDefaults[a] = d;
-}
-void ParserDat::parseLiquidAssets( std::istringstream& p_ss ) {
-	// Do nothing.
-}
+}*/
