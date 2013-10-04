@@ -111,7 +111,7 @@ bool AgentInteract::takeBird(Object p_object, Result& io_result) {
     else if(hasCage == false)
         io_result.setSummary("You can catch the bird but you cannot carry it.");
     else if(hasRod == true)
-        io_result.setSummary("The bird was unafraid as you entered, but as you approach it becomes disturbed and you cannot catch it.");
+        io_result.setSummary("The bird was unafraid when you entered but as you approach it, it becomes disturbed and you cannot catch it.");
 
     return success;
 }
