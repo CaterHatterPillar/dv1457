@@ -10,6 +10,9 @@ public:
 
 	static bool execute( ActionInteract* p_action, Result& io_result );
 protected:
+	static bool executeAction( 		ActionInteract* p_action, Result& io_result );
+	static bool executeInteract( 	ActionInteract* p_action, Result& io_result );
+	static bool executeInteracts( 	ActionInteract* p_action, Result& io_result );
 private:
 	static bool executeTake( Verb p_target, Result& io_result );
 	static void takeObject(Object p_object);
@@ -30,6 +33,7 @@ private:
 	static int searchLocation(int p_objId);
 
 	static std::vector<bool> s_feefie;
+
 };
 
 #endif // AGENTINTERACT_H

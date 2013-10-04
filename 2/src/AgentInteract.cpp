@@ -14,37 +14,68 @@ AgentInteract::~AgentInteract() {
 
 bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
 	AdventData& ad = Singleton<AdventData>::get();
-
     bool interact = false;
     
+    ActionInteract::ActionInteractTypes ait = p_action->getTypeActionInteract();
+    switch( ait ) {
+        case ActionInteract::ActionInteractTypes_ACTION:
+            interact = executeAction( p_action, io_result );
+            break;
+        case ActionInteract::ActionInteractTypes_INTERACT:
+            interact = executeInteract( p_action, io_result );
+            break;
+        case ActionInteract::ActionInteractTypes_INTERACTS:
+            interact = executeInteracts( p_action, io_result );
+            break;
+        default:
+            throw ExceptionAdvent( "Encountered unknown ActionInteract-type: " + Util::toString( ait ) );
+            break;
+    }
+
+    return interact;
+}
+
+bool AgentInteract::executeAction( ActionInteract* p_action, Result& io_result ) {
+    throw ExceptionAdventNotYetImplemented( "executeAction" );
+}
+bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result ) {
+    AdventData& ad = Singleton<AdventData>::get();
+    bool interact = false;
+
     Verb action = p_action->getAction();
     Verb target = p_action->getTargets().front();
-   
-    switch( action.getId() )
+
+    unsigned actionId = action.getId();
+    switch( actionId )
     {
-    case VerbIds_TAKE:
+    case VerbIdsAction_TAKE:
         interact = AgentInteract::executeTake( target, io_result );
         break;
-    case VerbIds_DROP:
+    case VerbIdsAction_DROP:
         interact = AgentInteract::executeDrop( target, io_result );
         break;
-    case VerbIds_OPEN:
+    case VerbIdsAction_OPEN:
         interact = AgentInteract::executeOpen( target, io_result );
         break;
-    case VerbIds_ON:
+    case VerbIdsAction_ON:
         interact = AgentInteract::executeOn( target, io_result );
         break;
-    case VerbIds_SAY:
+    case VerbIdsAction_SAY:
         interact = AgentInteract::executeSay( target, io_result );
-    case VerbIds_EAT:
+    case VerbIdsAction_EAT:
         interact = executeEat(target, io_result);
         break;
     default:
+        throw ExceptionAdvent( "Unrecognized action id in AgentInteract::executeInteract!" );
         break;
     }
 
     return interact;
 }
+bool AgentInteract::executeInteracts( ActionInteract* p_action, Result& io_result ) {
+    throw ExceptionAdventNotYetImplemented( "executeInteracts" );
+}
+
 bool AgentInteract::executeTake( Verb p_target, Result& io_result ) {
 	AdventData& ad = Singleton<AdventData>::get();
     bool interact = false;

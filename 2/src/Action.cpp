@@ -82,3 +82,20 @@ std::vector< Verb > ActionInteract::getTargets() const {
 unsigned ActionInteract::getNumTargets() const {
 	return m_targets.size();
 }
+
+// ActionMagic
+ActionMagic::ActionMagic( Verb p_spell ) : Action( ActionTypes_MAGIC ) {
+	m_spell = p_spell;
+}
+ActionMagic::~ActionMagic() {
+	// Do nothing.
+}
+
+std::string ActionMagic::toString() {
+	std::string magic = Action::toString() + " - Cast spell: " + m_spell.toString() + ".";
+	return magic;
+}
+
+Verb ActionMagic::getSpell() const {
+	return m_spell;
+}

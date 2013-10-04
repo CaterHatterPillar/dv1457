@@ -223,6 +223,10 @@ void ParserDat::parseObjLoc( std::istringstream& p_ss ) {
     		m_objectDescs[ objId ].obj.setImmovable( true );
     	} // m_objectDescs[ objId ].obj.insert( m_objectDescs[ objId ].obj.end(), locations.begin(), locations.end() ); 
     }
+    // If more than one locations, assume immovable status:
+    if( locations.size() > 1 ) {
+    	m_objectDescs[ objId ].obj.setImmovable( true );
+    }
 }
 void ParserDat::parseObjDesc( std::istringstream& p_ss ) {
 	static unsigned prevObjId; // hack
