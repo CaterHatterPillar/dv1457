@@ -34,7 +34,22 @@ bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
 }
 
 bool AgentInteract::executeAction( ActionInteract* p_action, Result& io_result ) {
-    throw ExceptionAdventNotYetImplemented( "executeAction" );
+    bool executedAction = false;
+    AdventData& ad = Singleton<AdventData>::get();
+
+    Verb action = p_action->getAction();
+    unsigned idAction = action.getId();
+    switch( idAction ) {
+        case VerbIdsAction_INVEN:
+            GUI::RenderInventory( ad.adventurer.getInventory() );
+            executedAction = true;
+            break;
+        default:
+            throw ExceptionAdvent( "Encountered unsupported Action ID in AgentInteract::executeAction()." );
+            break;
+    }
+
+    return executedAction;
 }
 bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result ) {
     AdventData& ad = Singleton<AdventData>::get();
@@ -43,8 +58,8 @@ bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result
     Verb action = p_action->getAction();
     Verb target = p_action->getTargets().front();
 
-    unsigned actionId = action.getId();
-    switch( actionId )
+    unsigned idAction = action.getId();
+    switch( idAction )
     {
     case VerbIdsAction_TAKE:
         interact = AgentInteract::executeTake( target, io_result );
@@ -66,6 +81,30 @@ bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result
     return interact;
 }
 bool AgentInteract::executeInteracts( ActionInteract* p_action, Result& io_result ) {
+    // This solution is temporary. Make it more durable.
+    /*AdventData& ad = Singleton<AdventData>::get();
+
+    Verb action = p_action->getAction();
+
+    std::vector< Verb > targets = p_action->getTargets();
+    Verb subject = targets[ 0 ];
+    Verb subjector = targets[ 1 ]; // eww
+
+    unsigned idSubject      = subject.getId()   % 1000;
+    unsigned idSubjector    = subjector.getId() % 1000; // Remember to convert to objet ids.
+    unsigned idAction       = action.getId();
+
+    std::cout << "Subject: " + Util::toString( idSubject ) << std::endl
+    << "Subjector: " + Util::toString( idSubjector ) << std::endl
+    << "Action: " + Util::toString( idAction );
+
+    Relation r;
+    bool hasRelation = ad.relations.hasRelation( idSubject, idSubjector, idAction, r );
+    if( hasRelation==true ) {
+        return true;
+    }*/
+
+
     throw ExceptionAdventNotYetImplemented( "executeInteracts" );
 }
 

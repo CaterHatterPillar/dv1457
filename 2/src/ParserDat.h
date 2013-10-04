@@ -23,6 +23,7 @@ protected:
 	void parseObjDesc( 			std::istringstream& p_ss ); // Can only parse up to 100 objects.
 	void parseLiquidAssets( 	std::istringstream& p_ss );
 	void parseActionDefaults( 	std::istringstream& p_ss );
+	void parseRelations( 		std::istringstream& p_ss );
 private:
 	std::ifstream* m_ifs;
 	AdventData* m_ad; // Result

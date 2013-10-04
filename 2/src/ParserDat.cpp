@@ -13,7 +13,8 @@ enum Sections {
 	Sections_LIQUID_ASSETS 				= 9,
 	Sections_CLASS_MESSAGES 			= 10,
 	Sections_HINTS 						= 11,
-	Sections_MAGIC_MESSAGES 			= 12
+	Sections_MAGIC_MESSAGES 			= 12,
+	Sections_RELATIONS					= 13
 };
 
 ParserDat::ParserDat( std::ifstream& p_ifs, AdventData& io_ad ) {
@@ -73,6 +74,9 @@ void ParserDat::init() {
 				break;
 			case Sections_MAGIC_MESSAGES:
 				// throw ExceptionAdventNotYetImplemented( "Not yet implemented: Parsing Magic Messages." );
+				break;
+			case Sections_RELATIONS:
+				parseRelations( ss );
 				break;
 		}
 	}
@@ -270,4 +274,11 @@ void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
 	unsigned a, d;
 	p_ss >> a >> d;
 	m_ad->letterbox.appendActionDefault( a, d );
+}
+void ParserDat::parseRelations( std::istringstream& p_ss ) {
+	unsigned subject, subjector, action, influence;
+	p_ss >> subject >> subjector >> action >> influence;
+
+	Relation r( subject, subjector, action, influence );
+	m_ad->relations.appendRelation( r );
 }
