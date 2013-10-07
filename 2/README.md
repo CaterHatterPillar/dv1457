@@ -1,3 +1,32 @@
+README.md
+10/07/13
+
+Rough implementation of the original Colossal Cave Adventure in C++ run on a server. A little rough-around-the-edges; it supports gameplay up until Hall of the Mountain King.
+The following in a walkthrough on how to get to Hall of the Mountain King:
+	east
+	take keys
+	take lamp
+	west
+	south x 3
+	unlock grate with key
+	down
+	west
+	take cage
+	west
+	light lamp
+	take rod
+	west
+	drop rod
+	west
+	take bird
+	east
+	take rod
+	west
+	down
+	north
+
+---
+
 advent.readme
 3/18/96
 
