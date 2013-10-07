@@ -65,6 +65,9 @@ bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result
     case VerbIdsAction_EAT:
         interact = executeEat(target, io_result);
         break;
+    case VerbIdsAction_FILL:
+        interact = executeFill(target, io_result);
+        break;
     default:
         throw ExceptionAdvent( "Unrecognized action id in AgentInteract::executeInteract!" );
         break;
@@ -92,7 +95,7 @@ bool AgentInteract::executeTake( Verb p_target, Result& io_result ) {
             interact = true;
         }
         else {
-            io_result.setSummary("You see no such item.");
+            io_result.setSummary(s_confMessageObjectNotFound);
         }
 
         if(interact == true && object.isImmovable()==true) {
@@ -291,7 +294,6 @@ bool AgentInteract::teleport(Verb p_target, bool p_canTeleport, Result& io_resul
 
     return success;
 }
-
 bool AgentInteract::feefie(unsigned p_wordIndex, Result& io_result)
 {
     AdventData& ad = Singleton<AdventData>::get();
@@ -358,10 +360,9 @@ bool AgentInteract::executeEat(Verb p_target, Result& io_result) {
             ad.map[ad.adventurer.getLocation().getId()].objectIdRemove(id);
     }
     else
-        io_result.setSummary("You see no such thing.");
+        io_result.setSummary(s_confMessageObjectNotFound);
     return success;
 }
-
 bool AgentInteract::eatObject(int p_objId, Result& io_result) {
     bool success = false;
 
@@ -376,6 +377,52 @@ bool AgentInteract::eatObject(int p_objId, Result& io_result) {
         io_result.setSummary("That's plainly inedible.");
     }
 
+    return success;
+}
+
+bool AgentInteract::executeFill(Verb p_target, Result& io_result) {
+    AdventData& ad = Singleton<AdventData>::get();
+    bool success = false;
+    int id = -1;
+    Location location = ad.adventurer.getLocation();
+
+    unsigned objId = p_target.getId() % 1000;
+
+    id = searchInventory(objId);
+
+    if(location.hasWater()) {
+        if(id == ObjectIds_BOTTLE) {
+            success = fillBottle(io_result);
+        }
+        else if(id == ObjectIds_NOT_FOUND) {
+            success = false;
+            io_result.setSummary(s_confMessageObjectNotFound);
+        }
+        else {
+            io_result.setSummary("That item can't hold any liquids.");
+        }
+    }
+    else {
+        success = false;
+        io_result.setSummary("You can't do that here.");
+    }
+
+
+    return success;
+}
+bool AgentInteract::fillBottle(Result& io_result) {
+    AdventData& ad = Singleton<AdventData>::get();
+    bool success = false;
+    int id = searchInventory(ObjectIds_WATER);
+    if(id == -1) {
+        ad.adventurer.getInventory().appendItem(ad.map.getObject(ObjectIds_WATER));
+        success = true;
+        GUI::RenderString("The bottle is now full of water.");
+    }
+    else {
+        success = false;
+        io_result.setSummary("The bottle is already full");
+    }
     return success;
 }
 

@@ -4,8 +4,10 @@
 #include "Location.h"
 
 Location::Location() {
-	m_id = 0;
-	m_lit = false;
+	m_id 		= 0;
+	m_lit 		= false;
+	m_water 	= false;
+	m_oil 		= false;
 	m_descShort = "";
 }
 Location::Location( unsigned p_id, std::string p_descShort, std::vector< std::string > p_descLongs ) {
@@ -22,6 +24,12 @@ void Location::setId( unsigned p_id ) {
 }
 void Location::setLit( bool p_isLit ) {
 	m_lit = p_isLit;
+}
+void Location::setWater( bool p_water ) {
+	m_water = p_water;
+}
+void Location::setOil( bool p_oil ) {
+	m_oil = p_oil;
 }
 void Location::setDescShort( std::string p_descShort ) {
 	m_descShort = p_descShort;
@@ -62,6 +70,12 @@ unsigned Location::getId() const {
 }
 bool Location::isLit() const {
 	return m_lit;
+}
+bool Location::hasWater() const {
+	return m_water;
+}
+bool Location::hasOil() const {
+	return m_oil;
 }
 std::string Location::getDescShort() const {
 	return m_descShort;

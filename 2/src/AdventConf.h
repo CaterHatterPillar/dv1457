@@ -78,10 +78,13 @@ enum VerbIdsAction {
 
 enum ObjectIds
 {
-	ObjectIds_CAGE = 4,
-	ObjectIds_ROD  = 5,
-	ObjectIds_BIRD = 8,
-	ObjectIds_FOOD = 19,
+	ObjectIds_NOT_FOUND = -1,
+	ObjectIds_CAGE 	 	= 4,
+	ObjectIds_ROD  	 	= 5,
+	ObjectIds_BIRD 	 	= 8,
+	ObjectIds_FOOD 	 	= 19,
+	ObjectIds_BOTTLE 	= 20,
+	ObjectIds_WATER	 	= 21,
 };
 
 enum MeaningfulWords

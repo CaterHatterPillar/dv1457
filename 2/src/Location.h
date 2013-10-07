@@ -21,11 +21,15 @@ public:
 
 	void setId( unsigned p_id );
 	void setLit( bool p_isLit );
+	void setWater( bool p_water );
+	void setOil( bool p_oil );
 	void setDescShort( std::string p_descShort );
 	void appendDescLong( std::string p_descLong );
 
 	unsigned getId() const;
 	bool isLit() const;
+	bool hasWater() const;
+	bool hasOil() const;
 	std::string getDescShort() const;
 	std::string getDescLong() const;
 	std::vector< std::string > getDescLongs() const;
@@ -38,6 +42,8 @@ private:
 	// Data describing the location:
 	unsigned m_id; // x
 	bool m_lit;
+	bool m_water;
+	bool m_oil;
 	std::string m_descShort;
 	std::vector< std::string > m_descLongs;
 

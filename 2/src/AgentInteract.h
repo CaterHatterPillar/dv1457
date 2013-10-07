@@ -29,6 +29,9 @@ private:
 	static bool executeEat(Verb p_target, Result& io_result);;
 	static bool eatObject(int p_objId, Result& io_result);
 
+	static bool executeFill(Verb p_target, Result& io_result);
+	static bool fillBottle(Result& io_result);
+
 	static int searchInventory(int p_objId);
 	static int searchLocation(int p_objId);
 

@@ -121,6 +121,13 @@ void ParserDat::compileDependantData() {
 				std::cout << std::endl << "Set lit for loc: " + Util::toString( loc);
 					m_ad->map[ loc ].setLit( true );
 					break;
+				case LiquidAssets_LIQUID_TYPE:
+					m_ad->map[loc].setWater( false );
+					m_ad->map[loc].setOil( true );
+					break;
+				case LiquidAssets_LIQUID:
+					m_ad->map[loc].setWater(true);
+					break;
 				default:
 					// Do nothing.
 					break;
