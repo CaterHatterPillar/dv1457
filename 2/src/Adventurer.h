@@ -16,13 +16,12 @@ public:
 	void adventTravelTo( Location p_location );
 	bool isIlluminated();
 
-	Location getLocation();
+	Location getLocation(); // Consider returning reference
 	Inventory& getInventory();
 	Magic& getMagic();
-	void setLocation( Location p_location ); // Consider removing.
 protected:
 private:
-	Location m_location;
+	unsigned m_idLocation;
 	Inventory m_inventory;
 	Magic m_magic;
 };

@@ -99,7 +99,7 @@ bool AgentTravel::condObjectCarry(unsigned int p_objectId) {
 
     Inventory invent = ad.adventurer.getInventory();
     for(unsigned int i=0; i<invent.getNumItems(); i++) {
-        if(p_objectId == invent[i].getId()) {
+        if(p_objectId == invent.getItemId(i)) {
             success = true;
         }
     }
@@ -119,10 +119,3 @@ bool AgentTravel::condObjectLocation(unsigned int p_objectId) {
     }
     return success;
 }
-
-/*
-std::cout << "FROM: " << Util::toString( x ) << std::endl
-        << "TO: " << Util::toString( y ) << std::endl
-        << "m: " << Util::toString( m ) << std::endl
-        << "n: " << Util::toString( n ) << std::endl;
-*/

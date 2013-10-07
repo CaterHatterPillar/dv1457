@@ -68,10 +68,13 @@ void GUI::RenderTerminal() {
 	std::cout << s_confTerminalIndicator;
 }
 void GUI::RenderInventory( Inventory p_inventory ) {
+	AdventData& ad = Singleton< AdventData >::get();
 	if( p_inventory.getNumItems() > 0 ) {
 		std::cout << s_confMessageInventoryHeader;
 		for( unsigned i = 0; i < p_inventory.getNumItems(); i++ ) {
-			std::cout << std::endl << " * " << p_inventory[i].getName();
+			unsigned itemId = p_inventory.getItemId( i );
+			Object object = ad.map.getObject( itemId );
+			std::cout << std::endl << " * " << object.getName();
 		}
 	} else {
 		std::cout << s_confMessageInventoryEmpty;

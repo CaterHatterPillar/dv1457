@@ -54,7 +54,7 @@ std::string ActionInteract::toString() {
 	for( unsigned i = 0; i < m_targets.size(); i++ ) {
 		interact += m_targets[ 0 ].toString() + " ";
 	}
-	interact += "] with verb [" + m_action.toString() + "].";
+	interact += "] with action verb [" + m_action.toString() + "].";
 	return interact;
 }
 ActionInteract::ActionInteractTypes ActionInteract::getTypeActionInteract() {

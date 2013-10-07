@@ -43,7 +43,7 @@ void Advent::load() {
 		pd.init();
 
 		// Initialize player starting position:
-		ad.adventurer.setLocation( ad.map[ adventurerStartingLocation ] );
+		ad.adventurer.adventTravelTo( ad.map[ adventurerStartingLocation ] );
 
 		m_running = true; // Hack to avoid starting the game if the level hasn't yet been loaded.
 	}

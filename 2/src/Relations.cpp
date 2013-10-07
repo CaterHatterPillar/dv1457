@@ -11,6 +11,12 @@ Relations::~Relations() {
 void Relations::appendRelation( Relation p_ro ) {
 	m_relations[ p_ro.getIdSubject() ].push_back( p_ro );
 }
+bool Relations::hasRelation(
+		unsigned p_idSubject,
+		unsigned p_idAction,
+		Relation& io_relation ) {
+	return hasRelation( p_idSubject, 0, p_idAction, io_relation );
+}
 bool Relations::hasRelation( 
 	unsigned p_idSubject, 
 	unsigned p_idSubjector, 

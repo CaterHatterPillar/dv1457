@@ -131,20 +131,4 @@ Other bits are used to indicate areas of interest to "hint" routines:
 	9	at witt's end
 */
 
-// Structured this way so that one may loop through ids that may be opened.
-enum ObjectsOpenableIds {
-	ObjectsOpenableIds_GRATE = 3
-};
-static const unsigned s_objectsOpenableSize = 1; // INCREASE ME
-static const unsigned ObjectsOpenable[] = { 
-	ObjectsOpenableIds_GRATE
-};
-
-/*
-enum ObjectsLighteable { ??
-	...	
-};
-*/
-
-
 #endif // ADVENTCONF_H
