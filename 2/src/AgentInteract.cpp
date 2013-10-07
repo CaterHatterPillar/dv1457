@@ -68,6 +68,9 @@ bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result
     case VerbIdsAction_FILL:
         interact = executeFill(target, io_result);
         break;
+    case VerbIdsAction_DRINK:
+        interact = executeDrink(target, io_result);
+        break;
     default:
         throw ExceptionAdvent( "Unrecognized action id in AgentInteract::executeInteract!" );
         break;
@@ -423,6 +426,46 @@ bool AgentInteract::fillBottle(Result& io_result) {
         success = false;
         io_result.setSummary("The bottle is already full");
     }
+    return success;
+}
+
+bool AgentInteract::executeDrink(Verb p_target, Result& io_result) {
+    AdventData& ad      = Singleton<AdventData>::get();
+    Location location   = ad.adventurer.getLocation();
+    bool success        = false;
+
+    int objId = p_target.getId() % 1000;
+    if(objId == ObjectIds_WATER) {
+        if(location.hasWater()) {
+            success = true;
+            GUI::RenderString("(the stream)\nYou have taken a drink from the stream. The water tastes strongly of minerals, but is not unpleasant. It is extremely cold.");
+        }
+        else {
+            success = drinkFromInventory(io_result);
+        }
+    }
+    else {
+        success = false;
+        io_result.setSummary("You can't drink that.");
+    }
+
+    return success;
+}
+bool AgentInteract::drinkFromInventory(Result& io_result) {
+    AdventData& ad = Singleton<AdventData>::get();
+    bool success   = false;
+
+    int id = searchInventory(ObjectIds_WATER);
+    if(id != ObjectIds_NOT_FOUND) {
+        success = true;
+        GUI::RenderString("You have taken a drink from yout bottle. The water tastes strongly of minerals, but is not unpleasant. It is extremely cold.");
+        ad.adventurer.getInventory().removeItem(id);
+    }
+    else {
+        success = false;
+        io_result.setSummary(s_confMessageObjectNotFound);
+    }
+
     return success;
 }
 

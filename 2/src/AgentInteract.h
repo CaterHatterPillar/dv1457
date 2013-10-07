@@ -32,6 +32,9 @@ private:
 	static bool executeFill(Verb p_target, Result& io_result);
 	static bool fillBottle(Result& io_result);
 
+	static bool executeDrink(Verb p_target, Result& io_result);
+	static bool drinkFromInventory(Result& io_result);
+
 	static int searchInventory(int p_objId);
 	static int searchLocation(int p_objId);
 
