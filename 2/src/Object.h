@@ -25,6 +25,7 @@ public:
 	unsigned getId() const;
 	unsigned getPropertyValue() const;
 	std::string getName() const;
+	std::string getNameTextFriendly();
 	bool isImmovable() const;
 
 	bool operator==( const Object& p_obj ) const;

@@ -36,7 +36,23 @@ bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
 }
 
 bool AgentInteract::executeAction( ActionInteract* p_action, Result& io_result ) {
-    throw ExceptionAdventNotYetImplemented( "executeAction" );
+    bool success = false;
+    Verb action = p_action->getAction();
+
+    unsigned actionId = action.getId();
+
+    switch(actionId)
+    {
+    case VerbIdsAction_WAVE:
+        success = executeWave(io_result);
+        break;
+    default:
+        throw ExceptionAdvent( "Unrecognized action id in AgentInteract::executeAction!" );
+        break;
+    }
+
+    return success;
+    //throw ExceptionAdventNotYetImplemented( "executeAction" );
 }
 bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result ) {
     AdventData& ad = Singleton<AdventData>::get();
@@ -472,15 +488,34 @@ bool AgentInteract::drinkFromInventory(Result& io_result) {
     return success;
 }
 
+bool AgentInteract::executeWave(Result& io_result) {
+    bool success = true;
+    GUI::RenderString("You wave, feeling foolish.");
+    return success;
+}
 bool AgentInteract::executeWave(Verb p_target, Result& io_result) {
     bool success = false;
+
+    AdventData& ad      = Singleton<AdventData>::get();
+
+    int objId = p_target.getId() % 1000;
+    int id = searchInventory(objId);
+    if(id != ObjectIds_NOT_FOUND) {
+        std::string name = ad.map.getObject(id).getNameTextFriendly();
+        GUI::RenderString("You look foolish waving the " + name);
+        success = true;
+    }
+    else {
+        success = false;
+        io_result.setSummary(s_confMessageObjectNotFound);
+    }
 
     return success;
 }
 
 int AgentInteract::searchInventory(int p_objId) {
     AdventData& ad = Singleton<AdventData>::get();
-    int id = -1;
+    int id = ObjectIds_NOT_FOUND;
 
     for(unsigned int i=0; i<ad.adventurer.getInventory().getNumItems(); i++) {
         if(p_objId == ad.adventurer.getInventory()[i].getId()) {
@@ -491,7 +526,7 @@ int AgentInteract::searchInventory(int p_objId) {
 }
 int AgentInteract::searchLocation(int p_objId) {
     AdventData& ad = Singleton<AdventData>::get();
-    int id = -1;
+    int id = ObjectIds_NOT_FOUND;
 
     Location location = ad.adventurer.getLocation();
     std::vector< unsigned > locationObjectIds = location.getObjectIds();

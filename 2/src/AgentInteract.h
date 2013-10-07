@@ -35,6 +35,7 @@ private:
 	static bool executeDrink(Verb p_target, Result& io_result);
 	static bool drinkFromInventory(Result& io_result);
 
+	static bool executeWave(Result& io_result);
 	static bool executeWave(Verb p_target, Result& io_result);
 
 	static int searchInventory(int p_objId);

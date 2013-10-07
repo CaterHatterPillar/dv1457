@@ -73,6 +73,18 @@ unsigned Object::getPropertyValue() const {
 std::string Object::getName() const {
 	return m_name;
 }
+std::string Object::getNameTextFriendly() {
+	std::string name = m_name;
+	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+    bool done = false;
+    for(unsigned i=0; i<name.length() && !done; i++) {
+        if(name.at(i) == ' ' || name.at(i) == '\t')
+            name.erase(name.begin());
+        else
+            done = true;
+    }
+    return name;
+}
 bool Object::isImmovable() const {
 	return m_immovable;
 }
