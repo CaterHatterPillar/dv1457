@@ -71,6 +71,9 @@ bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result
     case VerbIdsAction_DRINK:
         interact = executeDrink(target, io_result);
         break;
+    case VerbIdsAction_WAVE:
+        interact = executeWave(target, io_result);
+        break;
     default:
         throw ExceptionAdvent( "Unrecognized action id in AgentInteract::executeInteract!" );
         break;
@@ -465,6 +468,12 @@ bool AgentInteract::drinkFromInventory(Result& io_result) {
         success = false;
         io_result.setSummary(s_confMessageObjectNotFound);
     }
+
+    return success;
+}
+
+bool AgentInteract::executeWave(Verb p_target, Result& io_result) {
+    bool success = false;
 
     return success;
 }
