@@ -23,22 +23,22 @@ Section 3: Travel table.
 		if n>500
 			Message n-500 from section 6 is printed, and he stays wherever he is.
 		Meanwhile, m specifies the conditions on the motion.
-			if m=0
-				It's unconditional.
-			if 0<m<100
-				It is done with m% probability.
-			if m=100
-				Unconditional, but forbidden to dwarves.
-			if 100<m<=200
-				He must be carrying object m-100.
-			if 200<m<=300
-				Must be carrying or in same room as m-200.
-			if 300<m<=400
-				prop(m mod 100) must *not* be 0.
-			if 400<m<=500
-				prop(m mod 100) must *not* be 1.
-			if 500<m<=600
-				prop(m mod 100) must *not* be 2, etc.
+		if m=0
+			It's unconditional.
+		if 0<m<100
+			It is done with m% probability.
+		if m=100
+			Unconditional, but forbidden to dwarves.
+		if 100<m<=200
+			He must be carrying object m-100.
+		if 200<m<=300
+			Must be carrying or in same room as m-200.
+		if 300<m<=400
+			prop(m mod 100) must *not* be 0.
+		if 400<m<=500
+			prop(m mod 100) must *not* be 1.
+		if 500<m<=600
+			prop(m mod 100) must *not* be 2, etc.
 	If the condition (if any) is not met, then the next *different* "destination" value is used (unless it fails to meet *its* conditions, in which case the next is found, etc.).  Typically, the next dest will be for one of the same verbs, so that its only use is as the alternate destination for those verbs.  For instance:
 		15	110022	29	31	34	35	23	43
 		15	14	29
@@ -58,6 +58,8 @@ Section 4: Vocabulary.
 		The word is an action verb (such as "carry" or "attack").  
 	else, if m=3
 		The word is a special case verb (such as "dig") and n mod 1000 is an index into section 6.  Objects from 50 to (currently, anyway) 79 are considered treasures (for pirate, closeout).
+	else if m=4
+		The word is a game-command, such as look or inventory.
 
 Section 5: Object descriptions.  
 	Each line contains a number (n), a tab, and a message.  
