@@ -3,12 +3,22 @@ walkthrough
 # The caves
 east
 take keys
+take lamp
 west
 south x 3
-unlock grate
+unlock grate with key
 down
 west
 take cage
 west
 light lamp
 take rod
+west
+drop rod
+west
+take bird
+east
+take rod
+west
+down
+north
