@@ -27,8 +27,11 @@ actions: common vocabulary
 parser: common datastructures
 	g++ -c ParserDat.h ParserDat.cpp
 
-datastructures: common map vocabulary player
+datastructures: common map vocabulary player relations
 	g++ -c Singleton.h Letterbox.h Letterbox.cpp AdventData.h
+
+relations: common
+	g++ -c Relation.h Relation.cpp Relations.h Relations.cpp
 
 player: common map magic
 	g++ -c Inventory.h Inventory.cpp Adventurer.h Adventurer.cpp

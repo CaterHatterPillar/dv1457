@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Map.h"
+#include "Relations.h"
 #include "Letterbox.h"
 #include "Vocabulary.h"
 #include "Adventurer.h"
@@ -14,20 +15,21 @@
 
 class AdventData {
 public:
-	AdventData()	{}
-	~AdventData()	{}
-
 	Map map;
 	Vocabulary vocabulary;
 	Adventurer adventurer;
 	Letterbox letterbox;
+	Relations relations;
 
-	// Everything below is temporary. Ought not be stored in this way.
-	//std::map< unsigned, std::string > dataMsgsClass;
-	//std::map< unsigned, unsigned > dataActionDefaults;
-	// std::map< unsigned, std::vector<unsigned> > dataLiquidAssets;
-protected:
-private:
+	bool isOnSite( Object p_object ) {
+		bool onSite = false;
+		unsigned objectId = p_object.getId();
+		if( adventurer.getInventory().carriesItem( objectId )==true ||
+			adventurer.getLocation().objectAtLocation( objectId )==true ) {
+			onSite = true;
+		}
+		return onSite;
+	};
 };
 
 #endif //ADVENTDATA_H

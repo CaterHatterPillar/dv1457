@@ -3,27 +3,22 @@
 
 #include <vector>
 
-#include "Object.h"
-
-// This class needs some refactoring.
-// Consider storing only object ids instead of objects!
 class Inventory {
 public:
 	Inventory();
 	~Inventory();
 
-	bool carriesItem( unsigned p_objectId );
-	bool appendItem( Object p_object );
-	bool removeItem( Object p_object );
 	bool removeItem( int p_objectId );
+	bool carriesItem( unsigned p_idObject );
+	bool appendItem( unsigned p_idObject );
+
 	bool isFull();
 	unsigned getNumItems() const;
-
-	Object& operator[]( unsigned p_index );
+	unsigned getItemId( unsigned p_index );
 protected:
 private:
 	unsigned m_size;
-	std::vector< Object > m_items;
+	std::vector< unsigned > m_itemIds;
 };
 
 #endif // INVENTORY_H

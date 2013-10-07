@@ -8,43 +8,30 @@ Inventory::~Inventory() {
 	// Do nothing.
 }
 
-bool Inventory::carriesItem( unsigned p_objectId ) {
+bool Inventory::carriesItem( unsigned p_idObject ) {
 	bool carriesItem = false;
-	for( unsigned i = 0; i < m_items.size(); i++ ) {
-		if( p_objectId==m_items[ i ].getId() ) {
+	for( unsigned i = 0; i<m_itemIds.size(); i++ ) {
+		if( p_idObject==m_itemIds[ i ] ) {
 			carriesItem = true;
 			break;
 		}
 	}
 	return carriesItem;
 }
-bool Inventory::appendItem( Object p_object ) {
+bool Inventory::appendItem( unsigned p_idObject ) {
 	bool addedItem = true;
-	if( getNumItems() >= m_size ) {
+	if( getNumItems()>=m_size ) {
 		addedItem = false;
 	} else {
-		m_items.push_back( p_object );
+		m_itemIds.push_back( p_idObject );
 	}
 	return addedItem;
 }
-bool Inventory::removeItem( Object p_object ) {
-	bool removed = false;
-	for(unsigned int i=0; i<m_items.size() && !removed; i++) {
-		if(m_items[i].getId() == p_object.getId())
-		{
-			m_items.erase(m_items.begin()+i);
-			removed = true;
-		}
-	}
-
-	//throw ExceptionAdventNotYetImplemented( "Non-implemented method Inventory::removeItem called." );
-	return removed; // tmp
-}
 bool Inventory::removeItem( int p_objectId ) {
 	bool removed = false;
-	for(unsigned int i=0; i<m_items.size() && !removed; i++) {
-		if(m_items[i].getId() == p_objectId) {
-			m_items.erase(m_items.begin()+i);
+	for(unsigned int i=0; i<m_itemIds.size() && !removed; i++) {
+		if(m_itemIds[i] == p_objectId) {
+			m_itemIds.erase(m_itemIds.begin()+i);
 			removed = true;
 		}
 	}
@@ -52,15 +39,14 @@ bool Inventory::removeItem( int p_objectId ) {
 }
 bool Inventory::isFull() {
 	bool isFull = false;
-	if( m_items.size() >= m_size ) {
+	if( m_itemIds.size() >= m_size ) {
 		isFull = true;
 	}
 	return isFull;
 }
 unsigned Inventory::getNumItems() const {
-	return m_items.size();
+	return m_itemIds.size();
 }
-
-Object& Inventory::operator[]( unsigned p_index ) {
-	return m_items[ p_index ];
+unsigned Inventory::getItemId( unsigned p_index ) {
+	return m_itemIds[ p_index ];
 }

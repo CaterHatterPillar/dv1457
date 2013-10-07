@@ -19,7 +19,6 @@ static const std::string s_confTerminalIndicator = "> ";
 static const std::string s_confMessageInvalidCommand 	= "That's not a verb I recognise.";
 static const std::string s_confMessageInvalidTravel 	= "I understand you as far as that you wish to travel, but you have specified too many destinations.";
 static const std::string s_confMessageInvalidInteract 	= "I understand you as far as that you would like to interact with something. However, you have specified too many actions and/or objects.";
-static const std::string s_confMessageInvalidGame 		= "I understand you as far as that you have specified a special game-command. However, you have specified too many game-commands.";
 
 // Inventory and objects:
 static const std::string s_confMessageObjectTaken 		= "Taken.";
@@ -135,21 +134,5 @@ Other bits are used to indicate areas of interest to "hint" routines:
 	8	pondering dark room
 	9	at witt's end
 */
-
-// Structured this way so that one may loop through ids that may be opened.
-enum ObjectsOpenableIds {
-	ObjectsOpenableIds_GRATE = 3
-};
-static const unsigned s_objectsOpenableSize = 1; // INCREASE ME
-static const unsigned ObjectsOpenable[] = { 
-	ObjectsOpenableIds_GRATE
-};
-
-/*
-enum ObjectsLighteable { ??
-	...	
-};
-*/
-
 
 #endif // ADVENTCONF_H
