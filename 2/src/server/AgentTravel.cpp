@@ -25,7 +25,7 @@ bool AgentTravel::execute( ActionTravel* p_action, Result& io_result ) {
     }
 
     // The location is printing whether or not the travel was successful.
-    GUI::RenderLocation( ad.adventurer.getLocation() );
+    io_result.setSummary(ResFormater::FormatLocation( ad.adventurer.getLocation() ));
 
     return executed;
 }
@@ -84,7 +84,7 @@ bool AgentTravel::executeTravel( ActionTravel* p_action, Result& io_result ) {
             } else if( (n>300) && (n<=500) ) { // if 300<n<=500 n-300 is used in a computed goto to a section of special code.
                 throw ExceptionAdventNotYetImplemented( "Travel - GOTO." );
             } else if( n>500 ) { // if n>500 Message n-500 from section 6 is printed, and he stays wherever he is.
-                GUI::RenderLines( ad.letterbox[ n ].lines );
+                io_result.setSummary(ResFormater::FormatLines( ad.letterbox[ n ].lines ));
             }
         } 
     }

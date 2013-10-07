@@ -15,17 +15,16 @@ Remove them.
 Also, be sure to watch Pacific Rim.
 */
 
-class GUI {
+class ResFormater {
 public:
-	GUI();
-	~GUI();
+	ResFormater();
+	~ResFormater();
 
 	// Out
-	static void RenderLocation( Location p_location );
-	static void RenderText( int numLines, ... );
-	static void RenderString( std::string p_string );
-	static void RenderLines( std::vector< std::string > p_lines );
-	static void RenderInventory( Inventory p_inventory );
+	static std::string FormatLocation( Location p_location );
+	static std::string FormatText( int numLines, ... );
+	static std::string FormatLines( std::vector< std::string > p_lines );
+	static std::string FormatInventory( Inventory p_inventory );
 protected:
 private:
 };

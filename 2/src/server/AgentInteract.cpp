@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "CommonSys.h"
 #include "AgentInteract.h"
 #include "ActionFactory.h"
 #include "AgentTravel.h"
@@ -26,7 +27,8 @@ bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
             interact = executeInteracts( p_action, io_result );
             break;
         default:
-            throw ExceptionAdvent( "Encountered unknown ActionInteract-type: " + Util::toString( ait ) );
+            std::string info = "Encountered unknown ActionInteract-type: " + Util::toString( ait );
+            syslog(LOG_INFO, info.c_str() );
             break;
     }
 
@@ -41,14 +43,14 @@ bool AgentInteract::executeAction( ActionInteract* p_action, Result& io_result )
     unsigned idAction = action.getId();
     switch( idAction ) {
         case VerbIdsAction_INVEN:
-            GUI::RenderInventory( ad.adventurer.getInventory() );
+            io_result.setSummary(ResFormater::FormatInventory( ad.adventurer.getInventory() ));
             executedAction = true;
             break;
         case VerbIdsAction_WAVE:
             executedAction = executeWave(io_result);
             break;
         default:
-            throw ExceptionAdvent( "Encountered unsupported Action ID in AgentInteract::executeAction()." );
+            syslog(LOG_INFO, "Encountered unsupported Action ID in AgentInteract::executeAction()." );
             break;
     }
 
@@ -114,7 +116,7 @@ bool AgentInteract::executeInteracts( ActionInteract* p_action, Result& io_resul
         if( onSiteSubject==true &&
             onSiteSubjector==true ) {
             oSubject.setPropertyValue( r.getInfluence() );
-            GUI::RenderString( r.getOutput() );
+            io_result.setSummary( r.getOutput() );
             interaction = true;
         }
     }
@@ -141,7 +143,7 @@ bool AgentInteract::executeInteractGeneral( ActionInteract* p_action, Result& io
         bool onSiteSubject = ad.isOnSite( oSubject );
         if( onSiteSubject==true ) {
             oSubject.setPropertyValue( r.getInfluence() );
-            GUI::RenderString( r.getOutput() );
+            io_result.setSummary( r.getOutput() );
             interaction = true;
         }
     }
@@ -184,19 +186,19 @@ bool AgentInteract::executeTake( Verb p_target, Result& io_result ) {
                 interact = takeBird(object, io_result);
             }
             else {
-                takeObject(object);
+                takeObject(object, io_result);
             }
         }
     }
     return interact;
 }
-void AgentInteract::takeObject(Object p_object) {
+void AgentInteract::takeObject(Object p_object, Result& io_result) {
     AdventData& ad = Singleton<AdventData>::get();
     //Loot object.
     ad.adventurer.getInventory().appendItem( p_object.getId() );
     // Remove object from location:
     ad.map[ad.adventurer.getLocation().getId()].objectIdRemove(p_object.getId());
-    GUI::RenderString( s_confMessageObjectTaken );
+    io_result.setSummary( s_confMessageObjectTaken );
 }
 bool AgentInteract::takeBird(Object p_object, Result& io_result) {
     AdventData& ad = Singleton<AdventData>::get();
@@ -214,7 +216,7 @@ bool AgentInteract::takeBird(Object p_object, Result& io_result) {
     }
 
     if(hasRod == false && hasCage == true) {
-        takeObject(p_object);
+        takeObject(p_object, io_result);
         success = true;
     }
     else if(hasCage == false)
@@ -237,7 +239,7 @@ bool AgentInteract::executeDrop( Verb p_target, Result& io_result ) {
     if( inventory.carriesItem( objectId )==true ) {
         inventory.removeItem( objectId );
         ad.map[ location.getId() ].objectIdAppend( objectId );
-        GUI::RenderString( s_confMessageObjectDropped );
+        io_result.setSummary( s_confMessageObjectDropped );
         interact = true;
     }
 
@@ -279,7 +281,7 @@ bool AgentInteract::eatObject(int p_objId, Result& io_result) {
     bool success = false;
 
     if(p_objId == ObjectIds_FOOD) {
-        GUI::RenderString("Delecious!");
+        io_result.setSummary("Delecious!");
         success = true;
     }
     else if(p_objId == ObjectIds_BIRD) {
@@ -329,7 +331,7 @@ bool AgentInteract::fillBottle(Result& io_result) {
     if(id == -1) {
         ad.adventurer.getInventory().appendItem(ad.map.getObject(ObjectIds_WATER).getId());
         success = true;
-        GUI::RenderString("The bottle is now full of water.");
+       io_result.setSummary("The bottle is now full of water.");
     }
     else {
         success = false;
@@ -347,7 +349,7 @@ bool AgentInteract::executeDrink(Verb p_target, Result& io_result) {
     if(objId == ObjectIds_WATER) {
         if(location.hasWater()) {
             success = true;
-            GUI::RenderString("(the stream)\nYou have taken a drink from the stream. The water tastes strongly of minerals, but is not unpleasant. It is extremely cold.");
+            io_result.setSummary("(the stream)\nYou have taken a drink from the stream. The water tastes strongly of minerals, but is not unpleasant. It is extremely cold.");
         }
         else {
             success = drinkFromInventory(io_result);
@@ -367,7 +369,7 @@ bool AgentInteract::drinkFromInventory(Result& io_result) {
     int id = searchInventory(ObjectIds_WATER);
     if(id != ObjectIds_NOT_FOUND) {
         success = true;
-        GUI::RenderString("You have taken a drink from yout bottle. The water tastes strongly of minerals, but is not unpleasant. It is extremely cold.");
+        io_result.setSummary("You have taken a drink from yout bottle. The water tastes strongly of minerals, but is not unpleasant. It is extremely cold.");
         ad.adventurer.getInventory().removeItem(id);
     }
     else {
@@ -380,7 +382,7 @@ bool AgentInteract::drinkFromInventory(Result& io_result) {
 
 bool AgentInteract::executeWave(Result& io_result) {
     bool success = true;
-    GUI::RenderString("You wave, feeling foolish.");
+    io_result.setSummary("You wave, feeling foolish.");
     return success;
 }
 bool AgentInteract::executeWave(Verb p_target, Result& io_result) {
@@ -392,7 +394,7 @@ bool AgentInteract::executeWave(Verb p_target, Result& io_result) {
     int id = searchInventory(objId);
     if(id != ObjectIds_NOT_FOUND) {
         std::string name = ad.map.getObject(id).getNameTextFriendly();
-        GUI::RenderString("You look foolish waving the " + name);
+        io_result.setSummary("You look foolish waving the " + name);
         success = true;
     }
     else {

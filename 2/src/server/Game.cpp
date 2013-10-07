@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Advent.h"
 #include "Common.h"
+#include "Result.h"
 
 Game::Game(int p_sockfd, std::string p_name)
 {
@@ -17,8 +18,9 @@ Game::~Game()
 
 void Game::run()
 {
+	Result result;
 	Advent ure;
-	((Advent)ure).load();
+	((Advent)ure).load(result);
 
 	createFileName();
 	
@@ -40,7 +42,7 @@ void Game::run()
 			if(msg.at(0) == '/')
 				run = sysMsg(msg);
 			else
-				run = ((Advent)ure).play( msg ); // haha
+				ure.play( msg ); // haha
 		}
 	}
 

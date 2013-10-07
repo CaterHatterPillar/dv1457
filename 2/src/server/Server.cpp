@@ -55,7 +55,7 @@ void Server::run()
 		if(s_clientCnt < MAX_CLIENT_CNT)
 		{
 			pthread_t tid;
-			pthread_create(&threads[s_clientCnt], NULL, handleClient, NULL);
+			pthread_create(&tid, NULL, handleClient, NULL);
 			s_clientCnt++;
 		}	
 

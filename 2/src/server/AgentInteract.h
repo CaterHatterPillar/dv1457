@@ -22,7 +22,7 @@ private:
 	static bool executeInteractGeneral( ActionInteract* p_action, Result& io_result );
 	// Special case interactions:
 	static bool executeTake( Verb p_target, Result& io_result );
-	static void takeObject(Object p_object);
+	static void takeObject(Object p_object, Result& io_result );
 	static bool takeBird(Object p_object, Result& io_result);
 	static bool executeDrop( Verb p_target, Result& io_result );
 

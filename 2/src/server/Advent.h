@@ -8,7 +8,7 @@
 
 #define ADVENT_DEBUG 1
 
-const static std::string filepathAdventdat = "../advent/advent.dat";
+const static std::string filepathAdventdat = "/var/cave/advent.dat";
 const static unsigned adventurerStartingLocation = 1;
 
 class Advent {
@@ -16,8 +16,9 @@ public:
 	Advent();
 	~Advent();
 
-	void load();
+	void load(Result& io_result);
 	bool play( std::string p_in );
+	bool isRunning() const;
 protected:
 private:
 	Formatter	m_formatter;

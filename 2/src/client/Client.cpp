@@ -29,11 +29,11 @@ void Client::run()
 	answerLoadGame();
 
 	while(m_run)
-	{		
+	{	
 		msg = readMsg(); //Server checking connection.
 		if(!m_run)
 			break;
-
+;
  		msg = readUserInput();
 	 	
 	 	sendMsg(msg);

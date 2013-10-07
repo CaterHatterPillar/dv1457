@@ -1,19 +1,17 @@
 #include <string>
-#include <iostream>
 #include <algorithm>
 
 #include "GUI.h"
-#include "Snitch.h"
 #include "Common.h"
 
-GUI::GUI() {
+ResFormater::ResFormater() {
 
 }
-GUI::~GUI() {
+ResFormater::~ResFormater() {
 	// Do nothing.
 }
 
-void GUI::RenderLocation( Location p_location ) {
+std::string ResFormater::FormatLocation( Location p_location ) {
 	AdventData& ad = Singleton< AdventData >::get();
 	std::string descShort, descLong, descObjects = "";
 
@@ -41,9 +39,9 @@ void GUI::RenderLocation( Location p_location ) {
 	}
 
 	std::string locationDesc = descShort + "\n" + descLong + descObjects;
-	Snitch::SendMsg( ad.sockfd, locationDesc );
+	return locationDesc;
 }
-void GUI::RenderText( int numLines, ... ) {
+std::string ResFormater::FormatText( int numLines, ... ) {
 	AdventData& ad = Singleton<AdventData>::get();
 	std::string text = "";
 
@@ -54,23 +52,18 @@ void GUI::RenderText( int numLines, ... ) {
 	}
 	va_end(list);
 
-	Snitch::SendMsg( ad.sockfd, text );
+	return text;
 }
-void GUI::RenderString( std::string p_string ) {
-	AdventData& ad = Singleton<AdventData>::get();
-
-	Snitch::SendMsg( ad.sockfd, p_string );
-}
-void GUI::RenderLines( std::vector< std::string > p_lines ) {
+std::string ResFormater::FormatLines( std::vector< std::string > p_lines ) {
 	AdventData& ad = Singleton<AdventData>::get();
 
 	std::string lines = "";
 	for( unsigned i = 0; i < p_lines.size(); i++ ) {
 		lines += "\n" + p_lines[ i ];
 	}
-	Snitch::SendMsg( ad.sockfd, lines );
+	return lines;
 }
-void GUI::RenderInventory( Inventory p_inventory ) {
+std::string ResFormater::FormatInventory( Inventory p_inventory ) {
 	AdventData& ad = Singleton<AdventData>::get();
 
 	std::string inventory = "";
@@ -84,5 +77,5 @@ void GUI::RenderInventory( Inventory p_inventory ) {
 	} else {
 		inventory = s_confMessageInventoryEmpty;
 	}
-	Snitch::SendMsg( ad.sockfd, inventory );
+	return inventory;
 }

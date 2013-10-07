@@ -105,14 +105,14 @@ bool AgentMagic::executeMagicFeefie(unsigned p_wordIndex, Result& io_result)
     if(success && p_wordIndex == 3) {
         s_feefie.resize(0, false);
         if(ad.adventurer.getMagic().getFee()) {
-            GUI::RenderString("Move eggs back to the giant room. Not yet implemented");
+            io_result.setSummary("Move eggs back to the giant room. Not yet implemented");
         }
         else {
-            GUI::RenderString("Nothing happens!");
+            io_result.setSummary("Nothing happens!");
         }
     }
     else if(success)
-        GUI::RenderString("Ok!");
+        io_result.setSummary("Ok!");
     else
         io_result.setSummary("Get it right dummy!");
 

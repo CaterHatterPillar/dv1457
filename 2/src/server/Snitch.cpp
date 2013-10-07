@@ -16,7 +16,14 @@ std::string Snitch::ReadMsg( int p_sockfd ) {
  	if(numBytes<0)
  		printf("Error reading client message.\n errno: %d\n", errno);
 
- 	return std::string(buffer);
+ 	std::string msg(buffer);
+
+ 	if(msg.length() > 0) {
+ 		msg.erase(msg.end()-1);
+ 		msg.erase(msg.end()-2);
+ 	}
+ 	
+ 	return msg;
 }
 bool Snitch::SendMsg( int p_sockfd, std::string p_msg ) {
 	bool success = true;
