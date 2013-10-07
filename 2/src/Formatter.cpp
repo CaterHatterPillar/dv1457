@@ -1,9 +1,5 @@
-#include <string>
-#include <sstream>
-#include <algorithm> // transform
-
+#include "Common.h"
 #include "Formatter.h"
-#include "AdventData.h"
 
 Formatter::Formatter() {
 
@@ -13,12 +9,14 @@ Formatter::~Formatter() {
 }
 
 std::vector< Verb > Formatter::format( std::string p_command ) {
-	return formatVerbs( 
-		formatDuplicates( 
-			formatIds( 
-				formatUppercase( 
-					formatLength( 
-						formatWords( p_command ) ) ) ) ) );
+	// All aboard the format-train!
+	return formatOrder(
+		formatVerbs( 
+			formatDuplicates( 
+				formatIds( 
+					formatUppercase( 
+						formatLength( 
+							formatWords( p_command ) ) ) ) ) ) );
 }
 
 std::vector< std::string > Formatter::formatWords( std::string p_command ) {
@@ -78,5 +76,10 @@ std::vector< Verb > Formatter::formatVerbs( std::vector< unsigned > p_wordIds ) 
 		unsigned wordId = p_wordIds[ i ];
 		verbs.push_back( ad.vocabulary[ wordId ] );
 	}
+	return verbs;
+}
+std::vector< Verb >	Formatter::formatOrder( std::vector< Verb > p_verbs ) {
+	std::vector< Verb > verbs = p_verbs;
+	std::reverse( verbs.begin(), verbs.end() );
 	return verbs;
 }

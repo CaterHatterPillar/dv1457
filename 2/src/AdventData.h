@@ -13,13 +13,23 @@
 
 #include "Singleton.h" // Include for brevity.
 
-struct AdventData {
+class AdventData {
 public:
 	Map map;
 	Vocabulary vocabulary;
 	Adventurer adventurer;
 	Letterbox letterbox;
 	Relations relations;
+
+	bool isOnSite( Object p_object ) {
+		bool onSite = false;
+		unsigned objectId = p_object.getId();
+		if( adventurer.getInventory().carriesItem( objectId )==true ||
+			adventurer.getLocation().objectAtLocation( objectId )==true ) {
+			onSite = true;
+		}
+		return onSite;
+	};
 };
 
 #endif //ADVENTDATA_H

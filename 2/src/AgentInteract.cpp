@@ -81,11 +81,10 @@ bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result
     return interact;
 }
 bool AgentInteract::executeInteracts( ActionInteract* p_action, Result& io_result ) {
-    // This solution is temporary. Make it more durable.
-    /*AdventData& ad = Singleton<AdventData>::get();
+    AdventData& ad = Singleton<AdventData>::get();
+    bool interaction = false;
 
     Verb action = p_action->getAction();
-
     std::vector< Verb > targets = p_action->getTargets();
     Verb subject = targets[ 0 ];
     Verb subjector = targets[ 1 ]; // eww
@@ -94,18 +93,24 @@ bool AgentInteract::executeInteracts( ActionInteract* p_action, Result& io_resul
     unsigned idSubjector    = subjector.getId() % 1000; // Remember to convert to objet ids.
     unsigned idAction       = action.getId();
 
-    std::cout << "Subject: " + Util::toString( idSubject ) << std::endl
-    << "Subjector: " + Util::toString( idSubjector ) << std::endl
-    << "Action: " + Util::toString( idAction );
-
-    Relation r;
+     Relation r;
     bool hasRelation = ad.relations.hasRelation( idSubject, idSubjector, idAction, r );
-    if( hasRelation==true ) {
-        return true;
-    }*/
+    Object& oSubject = ad.map.getObject( r.getIdSubject() );
+    Object& oSubjector = ad.map.getObject( r.getIdSubjector() );
 
+    bool onSiteSubject = ad.isOnSite( oSubject );
+    bool onSiteSubjector = ad.isOnSite( oSubjector );
+    if( hasRelation==true   &&
+        onSiteSubject==true &&
+        onSiteSubjector==true ) {
+        oSubject.setPropertyValue( r.getInfluence() );
+        GUI::RenderString( r.getOutput() );
+        interaction = true;
+    } else {
+        io_result.setSummary( "That won't work!" );
+    }
 
-    throw ExceptionAdventNotYetImplemented( "executeInteracts" );
+    return interaction;
 }
 
 bool AgentInteract::executeTake( Verb p_target, Result& io_result ) {

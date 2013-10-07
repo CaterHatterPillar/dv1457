@@ -122,7 +122,6 @@ void ParserDat::compileDependantData() {
 			// Currently only supports LIT-attribute:
 			switch( asset ) {
 				case LiquidAssets_LIT:
-				std::cout << std::endl << "Set lit for loc: " + Util::toString( loc);
 					m_ad->map[ loc ].setLit( true );
 					break;
 				default:
@@ -277,8 +276,9 @@ void ParserDat::parseActionDefaults( std::istringstream& p_ss ) {
 }
 void ParserDat::parseRelations( std::istringstream& p_ss ) {
 	unsigned subject, subjector, action, influence;
-	p_ss >> subject >> subjector >> action >> influence;
+	std::string output;
+	p_ss >> subject >> subjector >> action >> influence >> output;
 
-	Relation r( subject, subjector, action, influence );
+	Relation r( subject, subjector, action, influence, output );
 	m_ad->relations.appendRelation( r );
 }
