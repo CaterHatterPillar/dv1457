@@ -16,9 +16,6 @@ public:
 	bool getPlugh();
 	bool getPlover();
 	bool getFee();
-
-	void discoverMagicWords();
-
 private:
 	bool m_xyzzy;
 	bool m_plugh;

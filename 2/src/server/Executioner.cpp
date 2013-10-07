@@ -1,22 +1,17 @@
-
-#include <cassert>
-
 #include "ActionFactory.h"
 
 #include "Common.h"
-#include "Object.h"
-#include "Location.h"
 #include "AgentMagic.h"
-#include "Destination.h"
 #include "Executioner.h"
 #include "AgentTravel.h"
 #include "AgentInteract.h"
 
-Executioner::Executioner() {
-
+Executioner::Executioner( AdventData& p_ad ) {
+	m_agent = new Agent( p_ad );
 }
 Executioner::~Executioner() {
-	// Do nothing.
+	assert( m_agent );
+	delete m_agent;
 }
 
 bool Executioner::execute( Action* p_action, Result& io_result ) {
@@ -29,13 +24,13 @@ bool Executioner::execute( Action* p_action, Result& io_result ) {
             executed = false;
 			break;
 		case ActionTypes_TRAVEL:
-			executed = AgentTravel::execute( (ActionTravel*)p_action, io_result );
+			executed = m_agent->execute( p_action, io_result, AgentTypes_TRAVEL );
 			break;
         case ActionTypes_INTERACT:
-            executed = AgentInteract::execute( (ActionInteract*)p_action, io_result );
+            executed = m_agent->execute( p_action, io_result, AgentTypes_INTERACT );
             break;
 		case ActionTypes_MAGIC:
-			executed = AgentMagic::execute( (ActionMagic*)p_action, io_result );
+			executed = m_agent->execute( p_action, io_result, AgentTypes_MAGIC );
 			break;
 		default:
 			throw ExceptionAdventNotYetImplemented( "Encountered unknown ActionTypes: " + std::string( ActionTypesString[ actionType ] ) + "." );

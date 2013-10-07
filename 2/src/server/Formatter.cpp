@@ -1,8 +1,8 @@
 #include "Common.h"
 #include "Formatter.h"
 
-Formatter::Formatter() {
-
+Formatter::Formatter( AdventData& p_ad ) {
+	m_ad = &p_ad;
 }
 Formatter::~Formatter() {
 	// Do nothing.
@@ -46,15 +46,13 @@ std::vector< std::string > Formatter::formatUppercase( std::vector< std::string 
 	return words;
 }
 std::vector< unsigned > Formatter::formatIds( std::vector< std::string > p_words ) {
-	AdventData& ad = Singleton<AdventData>::get();
-
 	std::string word;
 	unsigned wordId;
 	std::vector< unsigned > wordIds;
 	for( unsigned i = 0; i < p_words.size(); i++ ) {
 		word = p_words[ i ];
 		
-		bool isVerb = ad.vocabulary.isVerb( word, wordId );
+		bool isVerb = m_ad->vocabulary.isVerb( word, wordId );
 		if( isVerb==true ) {
 			wordIds.push_back( wordId );
 		}
@@ -69,12 +67,10 @@ std::vector< unsigned > Formatter::formatDuplicates( std::vector< unsigned > p_w
 	return p_wordIds;
 }
 std::vector< Verb > Formatter::formatVerbs( std::vector< unsigned > p_wordIds ) {
-	AdventData& ad = Singleton<AdventData>::get();
-
 	std::vector< Verb > verbs;
 	for( unsigned i = 0; i < p_wordIds.size(); i++ ) {
 		unsigned wordId = p_wordIds[ i ];
-		verbs.push_back( ad.vocabulary[ wordId ] );
+		verbs.push_back( m_ad->vocabulary[ wordId ] );
 	}
 	return verbs;
 }

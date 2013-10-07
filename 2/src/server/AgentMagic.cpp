@@ -1,20 +1,18 @@
+#include "Agent.h"
 #include "Common.h"
 #include "AgentMagic.h"
 #include "AgentTravel.h"
 #include "ActionFactory.h"
 
-std::vector<bool> AgentMagic::s_feefie;
-
-AgentMagic::AgentMagic() {
-
+AgentMagic::AgentMagic( AdventData& p_ad, Agent* p_agent ) {
+    m_ad = &p_ad;
+    m_agent = p_agent;
 }
 AgentMagic::~AgentMagic() {
 	// Do nothing.
 }
 
 bool AgentMagic::execute( ActionMagic* p_action, Result& io_result ) {
-	AdventData& ad = Singleton<AdventData>::get();
-    
     Verb spell = p_action->getSpell();
 
     bool spellCast = false;
@@ -24,24 +22,22 @@ bool AgentMagic::execute( ActionMagic* p_action, Result& io_result ) {
 }
 
 bool AgentMagic::executeMagic( Verb p_spell, Result& io_result ) {
-	AdventData& ad = Singleton<AdventData>::get();
-
-    Location location = ad.adventurer.getLocation();
+    Location location = m_ad->map[ m_ad->adventurer.getIdLocation() ];
     bool spellCast = false;
     bool canTeleport = false;
 
     switch( p_spell.getId() )
     {
     case MeaningfulWords_XYZZY:
-        canTeleport = ad.adventurer.getMagic().getXyzzy();
+        canTeleport = m_ad->magic.getXyzzy();
         spellCast = executeMagicTeleport( p_spell, canTeleport, io_result );
         break;
     case MeaningfulWords_PLUGH:
-        canTeleport = ad.adventurer.getMagic().getPlugh();
+        canTeleport = m_ad->magic.getPlugh();
         spellCast = executeMagicTeleport( p_spell, canTeleport, io_result );
         break;
     case MeaningfulWords_PLOVE:
-        canTeleport = ad.adventurer.getMagic().getPlover();
+        canTeleport = m_ad->magic.getPlover();
         spellCast = executeMagicTeleport( p_spell, canTeleport, io_result );
         break;
     case MeaningfulWords_FEE:
@@ -73,7 +69,7 @@ bool AgentMagic::executeMagicTeleport(Verb p_spell, bool p_canTeleport, Result& 
 
     if(p_canTeleport) {
         Action* action = ActionFactory::actionTravel( p_spell );
-        success = AgentTravel::execute((ActionTravel*)action, io_result);
+        success = m_agent->execute( action, io_result, AgentTypes_TRAVEL );
     }
     
     if(!success)
@@ -83,8 +79,6 @@ bool AgentMagic::executeMagicTeleport(Verb p_spell, bool p_canTeleport, Result& 
 }
 bool AgentMagic::executeMagicFeefie(unsigned p_wordIndex, Result& io_result)
 {
-    AdventData& ad = Singleton<AdventData>::get();
-
     bool success = true;
     
     if(p_wordIndex == 0)
@@ -104,15 +98,15 @@ bool AgentMagic::executeMagicFeefie(unsigned p_wordIndex, Result& io_result)
     }
     if(success && p_wordIndex == 3) {
         s_feefie.resize(0, false);
-        if(ad.adventurer.getMagic().getFee()) {
-            GUI::RenderString("Move eggs back to the giant room. Not yet implemented");
+        if(m_ad->magic.getFee()) {
+            GUI::RenderString( (*m_ad), "Move eggs back to the giant room. Not yet implemented");
         }
         else {
-            GUI::RenderString("Nothing happens!");
+            GUI::RenderString((*m_ad), "Nothing happens!");
         }
     }
     else if(success)
-        GUI::RenderString("Ok!");
+        GUI::RenderString((*m_ad), "Ok!");
     else
         io_result.setSummary("Get it right dummy!");
 

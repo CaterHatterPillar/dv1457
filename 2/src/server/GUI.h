@@ -6,6 +6,7 @@
 #include <vector>
 #include <stdarg.h>
 
+#include "AdventData.h"
 #include "Location.h"
 #include "Inventory.h"
 
@@ -21,11 +22,11 @@ public:
 	~GUI();
 
 	// Out
-	static void RenderLocation( Location p_location );
-	static void RenderText( int numLines, ... );
-	static void RenderString( std::string p_string );
-	static void RenderLines( std::vector< std::string > p_lines );
-	static void RenderInventory( Inventory p_inventory );
+	static void RenderLocation( 	AdventData& p_ad, Location p_location );
+	static void RenderText( 		AdventData& p_ad, int numLines, ... );
+	static void RenderString( 		AdventData& p_ad, std::string p_string );
+	static void RenderLines( 		AdventData& p_ad, std::vector< std::string > p_lines );
+	static void RenderInventory( 	AdventData& p_ad, Inventory p_inventory );
 protected:
 private:
 };

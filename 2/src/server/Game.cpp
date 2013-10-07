@@ -6,10 +6,6 @@ Game::Game(int p_sockfd, std::string p_name)
 {
 	m_sockfd = p_sockfd;
 	m_name 	 = p_name;
-
-	AdventData& ad = Singleton<AdventData>::get();
-	ad.sockfd = p_sockfd;
-	ad.client = p_name;
 }
 Game::~Game()
 {
@@ -17,7 +13,7 @@ Game::~Game()
 
 void Game::run()
 {
-	Advent ure;
+	Advent ure( m_sockfd, m_name );
 	((Advent)ure).load();
 
 	createFileName();

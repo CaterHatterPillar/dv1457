@@ -11,12 +11,14 @@ static const unsigned FormatterWordLength = 5;
 
 class Formatter {
 public:
-	Formatter();
+	Formatter( AdventData& p_ad );
 	~Formatter();
 
 	std::vector< Verb > format( std::string p_command );
 protected:
 private:
+	AdventData* m_ad;
+
 	std::vector< std::string >	formatWords( 		std::string p_command );
 	std::vector< std::string >	formatLength( 		std::vector< std::string > 	p_words 	);
 	std::vector< std::string >	formatUppercase( 	std::vector< std::string > 	p_words 	);

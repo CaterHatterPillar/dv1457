@@ -1,29 +1,24 @@
 #ifndef ADVENTURER_H
 #define ADVENTURER_H
 
-#include <vector>
-
-#include "Location.h"
-#include "Inventory.h"
 #include "Magic.h"
+#include "Inventory.h"
 
 class Adventurer {
 public:
 	Adventurer();
-	Adventurer( Location p_startingLocation );
+	Adventurer( unsigned p_idLocation );
 	~Adventurer();
 
-	void adventTravelTo( Location p_location );
+	void adventTravelTo( unsigned p_idLocation );
 	bool isIlluminated();
 
-	Location getLocation(); // Consider returning reference
+	unsigned getIdLocation() const;
 	Inventory& getInventory();
-	Magic& getMagic();
 protected:
 private:
 	unsigned m_idLocation;
 	Inventory m_inventory;
-	Magic m_magic;
 };
 
 #endif // ADVENTURER_H
