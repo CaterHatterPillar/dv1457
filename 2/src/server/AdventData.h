@@ -15,6 +15,11 @@
 
 class AdventData {
 public:
+	// Client
+	int sockfd;
+	std::string client;
+
+	// Gameplay
 	Map map;
 	Vocabulary vocabulary;
 	Adventurer adventurer;

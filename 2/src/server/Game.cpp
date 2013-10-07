@@ -1,9 +1,15 @@
 #include "Game.h"
+#include "Advent.h"
+#include "Common.h"
 
 Game::Game(int p_sockfd, std::string p_name)
 {
 	m_sockfd = p_sockfd;
 	m_name 	 = p_name;
+
+	AdventData& ad = Singleton<AdventData>::get();
+	ad.sockfd = p_sockfd;
+	ad.client = p_name;
 }
 Game::~Game()
 {
@@ -11,6 +17,9 @@ Game::~Game()
 
 void Game::run()
 {
+	Advent ure;
+	((Advent)ure).load();
+
 	createFileName();
 	
 	GameStatus status = queryLoadGame();
@@ -31,7 +40,7 @@ void Game::run()
 			if(msg.at(0) == '/')
 				run = sysMsg(msg);
 			else
-				run = gameMsg(msg);
+				run = ((Advent)ure).play( msg ); // haha
 		}
 	}
 

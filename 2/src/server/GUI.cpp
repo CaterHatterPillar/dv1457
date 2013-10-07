@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "GUI.h"
+#include "Snitch.h"
 #include "Common.h"
 
 GUI::GUI() {
@@ -12,13 +13,6 @@ GUI::~GUI() {
 	// Do nothing.
 }
 
-void GUI::GetInput( std::string& io_input ) {
-	getline( std::cin, io_input );
-}
-
-void GUI::ClearScreen() {
-	std::cout << std::string( 100, '\n' );
-}
 void GUI::RenderLocation( Location p_location ) {
 	AdventData& ad = Singleton< AdventData >::get();
 	std::string descShort, descLong, descObjects = "";
@@ -46,51 +40,49 @@ void GUI::RenderLocation( Location p_location ) {
 		descLong = s_confDescLongDarkness;
 	}
 
-	std::cout << descShort << std::endl << descLong << descObjects;
+	std::string locationDesc = descShort + "\n" + descLong + descObjects;
+	Snitch::SendMsg( ad.sockfd, locationDesc );
 }
 void GUI::RenderText( int numLines, ... ) {
+	AdventData& ad = Singleton<AdventData>::get();
+	std::string text = "";
+
 	va_list list;
 	va_start(list, numLines); 
 	for(unsigned i = 0; i < numLines; i++) { 
-		std::cout << va_arg(list, char*) << std::endl;
+		text += std::string( va_arg(list, char*) ) + "\n";
 	}
 	va_end(list);
+
+	Snitch::SendMsg( ad.sockfd, text );
 }
 void GUI::RenderString( std::string p_string ) {
-	std::cout << p_string;
+	AdventData& ad = Singleton<AdventData>::get();
+
+	Snitch::SendMsg( ad.sockfd, p_string );
 }
 void GUI::RenderLines( std::vector< std::string > p_lines ) {
+	AdventData& ad = Singleton<AdventData>::get();
+
+	std::string lines = "";
 	for( unsigned i = 0; i < p_lines.size(); i++ ) {
-		std::cout << std::endl << p_lines[ i ];
+		lines += "\n" + p_lines[ i ];
 	}
-}
-void GUI::RenderTerminal() {
-	std::cout << s_confTerminalIndicator;
+	Snitch::SendMsg( ad.sockfd, lines );
 }
 void GUI::RenderInventory( Inventory p_inventory ) {
-	AdventData& ad = Singleton< AdventData >::get();
+	AdventData& ad = Singleton<AdventData>::get();
+
+	std::string inventory = "";
 	if( p_inventory.getNumItems() > 0 ) {
 		std::cout << s_confMessageInventoryHeader;
 		for( unsigned i = 0; i < p_inventory.getNumItems(); i++ ) {
 			unsigned itemId = p_inventory.getItemId( i );
 			Object object = ad.map.getObject( itemId );
-			std::cout << std::endl << " * " << object.getName();
+			inventory += std::string("\n") + std::string(" * ") + object.getName();
 		}
 	} else {
-		std::cout << s_confMessageInventoryEmpty;
+		inventory = s_confMessageInventoryEmpty;
 	}
-}
-void GUI::RenderNewLine( unsigned p_numNewLine ) {
-	for( unsigned i = 0; i < p_numNewLine; i++ ) {
-		std::cout << std::endl;
-	}
-}
-
-void GUI::RenderObject( Object p_object ) {
-	std::cout << std::endl;
-
-	std::vector< std::string > description = p_object.getDescription();
-	for( unsigned i = 0; i < description.size(); i++ ) {
-		std::cout << description[i];
-	}
+	Snitch::SendMsg( ad.sockfd, inventory );
 }

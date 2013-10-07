@@ -16,10 +16,9 @@ public:
 	Advent();
 	~Advent();
 
-	void play();
-protected:
 	void load();
-	void gameLoop();
+	bool play( std::string p_in );
+protected:
 private:
 	Formatter	m_formatter;
 	Interpreter m_interpreter;

@@ -1,18 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <string>
-#include <cstring>
-
-#include <errno.h>
-#include <fcntl.h>
-#include <fstream>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <syslog.h>
-#include <stdio.h>
-#include <pwd.h>
+#include "CommonSys.h"
 
 class Game
 {
