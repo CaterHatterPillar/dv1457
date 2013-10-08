@@ -59,7 +59,7 @@ bool Advent::play( std::string p_in ) {
 
 	// Print response if the command was not executed correctly.
 //	if( success==false ) {
-        Snitch::SendMsg( ad.sockfd, p_in );
+        Snitch::SendMsg( ad.sockfd, result.getSummary() );
 // #ifdef ADVENT_DEBUG
 //         GUI::RenderString( action->toString() );
 // #endif // ADVENT_DEBUG

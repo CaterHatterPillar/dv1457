@@ -1,4 +1,5 @@
 #include "Client.h"
+#include <iostream>
 
 Client::Client(char* p_ip, int p_port)
 {
@@ -46,11 +47,14 @@ void Client::run()
 
 std::string Client::readUserInput()
 {
-	char buffer[256];
-	bzero(buffer, 256);
- 	fgets(buffer, 255, stdin);
+	//char buffer[256];
+	//bzero(buffer, 256);
+ 	//fgets(buffer, 255, stdin);
 
- 	return std::string(buffer);
+ 	std::string input = "";
+ 	std::getline(std::cin, input);
+
+ 	return input; //std::string(buffer);
 }
 
 std::string Client::readMsg()
@@ -116,13 +120,13 @@ void Client::answerLoadGame()
 		while(!done)
 		{
 			input = readUserInput();
-			if(strcmp(input.c_str(), "yes\n") == 0)
+			if(strcmp(input.c_str(), "yes") == 0)
 			{
 				done = true;
 				sendMsg("/load_game");
 				printf("Loading game...\n");
 			}
-			else if(strcmp(input.c_str(), "no\n") == 0)
+			else if(strcmp(input.c_str(), "no") == 0)
 			{
 				done = true;
 				sendMsg("/new_game");

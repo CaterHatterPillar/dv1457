@@ -18,10 +18,7 @@ std::string Snitch::ReadMsg( int p_sockfd ) {
 
  	std::string msg(buffer);
 
- 	if(msg.length() > 0) {
- 		msg.erase(msg.end()-1);
- 		msg.erase(msg.end()-2);
- 	}
+ 	msg.erase(std::remove(msg.begin(), msg.end(), '\n'), msg.end());
  	
  	return msg;
 }
