@@ -20,6 +20,8 @@ public:
 
 
 	bool load(Result& io_result);
+	bool loadGame(std::string p_filename, Result& io_result);
+	bool saveGame(std::string p_filename);
 
 	void play( std::string p_in );
 	bool isRunning() const;

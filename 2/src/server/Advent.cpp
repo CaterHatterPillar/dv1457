@@ -55,6 +55,48 @@ bool Advent::load(Result& io_result) {
 	}
 	return sucessfulLoad;
 }
+bool Advent::loadGame(std::string p_filename, Result& io_result) {
+	std::fstream file(p_filename.c_str());
+
+	bool success = false;
+	std::string prefix = "unknown";
+	int location, item;
+	if(file) {
+		success = true;
+		while(!file.eof()) {
+			file >> prefix;
+
+			if(prefix == "l") {
+				file >> location;
+				m_ad.adventurer.adventTravelTo(location);
+				io_result.setSummary(ResFormater::FormatLocation(m_ad, m_ad.map[ m_ad.adventurer.getIdLocation() ] ));
+			}
+			else if(prefix == "i") {
+				file >> item;
+				m_ad.adventurer.getInventory().appendItem(item);
+			}
+			prefix = "unknown";
+		}
+	}
+	return success;
+}
+bool Advent::saveGame(std::string p_filename) {
+	std::fstream file;
+	file.open(p_filename.c_str(),
+		std::ios_base::in |
+		std::ios_base::out |
+		std::ios_base::trunc);
+
+	unsigned int location = m_ad.adventurer.getIdLocation();
+	Inventory inventory = m_ad.adventurer.getInventory();
+
+	file << "l " << location << " ";
+	for(unsigned int i=0; i<inventory.getNumItems(); i++)  {
+		file << "i " << inventory.getItemId(i) << " ";
+	}
+
+	file.close();
+}
 
 void Advent::play( std::string p_in ) {
 	// Format and interpret input:

@@ -22,9 +22,7 @@ void Game::run()
 	
 	GameStatus status = queryLoadGame();
 	if(status == GameStatus_LOAD_GAME)
-		loadGame();
-	else if(status == GameStatus_NEW_GAME)
-		newGame();
+		ure.loadGame(m_filename, result);
 
 	sendMsg(result.getSummary());
 
@@ -44,7 +42,7 @@ void Game::run()
 		}
 	}
 
-	saveGame();
+	/*fut*/ure.saveGame(m_filename);
 }
 
 Game::GameStatus Game::queryLoadGame()
@@ -81,20 +79,6 @@ void Game::loadGame()
 void Game::newGame()
 {
 	//Set up for new game.
-}
-
-void Game::saveGame()
-{
-	std::fstream file;
-	file.open(m_filename.c_str(),
-		std::ios_base::in |
-		std::ios_base::out |
-		std::ios_base::trunc);
-
-	//Save shit!
-	file << m_name << "\n";
-
-	file.close();
 }
 
 bool Game::checkConnection()
@@ -158,7 +142,7 @@ bool Game::sysMsg(std::string p_msg)
 	}
  	else if(strcmp(p_msg.c_str(), "/save") == 0)
  	{
- 		saveGame();
+ 		//saveGame();
  		success = sendMsg("Game saved!");
  	}
  	else
@@ -170,7 +154,6 @@ bool Game::sysMsg(std::string p_msg)
 void Game::createFileName()
 {
 	std::string filename = m_name;
-	filename.erase(filename.end()-1);
 
 	std::string dir = "/var/cave/";
 	struct stat st={0};
