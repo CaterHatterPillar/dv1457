@@ -29,6 +29,9 @@ void Client::run()
 	answerName();
 	answerLoadGame();
 
+	msg = readMsg();
+	printf("%s\n", msg.c_str());
+
 	while(m_run)
 	{	
 		msg = readMsg(); //Server checking connection.
@@ -59,9 +62,9 @@ std::string Client::readUserInput()
 
 std::string Client::readMsg()
 {
-	char buffer[256];
-	bzero(buffer, 256);
-	int numBytes = recv(m_sockfd, buffer, 255, 0);
+	char buffer[MSG_BUFFER_SIZE];
+	bzero(buffer, MSG_BUFFER_SIZE);
+	int numBytes = recv(m_sockfd, buffer, MSG_BUFFER_SIZE-1, 0);
 	if(numBytes<0)
 	{
 		printf("Error reading from socket.\n errno: %d\n", errno);

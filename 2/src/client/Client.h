@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+static const unsigned int MSG_BUFFER_SIZE = 512;
 
 class Client
 {

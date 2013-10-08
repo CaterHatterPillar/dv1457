@@ -26,6 +26,8 @@ void Game::run()
 	else if(status == GameStatus_NEW_GAME)
 		newGame();
 
+	sendMsg(result.getSummary());
+
 	std::string msg;
 	bool run = true;
 	while(run)
@@ -149,12 +151,12 @@ bool Game::sysMsg(std::string p_msg)
 
 	bool success = true;
 
-	if(strcmp(p_msg.c_str(), "/exit\n") == 0)
+	if(strcmp(p_msg.c_str(), "/exit") == 0)
 	{
 		success = sendMsg("Client disconnecting");
 		shutdown(m_sockfd, SHUT_RDWR);
 	}
- 	else if(strcmp(p_msg.c_str(), "/save\n") == 0)
+ 	else if(strcmp(p_msg.c_str(), "/save") == 0)
  	{
  		saveGame();
  		success = sendMsg("Game saved!");

@@ -3,7 +3,7 @@
 
 #include <string>
 
-static const unsigned Msg_In_Buffer_Size = 256;
+static const unsigned Msg_In_Buffer_Size = 512;
 
 class Snitch {
 public:
