@@ -1,40 +1,36 @@
 #ifndef ADVENTDATA_H
 #define ADVENTDATA_H
 
-#include <map>
-#include <vector>
-#include <string>
-
 #include "Map.h"
+#include "Magic.h"
 #include "Relations.h"
 #include "Letterbox.h"
 #include "Vocabulary.h"
 #include "Adventurer.h"
 
-#include "Singleton.h" // Include for brevity.
-
+/* Clean me from comments */
 class AdventData {
 public:
+	AdventData();
+	~AdventData();
+
 	// Client
 	int sockfd;
-	std::string client;
+	std::string player;
 
 	// Gameplay
 	Map map;
-	Vocabulary vocabulary;
-	Adventurer adventurer;
-	Letterbox letterbox;
+	Magic magic;
+	Vocabulary vocabulary; 	
+	Adventurer adventurer; 	
+	Letterbox letterbox; 
 	Relations relations;
 
-	bool isOnSite( Object p_object ) {
-		bool onSite = false;
-		unsigned objectId = p_object.getId();
-		if( adventurer.getInventory().carriesItem( objectId )==true ||
-			adventurer.getLocation().objectAtLocation( objectId )==true ) {
-			onSite = true;
-		}
-		return onSite;
-	};
+	bool isOnSite( Object p_object );
+	bool locationIsIlluminated();
+	void discoverMagicWords();
+protected:
+private:
 };
 
-#endif //ADVENTDATA_H
+#endif // ADVENTDATA_H

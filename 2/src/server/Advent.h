@@ -1,8 +1,10 @@
 #ifndef ADVENT_H
 #define ADVENT_H
 
+#include <string>
+
 #include "Formatter.h"
-#include "Adventurer.h"
+#include "AdventData.h"
 #include "Interpreter.h"
 #include "Executioner.h"
 
@@ -13,19 +15,21 @@ const static unsigned adventurerStartingLocation = 1;
 
 class Advent {
 public:
-	Advent();
+	Advent( int p_sockfd, std::string p_player );
 	~Advent();
 
-	void load(Result& io_result);
-	bool play( std::string p_in );
+
+	bool load(Result& io_result);
+
+	void play( std::string p_in );
 	bool isRunning() const;
 protected:
 private:
-	Formatter	m_formatter;
-	Interpreter m_interpreter;
-	Executioner m_executioner;
+	AdventData m_ad;
 
-	bool m_running;
+	Formatter*		m_formatter;
+	Interpreter* 	m_interpreter;
+	Executioner* 	m_executioner;
 };
 
 #endif // ADVENT_H

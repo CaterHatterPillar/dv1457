@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "CommonSys.h"
+
 #include <map>
 #include <string>
 #include <vector>

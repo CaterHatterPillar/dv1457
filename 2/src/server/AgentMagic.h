@@ -1,23 +1,30 @@
 #ifndef AGENTMAGIC_H
 #define AGENTMAGIC_H
 
+class Agent;
+
 #include "Verb.h"
+
 #include "Action.h"
 #include "Result.h"
+#include "AdventData.h"
 
 class AgentMagic {
 public:
-	AgentMagic();
+	AgentMagic( AdventData& p_ad, Agent* p_agent );
 	~AgentMagic();
 
-	static bool execute( ActionMagic* p_action, Result& io_result );
+	bool execute( ActionMagic* p_action, Result& io_result );
 protected:
-	static bool executeMagic( Verb p_spell, Result& io_result );
+	bool executeMagic( Verb p_spell, Result& io_result );
 private:
-	static bool executeMagicTeleport(Verb p_spell, bool p_canTeleport, Result& io_result);
-	static bool executeMagicFeefie(unsigned p_wordIndex, Result& io_result);
+	bool executeMagicTeleport(Verb p_spell, bool p_canTeleport, Result& io_result);
+	bool executeMagicFeefie(unsigned p_wordIndex, Result& io_result);
 	
-	static std::vector<bool> s_feefie;
+	std::vector<bool> s_feefie;
+
+	AdventData* m_ad;
+	Agent* m_agent;
 };
 
 #endif // AGENTMAGIC_H

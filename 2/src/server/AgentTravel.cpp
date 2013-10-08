@@ -1,15 +1,20 @@
 #include "Common.h"
 #include "AgentTravel.h"
 
-AgentTravel::AgentTravel() {
+AgentTravel::AgentTravel( AdventData& p_ad, Agent* p_agent ) {
+    m_ad = &p_ad;
+    m_agent = p_agent;
 
+    assert(m_ad);
+    syslog(LOG_INFO, "AgentTravel::AgentTravel() m_ad");
+    assert( m_agent );
+    syslog(LOG_INFO, "AgentTravel::AgentTravel() m_agent");
 }
 AgentTravel::~AgentTravel() {
 	// Do nothing.
 }
 
 bool AgentTravel::execute( ActionTravel* p_action, Result& io_result ) {
-    AdventData& ad = Singleton<AdventData>::get();
     bool executed = false;
 
     Verb target = p_action->getTarget();
@@ -25,7 +30,7 @@ bool AgentTravel::execute( ActionTravel* p_action, Result& io_result ) {
     }
 
     // The location is printing whether or not the travel was successful.
-    io_result.setSummary(ResFormater::FormatLocation( ad.adventurer.getLocation() ));
+    io_result.setSummary(ResFormater::FormatLocation( (*m_ad), m_ad->map[ m_ad->adventurer.getIdLocation() ] ));
 
     return executed;
 }
@@ -34,11 +39,10 @@ bool AgentTravel::executeLook() {
     return true; // Since location is printed regardless of result, we only wish to mark the command as sucessful to indicate no error.
 }
 bool AgentTravel::executeTravel( ActionTravel* p_action, Result& io_result ) {
-    AdventData& ad = Singleton<AdventData>::get();
     bool satisfiesConditions = false;
 
     Verb target = p_action->getTarget();
-    Location location = ad.adventurer.getLocation();
+    Location location = m_ad->map[ m_ad->adventurer.getIdLocation() ];
     for( unsigned i = 0; i < location.getNumDestinations() && satisfiesConditions==false; i++ ) {
         Destination destination = location[ i ];
 
@@ -68,7 +72,7 @@ bool AgentTravel::executeTravel( ActionTravel* p_action, Result& io_result ) {
                 satisfiesConditions = condObjectLocation(m-200);    
         } else if( (m>300) && (m<=400) ) { // if 300<m<=400 prop(m mod 100) must *not* be 0.
             unsigned prop = m % 100;
-            unsigned propValue = ad.map.getObject( prop ).getPropertyValue();
+            unsigned propValue = m_ad->map.getObject( prop ).getPropertyValue();
             if( propValue!=0 ) {
                 satisfiesConditions = true;
             }
@@ -80,11 +84,11 @@ bool AgentTravel::executeTravel( ActionTravel* p_action, Result& io_result ) {
 
         if( satisfiesConditions==true ) {
             if( n<=300 ) { // if n<=300 It is the location to go to.
-                ad.adventurer.adventTravelTo( ad.map[ n ] );
+                m_ad->adventurer.adventTravelTo( m_ad->map[ n ].getId() );
             } else if( (n>300) && (n<=500) ) { // if 300<n<=500 n-300 is used in a computed goto to a section of special code.
                 throw ExceptionAdventNotYetImplemented( "Travel - GOTO." );
             } else if( n>500 ) { // if n>500 Message n-500 from section 6 is printed, and he stays wherever he is.
-                io_result.setSummary(ResFormater::FormatLines( ad.letterbox[ n ].lines ));
+                io_result.setSummary(ResFormater::FormatLines( (*m_ad), m_ad->letterbox[ n ].lines ));
             }
         } 
     }
@@ -93,24 +97,16 @@ bool AgentTravel::executeTravel( ActionTravel* p_action, Result& io_result ) {
 }
 
 bool AgentTravel::condObjectCarry(unsigned int p_objectId) {
-    AdventData& ad = Singleton<AdventData>::get();
-
     bool success = false;
-
-    Inventory invent = ad.adventurer.getInventory();
-    for(unsigned int i=0; i<invent.getNumItems(); i++) {
-        if(p_objectId == invent.getItemId(i)) {
-            success = true;
-        }
+    Inventory inventory = m_ad->adventurer.getInventory();
+    if( inventory.carriesItem( p_objectId ) ) {
+        success = true;
     }
-
     return success;
 }
 bool AgentTravel::condObjectLocation(unsigned int p_objectId) {
-    AdventData& ad = Singleton<AdventData>::get();
-
     bool success = false;
-    Location location = ad.adventurer.getLocation();
+    Location location = m_ad->map[ m_ad->adventurer.getIdLocation() ];
     std::vector< unsigned > locationObjectIds = location.getObjectIds();
     for( unsigned i = 0; i < locationObjectIds.size(); i++ ) {
         if(p_objectId == locationObjectIds[i]) {
