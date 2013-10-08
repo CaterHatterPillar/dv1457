@@ -24,3 +24,15 @@ Object& Map::getObject( unsigned p_idObject ) {
 Location& Map::operator[]( unsigned p_idLocation ) { 
 	return m_locations[ p_idLocation ];
 }
+
+void Map::removeDuplicatesHack( unsigned p_objectId ){
+	typedef std::map< unsigned, Location >::iterator it_type;
+	for(it_type it = m_locations.begin(); it!=m_locations.end(); it++) {
+    	unsigned locationId = it->first;
+    	Location& location = it->second;
+
+    	if( location.objectAtLocation( p_objectId )==true ) {
+    		location.objectIdRemove( p_objectId );
+    	}
+    }
+}

@@ -69,14 +69,15 @@ bool Advent::loadGame(std::string p_filename, Result& io_result) {
 			if(prefix == "l") {
 				file >> location;
 				m_ad.adventurer.adventTravelTo(location);
-				io_result.setSummary(ResFormater::FormatLocation(m_ad, m_ad.map[ m_ad.adventurer.getIdLocation() ] ));
 			}
 			else if(prefix == "i") {
 				file >> item;
 				m_ad.adventurer.getInventory().appendItem(item);
+				m_ad.map.removeDuplicatesHack( item );
 			}
 			prefix = "unknown";
 		}
+		io_result.setSummary(ResFormater::FormatLocation(m_ad, m_ad.map[ m_ad.adventurer.getIdLocation() ] ));
 	}
 	return success;
 }
