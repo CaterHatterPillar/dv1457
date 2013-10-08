@@ -8,9 +8,6 @@
 
 Executioner::Executioner( AdventData& p_ad ) {
 	m_agent = new Agent( p_ad );
-
-	assert( m_agent );
-	syslog(LOG_INFO, "Executioner::Executioner()");
 }
 Executioner::~Executioner() {
 	assert( m_agent );

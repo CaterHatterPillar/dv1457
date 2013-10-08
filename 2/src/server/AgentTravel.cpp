@@ -4,11 +4,6 @@
 AgentTravel::AgentTravel( AdventData& p_ad, Agent* p_agent ) {
     m_ad = &p_ad;
     m_agent = p_agent;
-
-    assert(m_ad);
-    syslog(LOG_INFO, "AgentTravel::AgentTravel() m_ad");
-    assert( m_agent );
-    syslog(LOG_INFO, "AgentTravel::AgentTravel() m_agent");
 }
 AgentTravel::~AgentTravel() {
 	// Do nothing.

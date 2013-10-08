@@ -13,8 +13,6 @@ AgentInteract::~AgentInteract() {
 }
 
 bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
-    
-    syslog(LOG_INFO, "AgentInteract::execute()");
     bool interact = false;
     ActionInteract::ActionInteractTypes ait = p_action->getTypeActionInteract();
     switch( ait ) {
@@ -37,8 +35,6 @@ bool AgentInteract::execute( ActionInteract* p_action, Result& io_result ) {
 }
 
 bool AgentInteract::executeAction( ActionInteract* p_action, Result& io_result ) {
-    
-    syslog(LOG_INFO, "AgentInteract::executeAction()");
     bool executedAction = false;
     Verb action = p_action->getAction();
     unsigned idAction = action.getId();
@@ -58,8 +54,6 @@ bool AgentInteract::executeAction( ActionInteract* p_action, Result& io_result )
     return executedAction;
 }
 bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result ) {
-    
-    syslog(LOG_INFO, "AgentInteract::executeInteract()");
     bool interact = false;
     Verb action = p_action->getAction();
     Verb target = p_action->getTargets().front();
@@ -94,8 +88,6 @@ bool AgentInteract::executeInteract( ActionInteract* p_action, Result& io_result
     return interact;
 }
 bool AgentInteract::executeInteracts( ActionInteract* p_action, Result& io_result ) {
-    
-    syslog(LOG_INFO, "AgentInteract::executeInteracts()");
     bool interaction = false;
 
     Verb action = p_action->getAction();
@@ -131,8 +123,6 @@ bool AgentInteract::executeInteracts( ActionInteract* p_action, Result& io_resul
 }
 
 bool AgentInteract::executeInteractGeneral( ActionInteract* p_action, Result& io_result ) {
-        
-    syslog(LOG_INFO, "AgentInteract::executeInteractGeneral");
     bool interaction = false;
     Verb action = p_action->getAction();
     Verb target = p_action->getTargets().front();

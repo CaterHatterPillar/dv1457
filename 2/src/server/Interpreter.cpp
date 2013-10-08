@@ -13,8 +13,6 @@ Interpreter::~Interpreter() {
 Action* Interpreter::interpret( std::vector< Verb > p_verbs, Result& io_result ) {
 	Action* a;
 
-	syslog(LOG_INFO, "Interpreter::interpret()");
-
 	// Order verbs into groups indicating actions:
 	Interpretation interpretation = interpretVerbs( p_verbs );
 	// Attempt to predict intent based off Action-verbs:
@@ -75,8 +73,6 @@ Action* Interpreter::interpretWildcard( Interpretation p_interpretation, Result&
 Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
 
-	syslog(LOG_INFO, "Interpreter::interpretActionTravel()");
-
 	bool validTarget = false;
 	switch( p_interpretation.vTravel.size() ) {
 		case 0:
@@ -99,8 +95,6 @@ Action* Interpreter::interpretActionTravel( Interpretation p_interpretation, Res
 }
 Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-
-	syslog(LOG_INFO, "Interpreter::interpretActionInteract()");
 
 	bool validAction = false;
 	if( p_interpretation.vAction.size()==1 ) {
@@ -128,8 +122,6 @@ Action* Interpreter::interpretActionInteract( Interpretation p_interpretation, R
 }
 Action* Interpreter::interpretActionMagic( Interpretation p_interpretation, Result& io_result ) {
 	Action* action = ActionFactory::actionInvalid();
-
-	syslog(LOG_INFO, "Interpreter::interpretActionMagic");
 
 	std::vector< Verb > spellsTravel = p_interpretation.vTravel;	// Some spells are motion-verbs, such as XYZZY.
 	std::vector< Verb > spellsSpecial = p_interpretation.vSpecial;	// Others are special, such as fee fie fum - yadda yadda.

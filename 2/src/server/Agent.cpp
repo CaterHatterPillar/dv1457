@@ -8,13 +8,6 @@ Agent::Agent( AdventData& p_ad ) {
 	m_travel 	= new AgentTravel( 		p_ad, this );
 	m_interact 	= new AgentInteract( 	p_ad, this );
 	m_magic 	= new AgentMagic( 		p_ad, this );
-
-	assert(m_travel);
-	syslog(LOG_INFO, "Agent::Agent() m_travel");
-	assert(m_interact);
-	syslog(LOG_INFO, "Agent::Agent() m_interact");
-	assert(m_magic);
-	syslog(LOG_INFO, "Agent::Agent() m_magic");
 }
 Agent::~Agent() {
 	assert( m_travel );

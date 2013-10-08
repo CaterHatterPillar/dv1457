@@ -3,9 +3,6 @@
 
 Formatter::Formatter( AdventData& p_ad ) {
 	m_ad = &p_ad;
-
-	assert(m_ad);
-	syslog(LOG_INFO, "Formatter::Formatter()");
 }
 Formatter::~Formatter() {
 	// Do nothing.

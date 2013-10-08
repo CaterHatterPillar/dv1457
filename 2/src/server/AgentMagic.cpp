@@ -7,11 +7,6 @@
 AgentMagic::AgentMagic( AdventData& p_ad, Agent* p_agent ) {
     m_ad = &p_ad;
     m_agent = p_agent;
-
-    assert(m_ad);
-    syslog(LOG_INFO, "AgentMagic::AgentMagic() m_ad");
-    assert( m_agent );
-    syslog(LOG_INFO, "AgentMagic::AgentMagic() m_agent");
 }
 AgentMagic::~AgentMagic() {
 	// Do nothing.
