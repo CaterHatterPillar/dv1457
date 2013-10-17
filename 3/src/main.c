@@ -16,6 +16,12 @@ int main(int argc, char *argv[])
   len = atoi(argv[1]);
   apples = atoi(argv[2]);
 
+  if( apples>10 )
+  {
+    printf( "Can only support up to ten apples!\n" );
+    return 1;
+  }
+
   start_game(len, apples);
 
   return 0;

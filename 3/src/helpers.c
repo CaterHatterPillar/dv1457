@@ -37,13 +37,25 @@ void nib_end(void)
   exit(0);
 }
 
+int getX()
+{
+	int x, y;
+	getmaxyx(p_screen, y, x);
+
+	return x;
+}
+int getY()
+{
+	int x, y;
+	getmaxyx(p_screen, y, x);
+
+	return y;
+}
 
 void nib_clear_screen()
 {
 	wclear(p_screen);
 	wborder(p_screen, '|', '|', '-', '-', '+', '+', '+', '+');
-	mvwprintw(p_screen, 0, 0, "(0, 0)");
-	mvwprintw(p_screen, 39, 91, "(40, 100)"); //MAGIC!
 
 	wrefresh(p_screen);
 }
@@ -51,4 +63,18 @@ void nib_clear_screen()
 void nib_update()
 {
 	refresh();
+}
+
+int nib_rand_x()
+{
+	return (rand()%(getX()-2))+1;
+}
+int nib_rand_y()
+{
+	return (rand()%(getY()-2))+1;
+}
+
+void nib_debug_print() 
+{
+	printf( "DEBUG\n" );
 }
