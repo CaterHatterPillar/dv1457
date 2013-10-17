@@ -23,7 +23,13 @@ nibbles_init:
 	movl 8(%esp), %eax
 	movl 12(%esp), %ebx
 	movl %ebx, (numApples)
+	#movl %eax, (numSnakeBits)
+	movl $5, %eax
 	movl %eax, (numSnakeBits)
+
+
+	movl $97, %eax
+	movl %eax, (dir)
 
 	call nib_init
 	call init_snakes
@@ -98,6 +104,7 @@ nibbles_run:
 	addl $4, %esp
 	
 	call get_input
+	call update_snake
 
 	call nib_clear_screen
 	call render_apples
@@ -107,8 +114,89 @@ nibbles_run:
 
 get_input:
 	call nib_poll_kbd
+	cmpl $97, %eax # left
+	je get_input_set_dir 
+    cmpl $119, %eax #up
+    je get_input_set_dir
+    cmpl $100, %eax #right
+    je get_input_set_dir
+    cmpl $115, %eax #down
+    je get_input_set_dir
+    ret
+
+    get_input_set_dir:
     movl %eax, (dir)
     ret
+
+update_snake:
+	#Update head
+	movl $snakes, %eax
+	movl $snakes, %ebx
+	addl $4, %ebx
+
+	movl (dir), %ecx
+	cmpl $97, %ecx # left
+	je update_snake_left 
+    cmpl $119, %ecx #up
+    je update_snake_up
+    cmpl $100, %ecx #right
+    je update_snake_right
+    cmpl $115, %ecx #down
+    je update_snake_down
+	jmp update_snake_body
+
+    update_snake_left:
+    movl $1, %ebx
+    subl %ebx, (%eax)
+    jmp update_snake_body
+    update_snake_up:
+    movl $1, %eax
+    subl %eax, (%ebx)
+    jmp update_snake_body
+    update_snake_right:
+    movl $1, %ebx
+    addl %ebx, (%eax)
+    jmp update_snake_body
+    update_snake_down:
+    movl $1, %eax
+    addl %eax, (%ebx)
+    jmp update_snake_body
+
+	update_snake_body:
+	movl (numSnakeBits), %eax
+	movl %eax, (i)
+	movl $8, %ecx
+	mull %ecx
+	movl $snakes, %ebx
+	addl %eax, %ebx
+	subl $4, %ebx
+	movl %ebx, address
+
+	update_snake_loop:
+	movl (i), %eax
+	cmpl $1, %eax
+	je update_snake_finished
+
+	movl address, %eax
+	movl %eax, %ebx
+	subl $8, %ebx
+	movl (%ebx), %ecx
+	movl %ecx, (%eax)
+
+	subl $4, %eax
+	subl $4, %ebx
+	movl (%ebx), %ecx
+	movl %ecx, (%eax)
+
+	movl (i), %eax
+	subl $1, %eax
+	movl %eax, (i)
+	movl $8, %eax
+	subl %eax, address
+	jmp update_snake_loop
+
+	update_snake_finished:
+	ret
 
 render_snakes:
 	movl $snakes, %eax
