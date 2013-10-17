@@ -37,19 +37,34 @@ void nib_end(void)
   exit(0);
 }
 
-int getX()
+int get_x()
 {
 	int x, y;
 	getmaxyx(p_screen, y, x);
 
 	return x;
 }
-int getY()
+int get_y()
 {
 	int x, y;
 	getmaxyx(p_screen, y, x);
 
 	return y;
+}
+
+int get_x_half()
+{
+	int x, y;
+	getmaxyx(p_screen, y, x);
+
+	return x/2;
+}
+int get_y_half()
+{
+	int x, y;
+	getmaxyx(p_screen, y, x);
+
+	return y/2;
 }
 
 void nib_clear_screen()
@@ -67,11 +82,11 @@ void nib_update()
 
 int nib_rand_x()
 {
-	return (rand()%(getX()-2))+1;
+	return (rand()%(get_x()-2))+1;
 }
 int nib_rand_y()
 {
-	return (rand()%(getY()-2))+1;
+	return (rand()%(get_y()-2))+1;
 }
 
 void nib_debug_print() 
