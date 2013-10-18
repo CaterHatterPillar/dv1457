@@ -2,6 +2,7 @@
 .bss
 	apples: .space 80
 	snakes: .space 8000 #Bits of snake!
+	snakeHead: .space 8
 
 .data
 	snakeSize: 		.long 0
@@ -12,6 +13,8 @@
 	i:				.long 0
 	startX: 		.long 0
 	startY:			.long 0
+	crawling: 		.long 0
+	score: 			.long 0
 
 .section .text
 	.globl nibbles_init
@@ -27,6 +30,8 @@ nibbles_init:
 	movl $5, %eax
 	movl %eax, (numSnakeBits)
 
+	movl $1, %eax
+	movl %eax, (crawling)
 
 	movl $97, %eax
 	movl %eax, (dir)
@@ -40,7 +45,8 @@ nibbles_init:
 init_snakes:
 	movl $snakes, %eax
 	movl %eax, address
-	movl $0, i
+	movl $0, %eax
+	movl %eax, (i)
 
 	call get_x_half
 	movl %eax, (startX)
@@ -70,7 +76,7 @@ init_snakes:
 	cmpl (numSnakeBits), %eax
 	movl %eax, (i)
 	jne init_snake_loop
-	ret
+	ret	
 
 spawn_apples:
 	movl $apples, %eax
@@ -105,23 +111,58 @@ nibbles_run:
 	
 	call get_input
 	call update_snake
+	call update_snake_collision
+	call update_snake_collision_walls
+	call update_snake_collision_apples
 
 	call nib_clear_screen
 	call render_apples
 	call render_snakes
-	jmp nibbles_run
+
+	movl (score), %eax
+	pushl %eax
+	call nib_print_score
+	addl $4, %esp
+
+	movl (crawling), %eax
+	cmpl $1, %eax
+	je nibbles_run
 	ret
 
 get_input:
 	call nib_poll_kbd
 	cmpl $97, %eax # left
-	je get_input_set_dir 
+	je get_input_set_dir_left
     cmpl $119, %eax #up
-    je get_input_set_dir
+    je get_input_set_dir_up
     cmpl $100, %eax #right
-    je get_input_set_dir
+    je get_input_set_dir_right
     cmpl $115, %eax #down
-    je get_input_set_dir
+    je get_input_set_dir_down
+    ret
+
+    get_input_set_dir_left:
+    movl (dir), %ebx
+    cmpl $100, %ebx
+    jne get_input_set_dir
+    ret
+
+    get_input_set_dir_up:
+    movl (dir), %ebx
+    cmpl $115, %ebx
+    jne get_input_set_dir
+    ret
+
+    get_input_set_dir_right:
+    movl (dir), %ebx
+    cmpl $97, %ebx
+    jne get_input_set_dir
+    ret
+
+    get_input_set_dir_down:
+    movl (dir), %ebx
+    cmpl $119, %ebx
+    jne get_input_set_dir
     ret
 
     get_input_set_dir:
@@ -129,38 +170,6 @@ get_input:
     ret
 
 update_snake:
-	#Update head
-	movl $snakes, %eax
-	movl $snakes, %ebx
-	addl $4, %ebx
-
-	movl (dir), %ecx
-	cmpl $97, %ecx # left
-	je update_snake_left 
-    cmpl $119, %ecx #up
-    je update_snake_up
-    cmpl $100, %ecx #right
-    je update_snake_right
-    cmpl $115, %ecx #down
-    je update_snake_down
-	jmp update_snake_body
-
-    update_snake_left:
-    movl $1, %ebx
-    subl %ebx, (%eax)
-    jmp update_snake_body
-    update_snake_up:
-    movl $1, %eax
-    subl %eax, (%ebx)
-    jmp update_snake_body
-    update_snake_right:
-    movl $1, %ebx
-    addl %ebx, (%eax)
-    jmp update_snake_body
-    update_snake_down:
-    movl $1, %eax
-    addl %eax, (%ebx)
-    jmp update_snake_body
 
 	update_snake_body:
 	movl (numSnakeBits), %eax
@@ -196,6 +205,166 @@ update_snake:
 	jmp update_snake_loop
 
 	update_snake_finished:
+
+	movl $snakes, %eax
+	movl $snakes, %ebx
+	addl $4, %ebx
+
+	movl (dir), %ecx
+	cmpl $97, %ecx # left
+	je update_snake_left 
+    cmpl $119, %ecx #up
+    je update_snake_up
+    cmpl $100, %ecx #right
+    je update_snake_right
+    cmpl $115, %ecx #down
+    je update_snake_down
+
+    update_snake_left:
+    movl $1, %ebx
+    subl %ebx, (%eax)
+ 	ret
+    update_snake_up:
+    movl $1, %eax
+    subl %eax, (%ebx)
+    ret
+    update_snake_right:
+    movl $1, %ebx
+    addl %ebx, (%eax)
+    ret
+    update_snake_down:
+    movl $1, %eax
+    addl %eax, (%ebx)
+    ret
+
+update_snake_collision:
+
+	movl $snakes, %eax
+	movl $snakeHead, %ecx
+	movl (%eax), %ebx
+	movl %ebx, (%ecx)
+	addl $4, %eax
+	addl $4, %ecx
+	movl (%eax), %ebx
+	movl %ebx, (%ecx)
+
+	movl $snakes, %eax
+	addl $8, %eax
+	movl %eax, address
+
+	movl $0, i
+
+	update_snake_collision_loop:
+	movl address, %eax
+	movl (%eax), %ebx
+	addl $4, %eax
+	movl (%eax), %ecx
+	addl $4, %eax
+	movl %eax, address
+
+	movl $snakeHead, %eax
+	movl (%eax), %edx
+	cmpl %ebx, %edx
+	jne snake_collision_loop_continue
+	addl $4, %eax
+	movl (%eax), %edx
+	cmpl %ecx, %edx
+	jne snake_collision_loop_continue
+
+	call end_game
+
+	snake_collision_loop_continue:
+	movl (i), %eax
+	addl $1, %eax
+	cmpl (numSnakeBits), %eax
+	movl %eax, (i)
+	jne update_snake_collision_loop
+	ret
+
+update_snake_collision_walls:
+	call get_x
+	movl %eax, %ecx # X Max
+	call get_y
+	movl %eax, %edx # Y Max
+
+	movl $snakes, %eax
+	movl (%eax), %ebx # X
+	addl $4, %eax
+	movl (%eax), %eax # Y
+
+	cmpl %ebx, %ecx
+	je end_game
+	cmpl %eax, %edx
+	je end_game
+
+	cmpl $0, %ebx
+	je end_game
+	cmpl $0, %eax
+	je end_game
+	
+	ret
+
+update_snake_collision_apples:
+	movl $snakes, %eax
+	movl (%eax), %ebx # X
+	addl $4, %eax
+	movl (%eax), %eax # Y
+
+	movl $snakeHead, %ecx
+	movl %ebx, (%ecx)
+	addl $4, %ecx
+	movl %eax, (%ecx)
+
+	movl $apples, %eax
+	movl %eax, address
+	movl $0, i
+
+	snake_collision_apples_loop:
+	movl address, %eax
+	movl (%eax), %ebx #X
+	addl $4, %eax
+	movl (%eax), %ecx #Y
+	addl $4, %eax
+	movl %eax, (address)
+
+	movl $snakeHead, %eax
+	movl (%eax), %edx
+	
+	cmpl %ebx, %edx
+	jne snake_collision_apples_loop_continue
+
+	addl $4, %eax
+	movl (%eax), %edx
+
+	cmpl %ecx, %edx
+	jne snake_collision_apples_loop_continue
+
+	call nib_rand_x
+	movl %eax, %ebx
+	call nib_rand_y
+	movl address, %ecx
+	subl $4, %ecx
+	movl %eax, (%ecx)
+	subl $4, %ecx
+	movl %ebx, (%ecx) 
+
+	movl $1, %eax
+	addl %eax, (numSnakeBits)
+	addl %eax, (score)
+
+	snake_collision_apples_loop_continue:
+	movl (i), %eax
+	addl $1, %eax
+	cmpl (numApples), %eax
+	movl %eax, (i)
+	jne snake_collision_apples_loop
+	ret
+	
+	ret
+
+end_game:
+	movl $0, %eax
+	movl %eax, (crawling)
 	ret
 
 render_snakes:

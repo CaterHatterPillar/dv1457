@@ -42,14 +42,14 @@ int get_x()
 	int x, y;
 	getmaxyx(p_screen, y, x);
 
-	return x;
+	return x-1;
 }
 int get_y()
 {
 	int x, y;
 	getmaxyx(p_screen, y, x);
 
-	return y;
+	return y-1;
 }
 
 int get_x_half()
@@ -92,4 +92,10 @@ int nib_rand_y()
 void nib_debug_print() 
 {
 	printf( "DEBUG\n" );
+}
+
+void nib_print_score(int p_score)
+{
+	mvwprintw(p_screen, 0, 0, "Score: %d", p_score);
+	wrefresh(p_screen);
 }
