@@ -1,12 +1,9 @@
 
-all: asm-files
+all: source
 	gcc -o ../SnakeASM_Apocalypse *.o -lcurses -lc
 
-asm-files: c-files
-	gcc -c nibbles.S start.S -g
-
-c-files:
-	gcc -c helpers.c main.c -g
+source:
+	gcc -c nibbles.S start.S helpers.c main.c -Os
 
 clean:
 	rm -f *.o
