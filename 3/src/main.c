@@ -16,9 +16,9 @@ int main(int argc, char *argv[])
   len = atoi(argv[1]);
   apples = atoi(argv[2]);
 
-  if( apples>10 )
+  if( apples>100 )
   {
-    printf( "Can only support up to ten apples!\n" );
+    printf( "Can only support up to 100 apples!\n" );
     return 1;
   }
 

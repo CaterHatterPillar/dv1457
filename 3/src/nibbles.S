@@ -1,6 +1,6 @@
 
 .bss
-	apples: .space 80
+	apples: .space 800
 	snakes: .space 8000 #Bits of snake!
 	snakeHead: .space 8
 
@@ -26,9 +26,9 @@ nibbles_init:
 	movl 8(%esp), %eax
 	movl 12(%esp), %ebx
 	movl %ebx, (numApples)
-	#movl %eax, (numSnakeBits)
-	movl $5, %eax
 	movl %eax, (numSnakeBits)
+	#movl $5, %eax
+	#movl %eax, (numSnakeBits)
 
 	movl $1, %eax
 	movl %eax, (crawling)
