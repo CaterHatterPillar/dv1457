@@ -494,5 +494,8 @@ render_apples:
 
 nibbles_end:
 	#Close down ncurses.
+	movl (score), %eax
+	pushl %eax
 	call nib_end
+	addl $4, %esp
 	ret

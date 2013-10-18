@@ -31,9 +31,13 @@ void nib_init(void)
 	printw("SnakeASM Apocalypse");
 }
 
-void nib_end(void)
+void nib_end(int p_score)
 {
   endwin();
+
+  printf("Thanks for playing SnakeASM Apocalypse!\n");
+  printf("Your final score was %d!\n", p_score);
+
   exit(0);
 }
 
